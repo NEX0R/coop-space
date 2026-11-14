@@ -17,6 +17,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 **C. Prova nel gioco**
 - [ ] Provare `coop-space.mcaddon` sul telefono: importarlo, attivarlo in un mondo, piazzare il "Blocco di prova Coop" e controllare che compaia il messaggio in chat. **Chi:** almeno uno, meglio tutti
+  - Provato su PC da Samuele: funziona dalla versione 0.1.1. Manca la prova sul telefono.
 
 **D. Decisioni di gruppo**
 - [ ] Chi si occupa di cosa (logica e script, oggetti e mob, grafica e texture)
@@ -26,10 +27,13 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 ## Da fare
 
 - [ ] (Facoltativo) Provare Blockbench per modelli 3D e texture, quando faremo il primo mob. **Chi:** ?
+- [ ] Aggiungere a `scripts/verify.mjs` un controllo per i blocchi senza `minecraft:geometry` (il validatore Mojang non lo segnala, il gioco scarta il blocco). **Chi:** ?
+- [ ] In `AGENTS.md` e `README.md`: nomi italiani delle impostazioni del registro dei contenuti e come provare una versione nuova (versione più alta, importare a gioco chiuso, mondo nuovo). **Chi:** ?
 
 ## In corso
 
 ## Fatto
 
+- [x] Corretto il blocco di prova: mancava la forma (`minecraft:geometry`), il gioco lo scartava e non compariva nell'inventario. Versione dei pack 0.1.1.
 - [x] Guida "Inizia qui" nel README, metodo di lavoro in AGENTS.md (piano prima dei file, confronto tra approcci, efficienza), script funzionanti anche su Windows.
 - [x] Struttura del progetto, blocco di prova, verifica automatica con il validatore Mojang e build del `.mcaddon` su GitHub.
