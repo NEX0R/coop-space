@@ -44,6 +44,17 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
 5. Aggiorna `TASKS.md`: sposta il compito nella sezione giusta e scrivi in una riga cosa hai fatto.
 6. Nella descrizione della pull request spiega cosa cambia nel gioco e come provarlo.
 
+## Metodo di lavoro
+
+Il team sta imparando a usare l'IA: il metro di ogni scelta è il loro tempo, i loro token e un risultato che funziona nel gioco.
+
+1. **Prima il piano, poi i file.** Per ogni contenuto o funzione nuova proponi un piano breve e aspetta l'approvazione prima di scrivere. Se la skill ufficiale copre il caso, il piano è seguire la skill. Se ci sono scelte vere (più modi di ottenere lo stesso risultato), confronta 2-3 approcci su efficacia nel gioco, manutenzione e costo (tempo e token) e consigliane uno spiegando perché. Fanno eccezione le correzioni piccole e le richieste già precise.
+2. **Richiesta vaga: chiedi.** Al massimo 3 domande: cosa deve succedere nel gioco, come si ottiene, come si capisce che funziona.
+3. **Controllo continuo.** Se un approccio già usato nel progetto risulta obsoleto, inefficiente o superato da un'alternativa migliore, fermati e proponi il cambiamento con costi e benefici prima di andare avanti.
+4. **Efficienza.** Passi piccoli e verificabili, modifiche mirate invece di riscrivere file interi, niente riletture di file già in contesto, niente ricerche sul web se la risposta è nella skill o nel repository. Una pull request, una cosa sola.
+5. **Fonti dirette.** Nell'ordine: skill ufficiali Mojang, documentazione Microsoft (`learn.microsoft.com/minecraft/creator`), esempi Mojang, `wiki.bedrock.dev`. Video e post di terzi solo come spunto, e dillo quando li usi.
+6. **Persona nuova.** Se chi ti scrive è nuovo o chiede come funziona il progetto, guidalo con la sezione "Inizia qui" di `README.md`, un passo alla volta.
+
 ## Regole tecniche
 
 - **Namespace**: tutti gli identificativi iniziano con `coop:` (es. `coop:spada_fulmine`). Mai `minecraft:`.
