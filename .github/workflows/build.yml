@@ -1,0 +1,54 @@
+# Ogni modifica viene verificata con il validatore ufficiale Mojang.
+# - Su una pull request: verifica + file .mcaddon allegato alla build (per provarlo prima di approvare).
+# - Su main: verifica + pubblicazione del .mcaddon nella release "ultima-versione",
+#   scaricabile da telefono dalla pagina Releases del repository.
+name: Build add-on
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installa gli strumenti
+        run: npm ci
+
+      - name: Verifica e crea il .mcaddon
+        run: npm run package
+
+      - name: Allega il .mcaddon alla build
+        uses: actions/upload-artifact@v4
+        with:
+          name: coop-space-mcaddon
+          path: dist/coop-space.mcaddon
+
+      - name: Pubblica in "ultima-versione"
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NOTE="Versione automatica del commit ${GITHUB_SHA::7}. Scarica coop-space.mcaddon sul telefono e aprilo con Minecraft."
+          if gh release view ultima-versione >/dev/null 2>&1; then
+            gh release upload ultima-versione dist/coop-space.mcaddon --clobber
+            gh release edit ultima-versione --notes "$NOTE"
+          else
+            gh release create ultima-versione dist/coop-space.mcaddon --title "Ultima versione" --notes "$NOTE" --latest
+          fi

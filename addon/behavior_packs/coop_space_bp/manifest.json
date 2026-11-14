@@ -1,0 +1,58 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Coop Space BP",
+    "description": "Comportamenti e script dell'add-on Coop Space",
+    "uuid": "b834c4d8-40fd-43f3-9413-526fbb7d0950",
+    "version": [
+      0,
+      1,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      60
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "cb3d4248-e01b-4ee7-a436-8ad97054ae26",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "69e2e4c3-7b75-461e-a064-76de81488df6",
+      "entry": "scripts/main.js",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "3173a7cb-09ad-4608-a61a-c3b58c80ec85",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "module_name": "@minecraft/server",
+      "version": [
+        2,
+        11,
+        0
+      ]
+    }
+  ]
+}
