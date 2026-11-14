@@ -1,0 +1,27 @@
+{
+  "format_version": "1.26.60",
+  "minecraft:block": {
+    "description": {
+      "identifier": "coop:blocco_prova",
+      "menu_category": {
+        "category": "construction"
+      }
+    },
+    "components": {
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1.5
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 6
+      },
+      "minecraft:light_emission": 10,
+      "minecraft:map_color": "#3C8527",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "coop_blocco_prova",
+          "render_method": "opaque"
+        }
+      }
+    }
+  }
+}
