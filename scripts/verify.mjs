@@ -5,8 +5,10 @@
 import { spawnSync } from "node:child_process";
 import { readdirSync, statSync, existsSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = new URL("..", import.meta.url).pathname;
+// fileURLToPath dà un percorso valido anche su Windows (C:\...), a differenza di URL.pathname.
+const root = fileURLToPath(new URL("..", import.meta.url));
 const addonDir = join(root, "addon");
 let failed = false;
 let syntaxErrors = 0;

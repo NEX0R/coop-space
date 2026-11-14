@@ -3,8 +3,10 @@
 import { spawnSync } from "node:child_process";
 import { mkdirSync, existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = new URL("..", import.meta.url).pathname;
+// fileURLToPath dà un percorso valido anche su Windows (C:\...), a differenza di URL.pathname.
+const root = fileURLToPath(new URL("..", import.meta.url));
 const addonDir = join(root, "addon");
 const dist = join(root, "dist");
 const out = join(dist, "coop-space.mcaddon");
@@ -15,10 +17,14 @@ if (verify.status !== 0) process.exit(verify.status ?? 1);
 if (existsSync(out)) rmSync(out);
 mkdirSync(dist, { recursive: true });
 
-const mct = join(root, "node_modules/.bin/mct");
-const r = spawnSync(mct, ["-i", addonDir, "-o", dist, "--of", out, "export", "addon"], {
-  stdio: "inherit",
-});
+// Lanciamo il file JS di mct direttamente con node: il collegamento in node_modules/.bin
+// su Windows è un .cmd e non si può avviare così.
+const mct = join(root, "node_modules/@minecraft/creator-tools/cli/index.mjs");
+const r = spawnSync(
+  process.execPath,
+  [mct, "-i", addonDir, "-o", dist, "--of", out, "export", "addon"],
+  { stdio: "inherit" },
+);
 if (r.status !== 0 || !existsSync(out)) {
   console.error("Impacchettamento fallito.");
   process.exit(1);
