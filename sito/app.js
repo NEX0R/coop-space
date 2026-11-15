@@ -295,7 +295,7 @@ async function avvio() {
     return;
   }
   $("scarica").href = dati.download;
-  $("scarica").textContent = dati.versione ? `Scarica l'add-on ${dati.versione}` : "Scarica l'add-on";
+  $("scarica").textContent = "Scarica l'ultima versione";
   $("piede").textContent = `Aggiornato dal commit ${dati.commit || "?"}${dati.dataCommit ? ", " + fa(dati.dataCommit) : ""}. Si aggiorna da solo a ogni modifica su main.`;
   mostraCompiti(dati.compiti);
   mostraContenuti(dati.contenuti);
