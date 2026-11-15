@@ -2,6 +2,8 @@
 
 Add-on per Minecraft Bedrock fatti in tre, con Claude Code e Codex. Nessuno di noi è programmatore: scriviamo cosa vogliamo nel gioco, l'assistente IA lo costruisce, un controllo automatico verifica che funzioni.
 
+**Il sito del team: <https://nex0r.github.io/coop-space/>** (funziona anche da telefono). Mostra a che punto siamo (da `TASKS.md`), le proposte di modifica aperte con l'esito del controllo, i contenuti dell'add-on con cosa manca a ognuno, un visore 3D con le animazioni e il pulsante per scaricare l'ultima versione. Si aggiorna da solo: non va mai modificato a mano.
+
 ## Inizia qui (se sei nuovo)
 
 Fai questi passi in ordine. Servono 15 minuti.
@@ -92,7 +94,7 @@ Chi usa **Codex** legge le stesse regole in `AGENTS.md`; i blocchi automatici pe
 | Claude Code o Codex | Scrive i file dell'add-on | Ognuno il suo |
 | Minecraft Creator Tools (Mojang) | Validatore ufficiale, guide per gli assistenti, creazione del `.mcaddon` | Nessuno: è già nel progetto |
 | GitHub | Tiene il progetto, controlla ogni modifica, pubblica il file per il telefono | Serve solo l'account |
-| [Blockbench](https://www.blockbench.net) | Modelli 3D, texture e animazioni. È lo strumento indicato nella documentazione ufficiale di Minecraft; funziona anche dal browser su [web.blockbench.net](https://web.blockbench.net) | Facoltativo, quando faremo mob o modelli |
+| [Blockbench](https://www.blockbench.net) | Modelli 3D, texture e animazioni. È lo strumento indicato nella documentazione ufficiale di Minecraft; funziona anche dal browser su [web.blockbench.net](https://web.blockbench.net). Un modello esportato si può guardare animato nel sito del team ("Prova un tuo modello") prima di metterlo nell'add-on | Facoltativo, quando faremo mob o modelli |
 
 ## Dove imparare (fonti dirette)
 
