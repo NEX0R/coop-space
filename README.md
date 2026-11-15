@@ -10,8 +10,8 @@ Fai questi passi in ordine. Servono 15 minuti.
 
 ### 1. Fatti dare l'accesso
 
-1. Crea un account gratuito su [github.com](https://github.com/signup), se non lo hai.
-2. Manda a Nexor su WhatsApp il tuo **nome utente GitHub** (va bene anche l'email dell'account, ma il nome utente è più sicuro).
+1. Crea un account gratuito su [github.com](https://github.com/signup), se non lo hai, e attiva l'**autenticazione a due fattori** (Settings → Password and authentication).
+2. Nel [sito del team](https://nex0r.github.io/coop-space/) premi **Chiedi l'accesso** e compila il modulo. In alternativa manda a Nexor il tuo nome utente GitHub. Mai l'email: il progetto è pubblico.
 3. Quando Nexor ti invita, accetta da qui: <https://github.com/NEX0R/coop-space/invitations> (ti arriva anche un'email).
 
 Senza l'invito puoi guardare il progetto, ma non modificarlo.
@@ -29,6 +29,7 @@ Senza l'invito puoi guardare il progetto, ma non modificarlo.
 1. Apri [chatgpt.com/codex](https://chatgpt.com/codex) oppure la sezione Codex nell'app ChatGPT.
 2. Collega il tuo account GitHub.
 3. Scegli il repository `NEX0R/coop-space`.
+4. Nelle impostazioni dell'ambiente (Environment) di Codex, come **script di setup** scrivi `npm ci`: installa gli strumenti di Mojang a ogni avvio. I blocchi automatici di Claude Code non valgono per Codex, quindi le regole di `AGENTS.md` contano ancora di più.
 
 **Se il repository non compare nell'elenco:** avvisa Nexor. L'app GitHub dell'assistente deve essere installata dal proprietario del repository, e possono servire alcuni minuti prima che compaia. In alternativa, al PC: installa [Git](https://git-scm.com) e [Node.js](https://nodejs.org), poi nel terminale scrivi `git clone https://github.com/NEX0R/coop-space.git` e avvia il tuo assistente dentro quella cartella.
 
