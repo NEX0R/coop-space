@@ -21,6 +21,8 @@ addon/
     textures/  texts/it_IT.lang  texts/en_US.lang
 scripts/verify.mjs                controllo obbligatorio (npm run verify)
 scripts/package.mjs               crea dist/coop-space.mcaddon (npm run package)
+scripts/avvio-sessione.mjs        installa gli strumenti all'avvio di Claude Code, se mancano
+.claude/settings.json             impostazioni di Claude Code per tutti: permessi, blocchi, hook
 .github/workflows/build.yml       build automatica e release "ultima-versione"
 TASKS.md                          compiti e assegnazioni
 ```

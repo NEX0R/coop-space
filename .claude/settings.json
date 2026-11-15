@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "enableAllProjectMcpServers": true,
+  "permissions": {
+    "allow": [
+      "Bash(npm run verify)",
+      "Bash(npm run package)",
+      "Bash(npm run sito)",
+      "Bash(npm run skills:*)",
+      "Bash(npx mct skills:*)",
+      "Bash(npm ci)",
+      "Bash(npm install)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr checks:*)",
+      "mcp__minecraft-creator-tools__getSkill",
+      "mcp__minecraft-creator-tools__validateFile",
+      "mcp__minecraft-creator-tools__validateContent",
+      "mcp__minecraft-creator-tools__getEffectiveContentSchema",
+      "mcp__minecraft-creator-tools__getModelTemplates"
+    ],
+    "deny": [
+      "Bash(npm audit fix --force:*)",
+      "Bash(npm audit fix -f:*)",
+      "Bash(npx mct fix randomizealluids:*)",
+      "Bash(mct fix randomizealluids:*)",
+      "Bash(npx mct eula:*)",
+      "Bash(mct eula:*)",
+      "Bash(npx -y @minecraft/creator-tools@0.21.0 eula:*)",
+      "Bash(git push origin main:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/avvio-sessione.mjs\"",
+            "timeout": 240
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -73,6 +73,17 @@ Altre abitudini utili:
 - **Incolla gli errori così come sono**, senza riassumerli.
 - **Non sai cosa scegliere?** Chiedi "quali sono le opzioni e quale consigli, e perché?".
 - **Se sbaglia due volte la stessa cosa**, non insistere: apri una sessione nuova e riformula la richiesta con quello che hai capito.
+- **Scegli il modello giusto** (Claude Code, comando `/model`): **Sonnet** per il lavoro normale (blocchi, oggetti, nomi, texture), **Opus** solo per i problemi difficili, come un errore che non si capisce dopo due tentativi. Opus consuma molto di più dei limiti del vostro abbonamento.
+
+### Claude Code è già configurato
+
+Il file `.claude/settings.json` vale per tutti, sul PC e nelle sessioni cloud:
+- **Meno richieste di permesso**: i comandi sicuri del progetto (controllo, pacchetto, guide Mojang, stato di git) partono senza chiedere.
+- **Comandi pericolosi bloccati**: `npm audit fix --force`, il cambio degli UUID, l'accettazione della EULA di Minecraft, il push diretto o forzato su `main`. Anche se l'assistente sbaglia, non può lanciarli.
+- **Strumenti installati da soli**: all'avvio, se mancano o sono cambiati, Claude Code li installa (`npm ci`). Se è tutto a posto non fa niente e non consuma.
+- **Server MCP di Mojang attivo senza conferme**: le sue descrizioni (circa 20.000 token) vengono caricate solo quando servono.
+
+Chi usa **Codex** legge le stesse regole in `AGENTS.md`; i blocchi automatici però valgono solo per Claude Code.
 
 ## Strumenti
 
