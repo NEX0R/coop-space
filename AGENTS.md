@@ -64,6 +64,9 @@ Il team sta imparando a usare l'IA: il metro di ogni scelta è il loro tempo, i 
 - **Versione del gioco**: `min_engine_version` è `1.26.60`. Se Minecraft si aggiorna, controlla le nuove versioni con `npm view @minecraft/server dist-tags` e `npm view @minecraft/vanilla-data dist-tags`, poi aggiorna insieme manifest, `package.json` e questo file. Uno script con una versione di modulo che il gioco non conosce viene disattivato **senza errori visibili**.
 - **Nomi visibili**: ogni blocco, oggetto o mob nuovo ha il suo nome in `texts/it_IT.lang` e in `texts/en_US.lang`. Senza, nel gioco compare `tile.coop:...name`.
 - **Texture**: PNG 16×16 per blocchi e oggetti, registrate in `textures/terrain_texture.json` (blocchi) o `textures/item_texture.json` (oggetti).
+- **Forma dei blocchi**: ogni blocco deve avere `minecraft:geometry` (per un cubo pieno: `"minecraft:geometry": "minecraft:geometry.full_block"`). Senza, il gioco scarta il blocco senza avvisi visibili: non compare nell'inventario e `/give` dà errore di sintassi. `npm run verify` **non** se ne accorge, l'errore compare solo nel registro dei contenuti del gioco.
+- **Versione da alzare per provare**: Minecraft importa un pack solo se `header.version` è più alta di quella già installata; con la stessa versione l'importazione viene ignorata. Ogni pull request che cambia `addon/` alza la versione di entrambi i pack (vedi "Versioni dei pack").
+- **Avvisi di sicurezza npm** (Dependabot, `npm audit`): arrivano dalle dipendenze di `@minecraft/creator-tools`, non dall'add-on (nel `.mcaddon` finisce solo `addon/`). Si risolvono aggiornando `creator-tools` (vedi "Aggiornare gli strumenti"). **Mai `npm audit fix --force`**: riporta `creator-tools` alla 0.15.6, senza skill, e rompe la verifica.
 - **Generatori automatici**: i comandi `mct add` e lo strumento `createMinecraftContent` possono riscrivere i manifest. Dopo averli usati controlla `git diff` sui due `manifest.json` e ripristina UUID, nomi e dipendenze originali.
 - **EULA di Minecraft**: non accettarla mai al posto dell'utente. Se un comando la chiede, digli di eseguire lui `npx -y @minecraft/creator-tools@0.21.0 eula`. Validazione ed export non ne hanno bisogno.
 - Non lanciare come comandi bloccanti `mct view`, `mct serve` o `mct mcp`: restano attivi finché non vengono fermati.
@@ -71,9 +74,22 @@ Il team sta imparando a usare l'IA: il metro di ogni scelta è il loro tempo, i 
 ## Provare l'add-on sul telefono
 
 1. Ogni pull request produce un `.mcaddon` nella sezione Actions di GitHub; dopo il merge su `main` il file si aggiorna nella release **"ultima-versione"**.
-2. Sul telefono: scarica `coop-space.mcaddon` e aprilo, Minecraft lo importa da solo.
-3. Nel mondo di prova: Impostazioni del mondo → Pacchetti comportamento e Pacchetti risorse → attiva "Coop Space".
-4. Se qualcosa non funziona ma `npm run verify` passa: nel gioco, Impostazioni → Creatore → attiva "Content Log GUI", riapri il mondo e fatti incollare le righe che citano `coop`. La skill `debug-addon` (file `references/content-log.md`) spiega come leggerle.
+2. Sul telefono: scarica `coop-space.mcaddon` e aprilo **con Minecraft chiuso**: lo importa da solo. Se il gioco è già aperto dentro un mondo, l'importazione viene ignorata senza nessun messaggio.
+3. Crea un **mondo nuovo** per ogni versione da provare: Impostazioni del mondo → Pacchetti comportamento e Pacchetti risorse → attiva "Coop Space". Un mondo creato con una versione vecchia può continuare a usare quella.
+4. Se qualcosa non funziona ma `npm run verify` passa, usa il **registro dei contenuti** (in inglese "Content Log"). L'utente vede il gioco in italiano: dagli questi nomi, non quelli inglesi.
+   - Prima di entrare nel mondo: Impostazioni → **Creatore** → gruppo **Impostazioni registro dei contenuti** → attiva **Mostra l'interfaccia utente del registro dei contenuti** (in alcune schermate: "Abilita l'interfaccia grafica del registro dei contenuti") e, se c'è, **Mostra UI registro dei contenuti per errori di caricamento**.
+   - Per leggere gli errori: Impostazioni → Creatore → **Cronologia registro dei contenuti** → **Visualizza** → **Copia negli appunti**, e fatti incollare il testo.
+   - La skill `debug-addon` (file `references/content-log.md`) spiega come leggerlo.
+5. Per sapere se un contenuto esiste davvero nel gioco: nel mondo, Pausa → Impostazioni → **Trucchi** → **Attiva i trucchi**, poi in chat `/give @s coop:<nome>`. Se dà errore di sintassi sull'ID, il gioco non lo conosce: il pack non è caricato oppure il contenuto è stato scartato (leggi il registro).
+
+### Prova sul PC (Windows, Minecraft Bedrock 1.26)
+
+Se l'assistente gira sul PC dove è installato Minecraft, può fare da solo i controlli sui file:
+
+- **Importare**: con Minecraft chiuso, apri `dist/coop-space.mcaddon` (in PowerShell: `Start-Process`). Poi controlla che la versione nuova sia arrivata prima di far provare l'utente.
+- **Pack installati**: `%APPDATA%\Minecraft Bedrock\Users\Shared\games\com.mojang\behavior_packs` e `resource_packs` (cartelle `CoopSpaceB`, `CoopSpaceR`; le versioni successive finiscono in `CoopSpaceB(1)`, ecc.). Le versioni vecchie restano accanto e confondono le prove: dopo una prova riuscita si possono eliminare, **controllando prima** nel loro `manifest.json` che siano davvero quelle vecchie, e solo con l'ok dell'utente.
+- **Mondi**: `%APPDATA%\Minecraft Bedrock\Users\<numero>\games\com.mojang\minecraftWorlds\<cartella>`; `world_behavior_packs.json` dice quali pack e versioni usa il mondo.
+- **Registro su file**: chiedi all'utente di attivare **Abilita file registro dei contenuti** (stesso gruppo in Impostazioni → Creatore). Il gioco scrive `%APPDATA%\Minecraft Bedrock\logs\ContentLog*.txt`. Se il file è vuoto, fai chiudere Minecraft e rileggilo. Cerca le righe con `[error]` o `[warning]` che citano `coop`.
 
 ## Aggiornare gli strumenti
 

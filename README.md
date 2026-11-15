@@ -41,8 +41,8 @@ Le regole del progetto le legge da solo: non devi spiegargliele tu.
 ### 4. Prova l'add-on sul telefono
 
 1. Dal telefono apri [l'ultima versione](https://github.com/NEX0R/coop-space/releases/tag/ultima-versione) e scarica `coop-space.mcaddon`.
-2. Apri il file: Minecraft lo importa da solo.
-3. Crea un mondo di prova. Nelle impostazioni del mondo attiva "Coop Space" sia in **Pacchetti comportamento** sia in **Pacchetti risorse**.
+2. Apri il file **con Minecraft chiuso**: lo importa da solo. Se il gioco è già aperto dentro un mondo, l'importazione non parte e non te lo dice.
+3. Crea un **mondo nuovo** di prova (anche ogni volta che provi una versione nuova). Nelle impostazioni del mondo attiva "Coop Space" sia in **Pacchetti comportamento** sia in **Pacchetti risorse**.
 4. In creativa cerca "Blocco di prova Coop" e piazzalo: deve comparire un messaggio in chat.
 
 Scrivi sul gruppo se ha funzionato oppure no.
@@ -64,7 +64,7 @@ Una buona richiesta dice tre cose: **cosa deve succedere nel gioco**, **come si 
 | Richiesta debole | Richiesta buona |
 | --- | --- |
 | "Fammi una spada forte" | "Voglio una spada di smeraldo: 9 di danno, dura il doppio di quella di diamante, si crea con 2 smeraldi e 1 bastone. Quando colpisce un mob lo incendia per 3 secondi." |
-| "Non funziona" | "Ho piazzato il blocco ma non compare il messaggio in chat. Ecco cosa c'è scritto nel Content Log: ..." |
+| "Non funziona" | "Ho piazzato il blocco ma non compare il messaggio in chat. Ecco cosa c'è scritto nel registro dei contenuti: ..." |
 
 Altre abitudini utili:
 
