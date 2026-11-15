@@ -44,7 +44,8 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
    - `debug-addon`: trovare e correggere errori
    - `creator-tools-cli`: comandi dello strumento `mct`
    Se il server MCP `minecraft-creator-tools` è disponibile (vedi `.mcp.json`), usa i suoi strumenti come dicono le skill. Se non lo è, scrivi i file a mano seguendo la skill.
-3. Lavora su un **ramo nuovo** e apri una **pull request** verso `main`. Mai push diretti su `main`.
+3. Lavora su un **ramo nuovo** e apri una **pull request** verso `main`. Mai push diretti su `main`: GitHub li rifiuta (regola "Proteggi main": servono pull request e controllo `build` passato; vietati push forzati e cancellazione).
+   **Richieste del team**: arrivano come issue dai moduli del sito (etichette `accesso`, `idea`, `problema`); leggile con `gh issue list`. Un'idea approvata dal team diventa un compito in `TASKS.md` e la pull request che la realizza scrive `Chiude #N`. Un problema si affronta con la skill `debug-addon`. Gli inviti (`accesso`) li può mandare solo Nexor: controlla che l'account esista e chiedigli l'ok.
 4. **Un lavoro non è finito finché `npm run verify` non passa: 0 errori e 0 avvisi.** Correggi e rilancia finché non passa. Le voci "likely noise" sono accettate da Bedrock e non bloccano.
 5. Aggiorna `TASKS.md`: sposta il compito nella sezione giusta e scrivi in una riga cosa hai fatto. Il sito del team (<https://nex0r.github.io/coop-space/>) legge proprio questo file: mantieni il formato `- [ ] testo **Chi:** nome`, i titoli `## Sezione` e i gruppi `**A. Nome**`. Il sito non si modifica mai a mano: si rigenera da `TASKS.md` e da `addon/`.
    Per vedere il sito prima del merge: `npm run sito -- --serve` e apri <http://localhost:8765>. Per i modelli 3D di mob nuovi, il visore del sito mostra modello, texture e animazioni presi da `addon/`.

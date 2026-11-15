@@ -1,0 +1,35 @@
+name: Chiedi l'accesso al progetto
+description: Per poter modificare coop-space con il tuo assistente IA (Claude Code o Codex).
+title: "Accesso: "
+labels: ["accesso"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Il tuo nome utente GitHub lo vediamo da solo: è l'autore di questa richiesta.
+        **Attenzione:** il progetto è pubblico, quindi anche questa pagina. Non scrivere email, numeri di telefono o password.
+  - type: input
+    id: nome
+    attributes:
+      label: Come ti chiamiamo nel team?
+      description: Solo il nome, va in TASKS.md accanto ai compiti che prendi.
+      placeholder: es. Jowa
+    validations:
+      required: true
+  - type: dropdown
+    id: assistente
+    attributes:
+      label: Che assistente usi?
+      options:
+        - Claude Code
+        - Codex (ChatGPT)
+        - Altro
+    validations:
+      required: true
+  - type: checkboxes
+    id: sicurezza
+    attributes:
+      label: Sicurezza dell'account
+      options:
+        - label: Ho attivato l'autenticazione a due fattori su GitHub (Settings → Password and authentication)
+          required: true

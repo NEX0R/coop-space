@@ -46,6 +46,8 @@ h3 { font-size: 1rem; margin: 20px 0 8px; }
 main { max-width: 960px; margin: 0 auto; padding: 0 16px; }
 section { background: var(--superficie); border: 1px solid var(--bordo); border-radius: 12px; padding: 16px; margin: 16px 0; }
 .bottone { display: inline-block; background: var(--verde); color: #fff; text-decoration: none; font-weight: 600; padding: 10px 16px; border-radius: 8px; border: 0; cursor: pointer; font-size: 1rem; }
+.azioni { display: flex; flex-wrap: wrap; gap: 8px; }
+.etichetta { font-size: 0.8rem; border-radius: 10px; padding: 0 8px; margin-left: 4px; border: 1px solid var(--bordo); color: var(--tenue); white-space: nowrap; }
 .bottone.piccolo { padding: 6px 12px; font-size: 0.9rem; margin-top: 8px; }
 .numeri { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
 .numero { border: 1px solid var(--bordo); border-radius: 10px; padding: 10px 12px; }

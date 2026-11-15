@@ -17,6 +17,8 @@
       "Bash(gh pr view:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr checks:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)",
       "mcp__minecraft-creator-tools__getSkill",
       "mcp__minecraft-creator-tools__validateFile",
       "mcp__minecraft-creator-tools__validateContent",
