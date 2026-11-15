@@ -28,6 +28,7 @@ sito/                             pagine del sito: progressi, contenuti, visore 
 .claude/settings.json             impostazioni di Claude Code per tutti: permessi, blocchi, hook
 .github/workflows/build.yml       build automatica e release "ultima-versione"
 TASKS.md                          compiti e assegnazioni
+team.json                         chi fa parte del gruppo e chi ha fatto l'accoglienza
 ```
 
 Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: il validatore lo segnala come errore.
@@ -53,7 +54,7 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
      Così gli assistenti degli altri la vedono all'avvio. Se `gh` manca (PC senza GitHub CLI), dai all'utente il link che `git push` stampa e fagli scegliere "Create draft pull request". Se il tuo strumento non apre bozze (per esempio Codex), apri la pull request appena puoi e avvisa sul gruppo WhatsApp.
    - **A lavoro finito**: aggiorna titolo e descrizione (`gh api -X PATCH repos/NEX0R/coop-space/pulls/<N> -f title="<cosa>" -f body="<cosa cambia e come provarlo>"`), poi togli la bozza. Sul PC: `gh pr ready <N>`. Dal telefono non si può da comando: chiedi all'utente di premere **Ready for review** nella pagina della pull request.
    - **Prima di finire**: `git fetch origin && git merge origin/main`, risolvi i conflitti (succedono spesso su `texts/*.lang` e `textures/*_texture.json`, file che tutti toccano: tieni le righe di tutti e due), poi rilancia `npm run verify`.
-   **Richieste del team**: arrivano come issue dai moduli del sito (etichette `accesso`, `idea`, `problema`); leggile con `gh api repos/NEX0R/coop-space/issues`. Un'idea approvata dal team diventa un compito in `TASKS.md` e la pull request che la realizza scrive `Chiude #N`. Un problema si affronta con la skill `debug-addon`. Gli inviti (`accesso`) li può mandare solo Nexor: controlla che l'account esista e chiedigli l'ok.
+   **Richieste del team**: arrivano come issue dai moduli del sito (etichette `accesso`, `idea`, `problema`, `messaggio`); leggile con `gh api repos/NEX0R/coop-space/issues`. Un'idea approvata dal team diventa un compito in `TASKS.md` e la pull request che la realizza scrive `Chiude #N`. Un problema si affronta con la skill `debug-addon`. Gli inviti (`accesso`) li può mandare solo Nexor: controlla che l'account esista e chiedigli l'ok. I messaggi seguono "Il repository è il centro di contatto", qui sotto.
 4. **Un lavoro non è finito finché `npm run verify` non passa: 0 errori e 0 avvisi.** Correggi e rilancia finché non passa. Le voci "likely noise" sono accettate da Bedrock e non bloccano.
 5. Aggiorna `TASKS.md`: sposta il compito nella sezione giusta e scrivi in una riga cosa hai fatto. Il sito del team (<https://nex0r.github.io/coop-space/>) legge proprio questo file: mantieni il formato `- [ ] testo **Chi:** nome`, i titoli `## Sezione` e i gruppi `**A. Nome**`. Il sito non si modifica mai a mano: si rigenera da `TASKS.md` e da `addon/`.
    Per vedere il sito prima del merge: `npm run sito -- --serve` e apri <http://localhost:8765>. Per i modelli 3D di mob nuovi, il visore del sito mostra modello, texture e animazioni presi da `addon/`.
@@ -70,18 +71,33 @@ Il team sta imparando a usare l'IA: il metro di ogni scelta è il loro tempo, i 
 5. **Fonti dirette.** Nell'ordine: skill ufficiali Mojang, documentazione Microsoft (`learn.microsoft.com/minecraft/creator`), esempi Mojang, `wiki.bedrock.dev`. Video e post di terzi solo come spunto, e dillo quando li usi.
 6. **Persona nuova.** Se chi ti scrive è nuovo o chiede come funziona il progetto, segui "Accoglienza di una persona nuova" qui sotto, un passo alla volta.
 
+## Il repository è il centro di contatto
+
+Il gruppo (oggi 2 Claude Code e 1 Codex, ognuno con la sua persona) si parla attraverso questo repository, non tramite copia e incolla. Chi c'è lo dice `team.json`.
+
+- **Messaggi**: sono issue con l'etichetta `messaggio`. Titolo `Per <nome>: …` oppure `Per tutti: …`. Il destinatario è l'assegnatario (il suo account GitHub); senza assegnatario il messaggio è per tutti. Firma sempre: `— assistente di <nome> (Claude Code / Codex)`.
+  - Scrivere: `gh api repos/NEX0R/coop-space/issues -f title="Per <nome>: …" -f body="…" -f "labels[]=messaggio" -f "assignees[]=<account>"`
+  - Rispondere: `gh api repos/NEX0R/coop-space/issues/<N>/comments -f body="…"`. Chiudere quando è risolto: `gh api -X PATCH repos/NEX0R/coop-space/issues/<N> -f state=closed`
+  - Le persone possono scrivere dal sito ("Scrivi al team").
+- **Leggere**: con Claude Code l'hook di avvio consegna all'assistente i messaggi per il suo utente ("MESSAGGI DEL TEAM"). Con Codex, e ogni volta che `gh` non funziona, chiedi all'utente di guardare "Richieste del team" nel sito o le notifiche di GitHub.
+- **Riferire**: racconta all'utente i messaggi per lui con parole semplici e chiedigli se e cosa rispondere. Non rispondere a suo nome senza il suo ok.
+- **Quando scrivere**: per una decisione o un aiuto che serve a qualcuno, per passare un lavoro, per un problema che blocca, per un cambiamento che tocca il lavoro degli altri. Quello che sta già in `TASKS.md` o in una pull request non va ripetuto.
+
 ## Accoglienza di una persona nuova
 
-Il repository è il punto d'ingresso del gruppo: ognuno entra con la propria IA, che controlla i requisiti e spiega le regole. Controlla tu quello che puoi, chiedi il resto, e alla fine fai un riepilogo con ✓ e ✗.
+Il repository è il punto d'ingresso del gruppo: ognuno entra con la propria IA, che controlla i requisiti e spiega le regole.
 
-1. **Chi è e da dove lavora**: nome (per `TASKS.md`), dispositivo (PC o telefono) e assistente (Claude Code o Codex). Spiega la differenza con la tabella "PC o telefono" del README.
+**Parti da solo.** Se all'avvio l'hook scrive "PERSONA NUOVA", o se l'utente non è in `team.json` con `"accoglienza": "fatta"`, avvia l'accoglienza alla tua prima risposta, anche se ti ha scritto solo "ciao"; poi riprendi la sua richiesta. Se non sai chi è (Codex, o PC senza `gh`), chiedigli il nome utente GitHub. Controlla tu quello che puoi, chiedi il resto, e alla fine fai un riepilogo con ✓ e ✗.
+
+1. **Chi è e da dove lavora**: nome di battesimo, dispositivo (PC o telefono) e assistente (Claude Code o Codex). Spiega la differenza con la tabella "PC o telefono" del README.
 2. **Accesso in scrittura**: `gh api repos/NEX0R/coop-space --jq .permissions.push` deve dare `true`. Se dà `false` o un errore, l'invito non è stato accettato: link <https://github.com/NEX0R/coop-space/invitations>. Se non c'è nessun invito, va usato "Chiedi l'accesso" nel sito.
 3. **Sicurezza**: autenticazione a due fattori attiva su GitHub (chiedilo, non puoi verificarlo).
 4. **Strumenti**: `npm run verify` deve dare 0 errori e 0 avvisi. Con Claude Code l'hook li installa da solo; con Codex serve `npm ci` come script di setup dell'ambiente.
 5. **Minecraft**: sul dispositivo dove prova, versione almeno 1.26.60 (in basso a destra nel menu principale).
 6. **Prima prova**: il blocco di prova, passo 4 di "Inizia qui" nel README.
 7. **Come si lavora**, in 5 righe: compito da `TASKS.md` o dal sito → piano → cartello "occupato" → `npm run verify` → anteprima da provare nel gioco → merge. Una cosa per pull request, una sessione per compito.
-8. Se manca solo il nome in `TASKS.md`, proponi la prima pull request: aggiungerlo accanto a un compito libero.
+8. **Prima pull request**: aggiorna la sua riga in `team.json` (nome, assistente, dispositivi, `"accoglienza": "fatta"`; se manca, aggiungila). È anche la prova pratica del ciclo di lavoro.
+9. **Messaggi in sospeso**: se c'è un messaggio di benvenuto per lui, rispondi con il riepilogo dell'accoglienza e chiudilo.
 
 ## Regole tecniche
 
