@@ -51,7 +51,7 @@ Scrivi sul gruppo se ha funzionato oppure no.
 
 ## Come lavoriamo
 
-1. **Scegli un compito** in [`TASKS.md`](TASKS.md), scrivi il tuo nome accanto e avvisa sul gruppo. Due persone non lavorano sulla stessa cosa.
+1. **Scegli un compito** in [`TASKS.md`](TASKS.md) o nel sito, controllando che nessuno lo stia già facendo, e dillo all'assistente. Appena approvi il suo piano, l'assistente apre una pull request in bozza "In corso: …": è il cartello "occupato" che gli assistenti degli altri vedono quando partono. Due persone non lavorano sulla stessa cosa.
 2. **Chiedi all'assistente.** Ti propone un piano; lo approvi oppure lo correggi; solo dopo scrive i file.
 3. **L'assistente apre una "pull request"**: è una proposta di modifica. GitHub la controlla in automatico con il validatore ufficiale di Mojang.
 4. **Prova sul telefono** il file `.mcaddon` che la pull request produce (te lo indica l'assistente).

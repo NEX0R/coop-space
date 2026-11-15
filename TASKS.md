@@ -34,6 +34,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Assistenti sempre aggiornati: all'avvio di Claude Code l'hook aggiorna `main` (solo se è sicuro) e scrive l'elenco dei lavori aperti; regola del cartello "occupato" (pull request in bozza subito) e aggiornamento da `main` prima di finire.
 - [x] Moduli per le richieste del team (accesso, idea, problema) con pulsanti nel sito e richieste aperte mostrate in diretta. `main` protetto: solo pull request con controllo passato, niente push forzati.
 - [x] Sito del team su GitHub Pages (<https://nex0r.github.io/coop-space/>): progressi da `TASKS.md`, pull request e modifiche in diretta, contenuti con i controlli di base, visore 3D con animazioni (anche per modelli esportati da Blockbench), download dell'ultima versione.
 - [x] Configurazione di Claude Code per tutti (`.claude/settings.json`): permessi per i comandi sicuri, blocco dei comandi pericolosi, installazione automatica degli strumenti all'avvio. Provata con una sessione di prova: l'hook installa, il blocco nega.
