@@ -45,6 +45,11 @@ export function aggiungiAnimazioni(animazioni) {
 export function suona(id) {
   const animator = viewer.getModel().animator;
   animator.pauseAll();
+  // Rimette le ossa nella posa di partenza: altrimenti, cambiando animazione, restano ferme a metà movimento.
+  for (const osso of viewer.getModel().getBoneMap().values()) {
+    if (osso.userData.defaultRotation) osso.rotation.fromArray(osso.userData.defaultRotation);
+    if (osso.userData.defaultPosition) osso.position.fromArray(osso.userData.defaultPosition);
+  }
   if (id) animator.play(id);
   viewer.requestRendering();
 }
