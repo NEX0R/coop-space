@@ -49,24 +49,31 @@ jobs:
           COMMIT: ${{ github.event.pull_request.head.sha }}
         run: |
           TAG="anteprima-pr-$NUMERO"
-          NOTE="Anteprima della pull request #$NUMERO (commit ${COMMIT::7}). Per provarla: scarica coop-space.mcaddon dal telefono e aprilo con Minecraft chiuso, poi usa un mondo nuovo. Si cancella da sola quando la pull request viene chiusa."
+          # Anteprima solo se la pull request cambia il gioco (addon/): per documenti e strumenti non serve e confonde.
+          if ! gh api "repos/$GITHUB_REPOSITORY/pulls/$NUMERO/files" --paginate --jq '.[].filename' | grep -q '^addon/'; then
+            echo "Questa pull request non cambia addon/: nessuna anteprima." >> "$GITHUB_STEP_SUMMARY"
+            gh release delete "$TAG" --cleanup-tag --yes >/dev/null 2>&1 || true
+            exit 0
+          fi
+          VERSIONE=$(node -e "const fs=require('fs'),p='out/pacchetto/behavior_packs/';const d=fs.readdirSync(p)[0];console.log(JSON.parse(fs.readFileSync(p+d+'/manifest.json','utf8')).header.version.join('.'))")
+          NOTE="Anteprima della pull request #$NUMERO, versione $VERSIONE (commit ${COMMIT::7}). Per provarla: scarica coop-space.mcaddon dal telefono e aprilo con Minecraft chiuso, poi usa un mondo nuovo. Si cancella da sola quando la pull request viene chiusa."
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" dist/coop-space.mcaddon --clobber
-            gh release edit "$TAG" --notes "$NOTE"
+            gh release edit "$TAG" --title "Anteprima PR #$NUMERO ($VERSIONE)" --notes "$NOTE"
           else
-            gh release create "$TAG" dist/coop-space.mcaddon --prerelease --target "$COMMIT" --title "Anteprima PR #$NUMERO" --notes "$NOTE"
+            gh release create "$TAG" dist/coop-space.mcaddon --prerelease --target "$COMMIT" --title "Anteprima PR #$NUMERO ($VERSIONE)" --notes "$NOTE"
           fi
-          echo "Anteprima: https://github.com/${GITHUB_REPOSITORY}/releases/download/$TAG/coop-space.mcaddon" >> "$GITHUB_STEP_SUMMARY"
+          echo "Anteprima $VERSIONE: https://github.com/${GITHUB_REPOSITORY}/releases/download/$TAG/coop-space.mcaddon" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Pubblica in "ultima-versione"
         if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          NOTE="Versione automatica del commit ${GITHUB_SHA::7}. Scarica coop-space.mcaddon sul telefono e aprilo con Minecraft."
-          if gh release view ultima-versione >/dev/null 2>&1; then
-            gh release upload ultima-versione dist/coop-space.mcaddon --clobber
-            gh release edit ultima-versione --notes "$NOTE"
-          else
-            gh release create ultima-versione dist/coop-space.mcaddon --title "Ultima versione" --notes "$NOTE" --latest
-          fi
+          # La release viene ricreata a ogni modifica su main: così in cima alla pagina Releases c'è sempre,
+          # con la data e la versione vere. Il link di download resta lo stesso.
+          VERSIONE=$(node -e "const fs=require('fs'),p='out/pacchetto/behavior_packs/';const d=fs.readdirSync(p)[0];console.log(JSON.parse(fs.readFileSync(p+d+'/manifest.json','utf8')).header.version.join('.'))")
+          NOTE="Versione $VERSIONE del $(date -u '+%d/%m/%Y alle %H:%M') UTC (commit ${GITHUB_SHA::7}). Scarica coop-space.mcaddon sul telefono e aprilo con Minecraft chiuso, poi usa un mondo nuovo."
+          gh release delete ultima-versione --cleanup-tag --yes >/dev/null 2>&1 || true
+          gh release create ultima-versione dist/coop-space.mcaddon --title "Ultima versione $VERSIONE" --notes "$NOTE" --latest --target "$GITHUB_SHA"
+          echo "Ultima versione $VERSIONE pubblicata." >> "$GITHUB_STEP_SUMMARY"
