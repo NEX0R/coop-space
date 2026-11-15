@@ -213,6 +213,7 @@ function costruisci() {
     versione,
     download: `https://github.com/${REPO}/releases/download/ultima-versione/coop-space.mcaddon`,
     compiti: leggiCompiti(),
+    team: (leggiJson(path.join(root, "team.json"))?.membri || []).map(({ github, nome, assistente, accoglienza }) => ({ github, nome, assistente, accoglienza })),
     contenuti,
   };
   fs.writeFileSync(path.join(out, "dati.json"), JSON.stringify(dati));

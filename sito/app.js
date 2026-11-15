@@ -80,7 +80,7 @@ async function github(percorso) {
   return d;
 }
 
-const ETICHETTE = { accesso: "accesso", idea: "idea", problema: "problema" };
+const ETICHETTE = { accesso: "accesso", idea: "idea", problema: "problema", messaggio: "messaggio" };
 
 async function mostraRichieste(repo) {
   try {
@@ -297,6 +297,12 @@ async function avvio() {
   $("scarica").href = dati.download;
   $("scarica").textContent = "Scarica l'ultima versione";
   $("piede").textContent = `Aggiornato dal commit ${dati.commit || "?"}${dati.dataCommit ? ", " + fa(dati.dataCommit) : ""}. Si aggiorna da solo a ogni modifica su main.`;
+  if (dati.team?.length)
+    $("team").innerHTML =
+      "Il gruppo: " +
+      dati.team
+        .map((m) => `<strong>${esc(m.nome || m.github)}</strong>${m.assistente ? ` (${esc(m.assistente)})` : ""}${m.accoglienza === "fatta" ? "" : ' <span class="chi libero">accoglienza da fare</span>'}`)
+        .join(" · ");
   mostraCompiti(dati.compiti);
   mostraContenuti(dati.contenuti);
   preparaVisore(dati.contenuti);

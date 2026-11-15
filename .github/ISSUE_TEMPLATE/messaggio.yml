@@ -1,0 +1,16 @@
+name: Scrivi al team
+description: Un messaggio per una persona del gruppo (o per tutti). Il suo assistente IA glielo riferisce all'avvio.
+title: "Per tutti: "
+labels: ["messaggio"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Cambia il titolo in "Per <nome>: …" se il messaggio è per una persona sola, e a destra, in "Assignees", scegli il suo account. Questa pagina è pubblica.
+  - type: textarea
+    id: messaggio
+    attributes:
+      label: Messaggio
+      placeholder: es. Ho finito il blocco di rubino, provalo dall'anteprima e dimmi se ti piace la texture.
+    validations:
+      required: true

@@ -34,6 +34,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Il repository è il centro di contatto tra gli agenti: `team.json` dice chi c'è, l'hook riconosce chi è nuovo e l'assistente avvia l'accoglienza da solo, i messaggi (issue con etichetta `messaggio`) arrivano all'assistente del destinatario all'avvio; modulo "Scrivi al team" nel sito.
 - [x] Versione automatica dei pacchetti (`prima cifra.giorno.minuto`): ogni `.mcaddon` è più nuovo del precedente, così Minecraft non lo rifiuta più come "Pacchetto doppio rilevato" e nessuno deve alzare la versione a mano.
 - [x] Anteprima di ogni pull request scaricabile dal telefono con un tocco (sito o pagina Releases), cancellata da sola alla chiusura della pull request.
 - [x] Telefono e PC: comandi GitHub che funzionano anche nelle sessioni cloud (`gh api`), hook che legge i lavori aperti anche dal cloud e i rami senza pull request, accoglienza delle persone nuove guidata dall'IA, tabella "PC o telefono" nel README.
