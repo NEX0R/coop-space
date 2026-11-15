@@ -1,0 +1,19 @@
+{
+  "_spiegazione": "Chi fa parte del gruppo. L'hook di avvio lo legge per riconoscere chi è nuovo e avviare l'accoglienza. Alla fine dell'accoglienza ognuno aggiorna la propria riga con una pull request. Solo nome di battesimo: il repository è pubblico.",
+  "membri": [
+    {
+      "github": "NEX0R",
+      "nome": "Nexor",
+      "assistente": "Claude Code",
+      "dispositivi": ["PC", "telefono"],
+      "accoglienza": "fatta"
+    },
+    {
+      "github": "giovannidonatokr14-code",
+      "nome": "",
+      "assistente": "",
+      "dispositivi": [],
+      "accoglienza": "da fare"
+    }
+  ]
+}

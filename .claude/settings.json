@@ -26,6 +26,7 @@
       "Bash(gh api repos/NEX0R/coop-space/issues:*)",
       "Bash(gh api repos/NEX0R/coop-space --jq:*)",
       "Bash(git ls-remote:*)",
+      "Bash(gh api user:*)",
       "mcp__minecraft-creator-tools__getSkill",
       "mcp__minecraft-creator-tools__validateFile",
       "mcp__minecraft-creator-tools__validateContent",

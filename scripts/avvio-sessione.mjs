@@ -4,7 +4,7 @@
 // 2. Installa gli strumenti se mancano o se package-lock.json è cambiato.
 // 3. Elenca i lavori aperti (pull request e richieste), per non rifare quello che fa già un altro.
 // Se qualcosa non va (niente rete, niente git) non blocca mai la sessione.
-import { existsSync, statSync } from "node:fs";
+import { existsSync, statSync, readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import https from "node:https";
 import path from "node:path";
@@ -93,14 +93,27 @@ async function lavoriAperti() {
     return chiedi(p);
   };
   const voci = [];
+  const messaggi = [];
   const conPr = new Set();
+  const chi = chiSei();
+  accoglienza(chi);
   try {
-    const [prs, issues] = await Promise.all([leggi("pulls?state=open&per_page=20"), leggi("issues?state=open&per_page=20")]);
+    const [prs, issues] = await Promise.all([leggi("pulls?state=open&per_page=20"), leggi("issues?state=open&per_page=30")]);
     for (const p of prs) {
       conPr.add(p.head.ref);
       voci.push(`- PR #${p.number}${p.draft ? " [in corso]" : ""} ${p.title} (di ${p.user.login}, ramo ${p.head.ref})`);
     }
-    for (const i of issues.filter((x) => !x.pull_request)) voci.push(`- Richiesta #${i.number}${i.labels.length ? ` [${i.labels.map((l) => l.name).join(", ")}]` : ""} ${i.title} (di ${i.user.login})`);
+    for (const i of issues.filter((x) => !x.pull_request)) {
+      const etichette = i.labels.map((l) => l.name);
+      if (etichette.includes("messaggio")) {
+        const destinatari = (i.assignees || []).map((a) => a.login);
+        if (destinatari.length && chi && !destinatari.includes(chi)) continue; // messaggio per un altro
+        const testo = (i.body || "").replace(/\s+/g, " ").trim().slice(0, 300);
+        messaggi.push(`- #${i.number} ${i.title} (da ${i.user.login}${destinatari.length ? "" : ", per tutti"}): ${testo}`);
+      } else {
+        voci.push(`- Richiesta #${i.number}${etichette.length ? ` [${etichette.join(", ")}]` : ""} ${i.title} (di ${i.user.login})`);
+      }
+    }
   } catch {
     // niente rete o limite di richieste: restano i rami; il sito del team mostra gli stessi dati
     voci.push("- Non riesco a leggere pull request e richieste: guardale nel sito del team prima di iniziare.");
@@ -112,7 +125,32 @@ async function lavoriAperti() {
     .map((r) => r.split("refs/heads/")[1])
     .filter((r) => r && r !== "main" && r !== mio && !conPr.has(r));
   if (rami.length) voci.push(`- Rami senza pull request: ${rami.join(", ")}`);
+  if (messaggi.length) righe.push(`MESSAGGI DEL TEAM${chi ? ` PER ${chi}` : ""} (riferiscili all'utente con parole semplici e chiedi se rispondere; vedi "Il repository è il centro di contatto" in AGENTS.md):\n${messaggi.join("\n")}`);
   righe.push(voci.length ? `Lavori aperti su GitHub (prima di iniziare controlla che nessuno stia già facendo la stessa cosa):\n${voci.join("\n")}` : "Nessun lavoro aperto su GitHub.");
+}
+
+// ---------- 4. chi sta lavorando e accoglienza ----------
+// Nel cloud e sui PC con GitHub CLI, "gh api user" dice quale account GitHub è collegato.
+function chiSei() {
+  if (process.env.COOP_GITHUB_UTENTE) return process.env.COOP_GITHUB_UTENTE; // per le prove, o per chi non ha gh
+  const r = spawnSync("gh", ["api", "user", "--jq", ".login"], { cwd: root, encoding: "utf8", timeout: 15000 });
+  return r.status === 0 ? (r.stdout || "").trim() : "";
+}
+
+function accoglienza(chi) {
+  let membri = [];
+  try {
+    membri = JSON.parse(readFileSync(path.join(root, "team.json"), "utf8")).membri || [];
+  } catch {
+    return;
+  }
+  const io = membri.find((m) => chi && m.github.toLowerCase() === chi.toLowerCase());
+  const daFare = membri.filter((m) => m.accoglienza !== "fatta").map((m) => m.github);
+  if (chi && (!io || io.accoglienza !== "fatta")) {
+    righe.push(`PERSONA NUOVA: l'account GitHub ${chi} ${io ? "non ha ancora fatto l'accoglienza" : "non è in team.json"}. Alla tua prima risposta, prima di qualsiasi altra cosa, avvia tu l'accoglienza (AGENTS.md, "Accoglienza di una persona nuova"), anche se l'utente ha scritto solo "ciao"; poi riprendi la sua richiesta.`);
+  } else if (!chi && daFare.length) {
+    righe.push(`Non so quale account GitHub sta usando l'utente. In team.json l'accoglienza è ancora da fare per: ${daFare.join(", ")}. Alla prima risposta chiedigli il suo nome utente GitHub: se è uno di questi, o non è in team.json, avvia l'accoglienza (AGENTS.md).`);
+  }
 }
 
 aggiorna();
