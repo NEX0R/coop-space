@@ -107,13 +107,18 @@ async function mostraGitHub(repo) {
     if (!prs.length) {
       $("pr").innerHTML = '<p class="nota">Nessuna proposta aperta.</p>';
     } else {
-      const stati = await Promise.all(
-        prs.slice(0, 6).map((p) =>
-          github(`repos/${repo}/commits/${p.head.sha}/check-runs?per_page=20`)
-            .then((r) => r.check_runs || [])
-            .catch(() => null)
-        )
-      );
+      const [stati, anteprime] = await Promise.all([
+        Promise.all(
+          prs.slice(0, 6).map((p) =>
+            github(`repos/${repo}/commits/${p.head.sha}/check-runs?per_page=20`)
+              .then((r) => r.check_runs || [])
+              .catch(() => null)
+          )
+        ),
+        github(`repos/${repo}/releases?per_page=30`)
+          .then((r) => new Set(r.map((x) => x.tag_name)))
+          .catch(() => new Set()),
+      ]);
       $("pr").innerHTML =
         '<ul class="elenco">' +
         prs
@@ -126,7 +131,10 @@ async function mostraGitHub(repo) {
               stato = ko ? '<span class="stato ko">controllo fallito</span>' : attesa ? '<span class="stato attesa">controllo in corso</span>' : '<span class="stato ok">controllo passato</span>';
             }
             const prima = p.base.ref !== "main" ? prs.find((q) => q.head.ref === p.base.ref) : null;
-            return `<li><a href="${esc(p.html_url)}" target="_blank" rel="noopener">#${p.number} ${esc(p.title)}</a> ${stato}
+            const anteprima = anteprime.has(`anteprima-pr-${p.number}`)
+              ? ` <a class="stato ok" href="https://github.com/${repo}/releases/download/anteprima-pr-${p.number}/coop-space.mcaddon">scarica l'anteprima</a>`
+              : "";
+            return `<li><a href="${esc(p.html_url)}" target="_blank" rel="noopener">#${p.number} ${esc(p.title)}</a> ${stato}${anteprima}
               <div class="meta">di ${esc(p.user.login)} · aperta ${fa(p.created_at)}${p.draft ? " · bozza" : ""}${prima ? ` · da fondere dopo la #${prima.number}` : ""}</div></li>`;
           })
           .join("") +

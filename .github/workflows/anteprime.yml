@@ -1,0 +1,22 @@
+# Quando una pull request si chiude (fusa o no), cancella la sua anteprima "anteprima-pr-<numero>"
+# creata da build.yml, così la pagina Releases resta pulita.
+name: Pulizia anteprime
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  pulisci:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancella l'anteprima della pull request chiusa
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NUMERO: ${{ github.event.pull_request.number }}
+        run: gh release delete "anteprima-pr-$NUMERO" --cleanup-tag --yes || echo "Nessuna anteprima da cancellare."
