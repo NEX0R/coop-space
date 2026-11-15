@@ -18,7 +18,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 **C. Prova nel gioco**
 - [ ] Provare `coop-space.mcaddon` sul telefono: importarlo, attivarlo in un mondo, piazzare il "Blocco di prova Coop" e controllare che compaia il messaggio in chat. **Chi:** almeno uno, meglio tutti
-  - Provato su PC da Samuele: funziona dalla versione 0.1.1. Manca la prova sul telefono, da fare con la 0.1.2 (dipendenza circolare tolta).
+  - Provato su PC da Samuele: funziona dalla versione 0.1.1. Sul telefono la prima importazione è risultata rovinata e la seconda è stata rifiutata ("Pacchetto doppio rilevato"): eliminare il vecchio pacchetto da Impostazioni → Generale → Archiviazione e riprovare con l'ultima versione (ora la versione cambia a ogni pacchetto).
 
 **D. Decisioni di gruppo**
 - [ ] Chi si occupa di cosa (logica e script, oggetti e mob, grafica e texture)
@@ -34,6 +34,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Versione automatica dei pacchetti (`prima cifra.giorno.minuto`): ogni `.mcaddon` è più nuovo del precedente, così Minecraft non lo rifiuta più come "Pacchetto doppio rilevato" e nessuno deve alzare la versione a mano.
 - [x] Anteprima di ogni pull request scaricabile dal telefono con un tocco (sito o pagina Releases), cancellata da sola alla chiusura della pull request.
 - [x] Telefono e PC: comandi GitHub che funzionano anche nelle sessioni cloud (`gh api`), hook che legge i lavori aperti anche dal cloud e i rami senza pull request, accoglienza delle persone nuove guidata dall'IA, tabella "PC o telefono" nel README.
 - [x] Tolta la dipendenza circolare tra i pack (il resource pack dipendeva dal behavior pack), come chiede la guida Mojang. Versione 0.1.2.

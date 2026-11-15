@@ -60,6 +60,8 @@ Le regole del progetto le legge da solo: non devi spiegargliele tu. Controlla lu
 
 Scrivi sul gruppo se ha funzionato oppure no.
 
+**Se Minecraft dice "Pacchetto doppio rilevato"** o il pacchetto risulta vuoto o rovinato: Impostazioni → **Generale** → **Archiviazione** → **Pacchetti di comportamenti**, poi **Pacchetti di risorse** (e **Non valido**, se c'è) → seleziona "Coop Space" → **Elimina**. Poi scarica di nuovo l'ultima versione: ogni pacchetto ha una versione nuova, quindi Minecraft lo accetta.
+
 ## Come lavoriamo
 
 1. **Scegli un compito** in [`TASKS.md`](TASKS.md) o nel sito, controllando che nessuno lo stia già facendo, e dillo all'assistente. Appena approvi il suo piano, l'assistente apre una pull request in bozza "In corso: …": è il cartello "occupato" che gli assistenti degli altri vedono quando partono. Due persone non lavorano sulla stessa cosa.
