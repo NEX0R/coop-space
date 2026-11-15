@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Sicurezza: forzate le versioni corrette di `axios`, `@modelcontextprotocol/sdk`, `@hono/node-server` e `zod` (0 vulnerabilità). Add-on, verifica, skill e server MCP provati: funzionano come prima. Da togliere al prossimo aggiornamento di `creator-tools` (vedi `AGENTS.md`).
 - [x] Scritte in `AGENTS.md` e `README.md` le scoperte della prima prova nel gioco: forma obbligatoria dei blocchi, versione da alzare, importare a gioco chiuso, mondo nuovo, nomi italiani del registro dei contenuti, prova sul PC e divieto di `npm audit fix --force`.
 - [x] Corretto il blocco di prova: mancava la forma (`minecraft:geometry`), il gioco lo scartava e non compariva nell'inventario. Versione dei pack 0.1.1.
 - [x] Guida "Inizia qui" nel README, metodo di lavoro in AGENTS.md (piano prima dei file, confronto tra approcci, efficienza), script funzionanti anche su Windows.
