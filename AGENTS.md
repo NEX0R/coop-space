@@ -36,7 +36,7 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
 
 1. **All'inizio, aggiornati e guarda cosa fanno gli altri.** Il lavoro degli altri finché non entra in `main` sta solo nelle loro pull request: se non le guardi, rischi di rifare la stessa cosa.
    - Aggiorna il progetto: `git switch main && git pull`, poi `npm install` se `node_modules/` manca. Con Claude Code lo fa da solo l'hook di avvio (`scripts/avvio-sessione.mjs`), che ti scrive anche l'elenco dei lavori aperti.
-   - Leggi `TASKS.md` e i lavori aperti: `gh pr list` e `gh issue list`. Se `gh` non funziona, usa <https://api.github.com/repos/NEX0R/coop-space/pulls> oppure il sito del team.
+   - Leggi `TASKS.md` e i lavori aperti: `gh api repos/NEX0R/coop-space/pulls` e `gh api repos/NEX0R/coop-space/issues`. **Usa sempre `gh api`**: nelle sessioni cloud (telefono) i comandi `gh pr …` e `gh issue …` sono bloccati. Senza `gh`: <https://api.github.com/repos/NEX0R/coop-space/pulls> oppure il sito del team.
    - Se qualcuno sta già facendo la stessa cosa (pull request aperta, anche in bozza), fermati e avvisa l'utente.
 2. Prima di creare o modificare contenuti, **leggi la skill ufficiale Mojang** adatta e seguila:
    `npx mct skills <nome>` (o `npm run skills -- <nome>`). Skill disponibili:
@@ -48,9 +48,12 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
    - `creator-tools-cli`: comandi dello strumento `mct`
    Se il server MCP `minecraft-creator-tools` è disponibile (vedi `.mcp.json`), usa i suoi strumenti come dicono le skill. Se non lo è, scrivi i file a mano seguendo la skill.
 3. Lavora su un **ramo nuovo** e apri una **pull request** verso `main`. Mai push diretti su `main`: GitHub li rifiuta (regola "Proteggi main": servono pull request e controllo `build` passato; vietati push forzati e cancellazione).
-   - **Cartello "occupato"**: appena approvato il piano, prima di scrivere i file, fai un primo commit (anche solo `TASKS.md` con il compito "In corso" e il nome) e apri subito la pull request **in bozza** con titolo `In corso: <cosa>` (`gh pr create --draft`). Così gli assistenti degli altri la vedono all'avvio. A lavoro finito togli la bozza (`gh pr ready`) e rinomina il titolo. Se il tuo strumento non apre bozze (per esempio Codex), apri la pull request appena puoi e avvisa sul gruppo WhatsApp.
+   - **Cartello "occupato"**: appena approvato il piano, prima di scrivere i file, fai un primo commit (anche solo `TASKS.md` con il compito "In corso" e il nome), `git push -u origin <ramo>` e apri subito la pull request **in bozza** (GitHub non permette di fondere le bozze):
+     `gh api repos/NEX0R/coop-space/pulls -f title="In corso: <cosa>" -f head=<ramo> -f base=main -f body="<piano in 2 righe>" -F draft=true`
+     Così gli assistenti degli altri la vedono all'avvio. Se `gh` manca (PC senza GitHub CLI), dai all'utente il link che `git push` stampa e fagli scegliere "Create draft pull request". Se il tuo strumento non apre bozze (per esempio Codex), apri la pull request appena puoi e avvisa sul gruppo WhatsApp.
+   - **A lavoro finito**: aggiorna titolo e descrizione (`gh api -X PATCH repos/NEX0R/coop-space/pulls/<N> -f title="<cosa>" -f body="<cosa cambia e come provarlo>"`), poi togli la bozza. Sul PC: `gh pr ready <N>`. Dal telefono non si può da comando: chiedi all'utente di premere **Ready for review** nella pagina della pull request.
    - **Prima di finire**: `git fetch origin && git merge origin/main`, risolvi i conflitti (succedono spesso su `texts/*.lang` e `textures/*_texture.json`, file che tutti toccano: tieni le righe di tutti e due; e sulla versione dei due `manifest.json`, se anche l'altro l'ha alzata: usa la versione di `main` più uno), poi rilancia `npm run verify`.
-   **Richieste del team**: arrivano come issue dai moduli del sito (etichette `accesso`, `idea`, `problema`); leggile con `gh issue list`. Un'idea approvata dal team diventa un compito in `TASKS.md` e la pull request che la realizza scrive `Chiude #N`. Un problema si affronta con la skill `debug-addon`. Gli inviti (`accesso`) li può mandare solo Nexor: controlla che l'account esista e chiedigli l'ok.
+   **Richieste del team**: arrivano come issue dai moduli del sito (etichette `accesso`, `idea`, `problema`); leggile con `gh api repos/NEX0R/coop-space/issues`. Un'idea approvata dal team diventa un compito in `TASKS.md` e la pull request che la realizza scrive `Chiude #N`. Un problema si affronta con la skill `debug-addon`. Gli inviti (`accesso`) li può mandare solo Nexor: controlla che l'account esista e chiedigli l'ok.
 4. **Un lavoro non è finito finché `npm run verify` non passa: 0 errori e 0 avvisi.** Correggi e rilancia finché non passa. Le voci "likely noise" sono accettate da Bedrock e non bloccano.
 5. Aggiorna `TASKS.md`: sposta il compito nella sezione giusta e scrivi in una riga cosa hai fatto. Il sito del team (<https://nex0r.github.io/coop-space/>) legge proprio questo file: mantieni il formato `- [ ] testo **Chi:** nome`, i titoli `## Sezione` e i gruppi `**A. Nome**`. Il sito non si modifica mai a mano: si rigenera da `TASKS.md` e da `addon/`.
    Per vedere il sito prima del merge: `npm run sito -- --serve` e apri <http://localhost:8765>. Per i modelli 3D di mob nuovi, il visore del sito mostra modello, texture e animazioni presi da `addon/`.
@@ -65,7 +68,20 @@ Il team sta imparando a usare l'IA: il metro di ogni scelta è il loro tempo, i 
 3. **Controllo continuo.** Se un approccio già usato nel progetto risulta obsoleto, inefficiente o superato da un'alternativa migliore, fermati e proponi il cambiamento con costi e benefici prima di andare avanti.
 4. **Efficienza.** Passi piccoli e verificabili, modifiche mirate invece di riscrivere file interi, niente riletture di file già in contesto, niente ricerche sul web se la risposta è nella skill o nel repository. Una pull request, una cosa sola.
 5. **Fonti dirette.** Nell'ordine: skill ufficiali Mojang, documentazione Microsoft (`learn.microsoft.com/minecraft/creator`), esempi Mojang, `wiki.bedrock.dev`. Video e post di terzi solo come spunto, e dillo quando li usi.
-6. **Persona nuova.** Se chi ti scrive è nuovo o chiede come funziona il progetto, guidalo con la sezione "Inizia qui" di `README.md`, un passo alla volta.
+6. **Persona nuova.** Se chi ti scrive è nuovo o chiede come funziona il progetto, segui "Accoglienza di una persona nuova" qui sotto, un passo alla volta.
+
+## Accoglienza di una persona nuova
+
+Il repository è il punto d'ingresso del gruppo: ognuno entra con la propria IA, che controlla i requisiti e spiega le regole. Controlla tu quello che puoi, chiedi il resto, e alla fine fai un riepilogo con ✓ e ✗.
+
+1. **Chi è e da dove lavora**: nome (per `TASKS.md`), dispositivo (PC o telefono) e assistente (Claude Code o Codex). Spiega la differenza con la tabella "PC o telefono" del README.
+2. **Accesso in scrittura**: `gh api repos/NEX0R/coop-space --jq .permissions.push` deve dare `true`. Se dà `false` o un errore, l'invito non è stato accettato: link <https://github.com/NEX0R/coop-space/invitations>. Se non c'è nessun invito, va usato "Chiedi l'accesso" nel sito.
+3. **Sicurezza**: autenticazione a due fattori attiva su GitHub (chiedilo, non puoi verificarlo).
+4. **Strumenti**: `npm run verify` deve dare 0 errori e 0 avvisi. Con Claude Code l'hook li installa da solo; con Codex serve `npm ci` come script di setup dell'ambiente.
+5. **Minecraft**: sul dispositivo dove prova, versione almeno 1.26.60 (in basso a destra nel menu principale).
+6. **Prima prova**: il blocco di prova, passo 4 di "Inizia qui" nel README.
+7. **Come si lavora**, in 5 righe: compito da `TASKS.md` o dal sito → piano → cartello "occupato" → `npm run verify` → anteprima da provare nel gioco → merge. Una cosa per pull request, una sessione per compito.
+8. Se manca solo il nome in `TASKS.md`, proponi la prima pull request: aggiungerlo accanto a un compito libero.
 
 ## Regole tecniche
 
