@@ -80,7 +80,28 @@ async function github(percorso) {
   return d;
 }
 
+const ETICHETTE = { accesso: "accesso", idea: "idea", problema: "problema" };
+
+async function mostraRichieste(repo) {
+  try {
+    const voci = (await github(`repos/${repo}/issues?state=open&per_page=15`)).filter((i) => !i.pull_request);
+    $("richieste").innerHTML = voci.length
+      ? voci
+          .map(
+            (i) => `<li><a href="${esc(i.html_url)}" target="_blank" rel="noopener">#${i.number} ${esc(i.title)}</a>${i.labels
+              .filter((l) => ETICHETTE[l.name])
+              .map((l) => `<span class="etichetta">${esc(l.name)}</span>`)
+              .join("")}<div class="meta">di ${esc(i.user.login)} · ${fa(i.created_at)}${i.comments ? ` · ${i.comments} rispost${i.comments === 1 ? "a" : "e"}` : ""}</div></li>`
+          )
+          .join("")
+      : '<li class="nota">Nessuna richiesta aperta.</li>';
+  } catch (e) {
+    $("richieste").innerHTML = `<li class="nota">Non disponibile: ${esc(e.message)}.</li>`;
+  }
+}
+
 async function mostraGitHub(repo) {
+  mostraRichieste(repo);
   try {
     const prs = await github(`repos/${repo}/pulls?state=open&per_page=10`);
     if (!prs.length) {
