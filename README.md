@@ -43,13 +43,11 @@ Termux non serve: l'app ufficiale fa la stessa cosa senza configurazioni.
 
 **Se il repository non compare nell'elenco:** avvisa Samuele. L'app GitHub dell'assistente deve essere installata dal proprietario del repository, e possono servire alcuni minuti prima che compaia. In alternativa, al PC: installa [Git](https://git-scm.com) e [Node.js](https://nodejs.org), poi nel terminale scrivi `git clone https://github.com/NEX0R/coop-space.git` e avvia il tuo assistente dentro quella cartella.
 
-### 3. Fai la prima richiesta
+### 3. Saluta il tuo assistente
 
-Scrivi al tuo assistente, così com'è:
+Avvia una sessione sul progetto e scrivi quello che vuoi, anche solo "ciao". L'assistente si accorge da solo che sei nuovo (con Codex ti chiede il nome utente GitHub) e ti accoglie: controlla accesso, strumenti e versione di Minecraft, ti dice cosa manca e ti spiega come lavoriamo. Le regole le legge da solo: non devi spiegargliele tu.
 
-> Sono nuovo nel progetto. Fai l'accoglienza descritta in AGENTS.md: controlla che io sia pronto, spiegami in parole semplici come lavoriamo e cosa posso fare per primo.
-
-Le regole del progetto le legge da solo: non devi spiegargliele tu. Controlla lui accesso, strumenti e versione di Minecraft, e ti dice cosa manca.
+Da lì in poi il progetto è il punto di contatto del gruppo: quando parte, l'assistente ti riferisce i messaggi che gli altri (o i loro assistenti) ti hanno lasciato, e scrive i tuoi quando serve.
 
 ### 4. Prova l'add-on sul telefono
 
