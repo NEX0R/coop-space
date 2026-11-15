@@ -7,9 +7,10 @@ Prendi un compito scrivendo il tuo nome accanto, e avvisa sul gruppo WhatsApp. Q
 Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "Inizia qui".
 
 **A. Accesso**
-- [ ] Amico 1 manda a Nexor il nome utente GitHub
-- [ ] Amico 2 manda a Nexor il nome utente GitHub
+- [x] Amico 1 manda a Nexor il nome utente GitHub
+- [ ] Amico 2 manda a Nexor il nome utente GitHub (o usa "Chiedi l'accesso" nel sito del team)
 - [ ] Nexor invita entrambi (Settings → Collaborators → Add people) e loro accettano
+  - Amico 1 invitato il 15/11: deve accettare da <https://github.com/NEX0R/coop-space/invitations> e attivare l'autenticazione a due fattori.
 - [ ] Nexor installa sul proprio account GitHub l'app "ChatGPT Codex Connector" per `coop-space` (serve a chi usa Codex)
 
 **B. Assistenti collegati**
@@ -33,6 +34,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Moduli per le richieste del team (accesso, idea, problema) con pulsanti nel sito e richieste aperte mostrate in diretta. `main` protetto: solo pull request con controllo passato, niente push forzati.
 - [x] Sito del team su GitHub Pages (<https://nex0r.github.io/coop-space/>): progressi da `TASKS.md`, pull request e modifiche in diretta, contenuti con i controlli di base, visore 3D con animazioni (anche per modelli esportati da Blockbench), download dell'ultima versione.
 - [x] Configurazione di Claude Code per tutti (`.claude/settings.json`): permessi per i comandi sicuri, blocco dei comandi pericolosi, installazione automatica degli strumenti all'avvio. Provata con una sessione di prova: l'hook installa, il blocco nega.
 - [x] Sicurezza: forzate le versioni corrette di `axios`, `@modelcontextprotocol/sdk`, `@hono/node-server` e `zod` (0 vulnerabilità). Add-on, verifica, skill e server MCP provati: funzionano come prima. Da togliere al prossimo aggiornamento di `creator-tools` (vedi `AGENTS.md`).
