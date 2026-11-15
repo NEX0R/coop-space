@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coop Space</title>
+  <meta name="description" content="A che punto siamo con gli add-on Minecraft Bedrock di Coop Space">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%233C8527'/%3E%3Crect y='10' width='16' height='6' fill='%23795635'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="stile.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.139.2/build/three.module.js",
+      "molang": "https://cdn.jsdelivr.net/npm/molang@1.13.11/+esm",
+      "wintersky": "./wintersky-vuoto.js",
+      "bridge-model-viewer": "https://cdn.jsdelivr.net/npm/bridge-model-viewer@0.7.7/dist/model-viewer.es.js"
+    }
+  }
+  </script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="testata">
+    <div class="riga">
+      <div>
+        <h1>Coop Space</h1>
+        <p class="sotto" id="sottotitolo">Add-on per Minecraft Bedrock, fatti in tre con l'IA</p>
+      </div>
+      <a class="bottone" id="scarica" href="#">Scarica l'add-on</a>
+    </div>
+  </header>
+
+  <main>
+    <section aria-labelledby="t-punto">
+      <h2 id="t-punto">A che punto siamo</h2>
+      <div class="numeri" id="numeri"></div>
+      <div id="compiti"></div>
+    </section>
+
+    <section aria-labelledby="t-corso">
+      <h2 id="t-corso">Lavori in corso su GitHub</h2>
+      <p class="nota">Proposte di modifica aperte (pull request) e ultime modifiche entrate nel progetto. Si aggiorna da solo.</p>
+      <div id="pr"><p class="nota">Caricamento…</p></div>
+      <h3>Ultime modifiche</h3>
+      <ul class="elenco" id="commit"></ul>
+    </section>
+
+    <section aria-labelledby="t-contenuti">
+      <h2 id="t-contenuti">Contenuti dell'add-on</h2>
+      <p class="nota">Tutto quello che c'è nell'add-on, con i controlli di base. Tocca un contenuto per vederlo in 3D.</p>
+      <div class="griglia" id="contenuti"></div>
+    </section>
+
+    <section aria-labelledby="t-visore" id="visore-sezione">
+      <h2 id="t-visore">Visore 3D</h2>
+      <div class="visore">
+        <div class="tela" id="tela-box">
+          <canvas id="tela" aria-label="Modello 3D"></canvas>
+          <p class="avviso" id="visore-stato">Scegli un modello.</p>
+        </div>
+        <div class="comandi">
+          <label>Modello
+            <select id="scelta-modello"></select>
+          </label>
+          <label>Animazione
+            <select id="scelta-animazione" disabled><option value="">Nessuna</option></select>
+          </label>
+          <p class="nota">Trascina per ruotare, due dita o rotella per lo zoom.</p>
+          <details>
+            <summary>Prova un tuo modello</summary>
+            <p class="nota">Esporta da <a href="https://web.blockbench.net" target="_blank" rel="noopener">Blockbench</a> (progetto "Bedrock Entity") il modello <code>.geo.json</code>, la texture <code>.png</code> e, se vuoi, le animazioni <code>.animation.json</code>. Restano sul tuo dispositivo: non vengono caricati da nessuna parte.</p>
+            <label>Modello (.geo.json) <input type="file" id="file-geo" accept=".json"></label>
+            <label>Texture (.png) <input type="file" id="file-png" accept="image/png"></label>
+            <label>Animazioni (facoltativo) <input type="file" id="file-anim" accept=".json"></label>
+            <button class="bottone piccolo" id="carica-miei" type="button">Mostra</button>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p id="piede"></p>
+    <p><a href="https://github.com/NEX0R/coop-space" target="_blank" rel="noopener">Il progetto su GitHub</a> · <a href="https://github.com/NEX0R/coop-space/blob/main/TASKS.md" target="_blank" rel="noopener">TASKS.md</a></p>
+  </footer>
+</body>
+</html>
