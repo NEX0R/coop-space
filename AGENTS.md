@@ -71,7 +71,7 @@ Il team sta imparando a usare l'IA: il metro di ogni scelta è il loro tempo, i 
 
 - **Namespace**: tutti gli identificativi iniziano con `coop:` (es. `coop:spada_fulmine`). Mai `minecraft:`.
 - **UUID dei manifest**: non cambiarli mai. Cambiarli rompe i mondi che usano già l'add-on. Lo strumento `mct fix randomizealluids` è vietato.
-- **Versioni dei pack**: se aumenti `header.version` di un pack, aggiorna anche la versione nella `dependencies` dell'altro pack, che deve combaciare.
+- **Versioni dei pack**: tieni la stessa `header.version` nei due pack. Solo il behavior pack dipende dal resource pack, e la versione nella sua `dependencies` deve combaciare. **Mai** aggiungere la dipendenza al contrario (dal resource pack al behavior pack): la skill `debug-addon` avverte che le dipendenze circolari possono impedire il caricamento dei pack.
 - **Script API**: usa solo moduli **stabili** (`@minecraft/server` 2.11.0, la stessa in `package.json` e nel manifest). Niente versioni `beta`, a meno che il team lo decida: in quel caso ogni mondo deve attivare "Beta API" negli esperimenti, e va scritto qui.
 - **Versione del gioco**: `min_engine_version` è `1.26.60`. Se Minecraft si aggiorna, controlla le nuove versioni con `npm view @minecraft/server dist-tags` e `npm view @minecraft/vanilla-data dist-tags`, poi aggiorna insieme manifest, `package.json` e questo file. Uno script con una versione di modulo che il gioco non conosce viene disattivato **senza errori visibili**.
 - **Nomi visibili**: ogni blocco, oggetto o mob nuovo ha il suo nome in `texts/it_IT.lang` e in `texts/en_US.lang`. Senza, nel gioco compare `tile.coop:...name`.

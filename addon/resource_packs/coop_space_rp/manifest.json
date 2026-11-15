@@ -4,7 +4,7 @@
     "name": "Coop Space RP",
     "description": "Texture, nomi e suoni dell'add-on Coop Space",
     "uuid": "3173a7cb-09ad-4608-a61a-c3b58c80ec85",
-    "version": [0, 1, 1],
+    "version": [0, 1, 2],
     "min_engine_version": [1, 26, 60]
   },
   "modules": [
@@ -12,12 +12,6 @@
       "type": "resources",
       "uuid": "fed7897e-64fb-42e7-9442-d4bb7d427bc4",
       "version": [0, 1, 0]
-    }
-  ],
-  "dependencies": [
-    {
-      "uuid": "b834c4d8-40fd-43f3-9413-526fbb7d0950",
-      "version": [0, 1, 1]
     }
   ]
 }

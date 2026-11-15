@@ -18,7 +18,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 **C. Prova nel gioco**
 - [ ] Provare `coop-space.mcaddon` sul telefono: importarlo, attivarlo in un mondo, piazzare il "Blocco di prova Coop" e controllare che compaia il messaggio in chat. **Chi:** almeno uno, meglio tutti
-  - Provato su PC da Samuele: funziona dalla versione 0.1.1. Manca la prova sul telefono.
+  - Provato su PC da Samuele: funziona dalla versione 0.1.1. Manca la prova sul telefono, da fare con la 0.1.2 (dipendenza circolare tolta).
 
 **D. Decisioni di gruppo**
 - [ ] Chi si occupa di cosa (logica e script, oggetti e mob, grafica e texture)
@@ -34,6 +34,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Tolta la dipendenza circolare tra i pack (il resource pack dipendeva dal behavior pack), come chiede la guida Mojang. Versione 0.1.2.
 - [x] Assistenti sempre aggiornati: all'avvio di Claude Code l'hook aggiorna `main` (solo se è sicuro) e scrive l'elenco dei lavori aperti; regola del cartello "occupato" (pull request in bozza subito) e aggiornamento da `main` prima di finire.
 - [x] Moduli per le richieste del team (accesso, idea, problema) con pulsanti nel sito e richieste aperte mostrate in diretta. `main` protetto: solo pull request con controllo passato, niente push forzati.
 - [x] Sito del team su GitHub Pages (<https://nex0r.github.io/coop-space/>): progressi da `TASKS.md`, pull request e modifiche in diretta, contenuti con i controlli di base, visore 3D con animazioni (anche per modelli esportati da Blockbench), download dell'ultima versione.
