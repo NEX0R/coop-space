@@ -57,7 +57,7 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
 4. **Un lavoro non è finito finché `npm run verify` non passa: 0 errori e 0 avvisi.** Correggi e rilancia finché non passa. Le voci "likely noise" sono accettate da Bedrock e non bloccano.
 5. Aggiorna `TASKS.md`: sposta il compito nella sezione giusta e scrivi in una riga cosa hai fatto. Il sito del team (<https://nex0r.github.io/coop-space/>) legge proprio questo file: mantieni il formato `- [ ] testo **Chi:** nome`, i titoli `## Sezione` e i gruppi `**A. Nome**`. Il sito non si modifica mai a mano: si rigenera da `TASKS.md` e da `addon/`.
    Per vedere il sito prima del merge: `npm run sito -- --serve` e apri <http://localhost:8765>. Per i modelli 3D di mob nuovi, il visore del sito mostra modello, texture e animazioni presi da `addon/`.
-6. Nella descrizione della pull request spiega cosa cambia nel gioco e come provarlo.
+6. Nella descrizione della pull request spiega cosa cambia nel gioco e come provarlo, con il link dell'anteprima: `https://github.com/NEX0R/coop-space/releases/download/anteprima-pr-<N>/coop-space.mcaddon`.
 
 ## Metodo di lavoro
 
@@ -101,7 +101,7 @@ Il repository è il punto d'ingresso del gruppo: ognuno entra con la propria IA,
 
 ## Provare l'add-on sul telefono
 
-1. Ogni pull request produce un `.mcaddon` nella sezione Actions di GitHub; dopo il merge su `main` il file si aggiorna nella release **"ultima-versione"**.
+1. Ogni pull request pubblica un'**anteprima** scaricabile direttamente dal telefono: la pre-release `anteprima-pr-<N>` (link nella regola 6 di "Come lavorare" e nel sito, accanto alla pull request). Si aggiorna a ogni push e si cancella quando la pull request si chiude. Dopo il merge su `main` il file si aggiorna nella release **"ultima-versione"**.
 2. Sul telefono: scarica `coop-space.mcaddon` e aprilo **con Minecraft chiuso**: lo importa da solo. Se il gioco è già aperto dentro un mondo, l'importazione viene ignorata senza nessun messaggio.
 3. Crea un **mondo nuovo** per ogni versione da provare: Impostazioni del mondo → Pacchetti comportamento e Pacchetti risorse → attiva "Coop Space". Un mondo creato con una versione vecchia può continuare a usare quella.
 4. Se qualcosa non funziona ma `npm run verify` passa, usa il **registro dei contenuti** (in inglese "Content Log"). L'utente vede il gioco in italiano: dagli questi nomi, non quelli inglesi.
