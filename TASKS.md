@@ -10,8 +10,9 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 - [x] Amico 1 manda a Samuele il nome utente GitHub
 - [ ] Amico 2 manda a Samuele il nome utente GitHub (o usa "Chiedi l'accesso" nel sito del team)
 - [ ] Samuele invita entrambi (Settings → Collaborators → Add people) e loro accettano
-  - Amico 1 invitato il 15/11: deve accettare da <https://github.com/NEX0R/coop-space/invitations> e attivare l'autenticazione a due fattori.
-- [ ] Samuele installa sul proprio account GitHub l'app "ChatGPT Codex Connector" per `coop-space` (serve a chi usa Codex)
+  - Amico 1 ha accettato l'invito il 15/11 (accesso in scrittura). Prossimo passo: apre il suo assistente sul progetto e fa l'accoglienza (messaggio #17). Amico 2: invito da fare.
+- [x] Samuele installa sul proprio account GitHub l'app "ChatGPT Codex Connector" per `coop-space` (serve a chi usa Codex)
+  - Installata il 15/11 solo su `coop-space`.
 
 **B. Assistenti collegati**
 - [ ] Ognuno collega il proprio assistente al repository e fa la prima richiesta scritta nel README. **Chi:** tutti
