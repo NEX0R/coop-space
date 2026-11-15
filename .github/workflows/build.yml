@@ -1,5 +1,6 @@
 # Ogni modifica viene verificata con il validatore ufficiale Mojang.
-# - Su una pull request: verifica + file .mcaddon allegato alla build (per provarlo prima di approvare).
+# - Su una pull request: verifica + file .mcaddon allegato alla build, e anteprima scaricabile dal
+#   telefono nella pre-release "anteprima-pr-<numero>" (la cancella anteprime.yml quando la PR si chiude).
 # - Su main: verifica + pubblicazione del .mcaddon nella release "ultima-versione",
 #   scaricabile da telefono dalla pagina Releases del repository.
 name: Build add-on
@@ -39,6 +40,23 @@ jobs:
         with:
           name: coop-space-mcaddon
           path: dist/coop-space.mcaddon
+
+      - name: Pubblica l'anteprima per il telefono
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMERO: ${{ github.event.pull_request.number }}
+          COMMIT: ${{ github.event.pull_request.head.sha }}
+        run: |
+          TAG="anteprima-pr-$NUMERO"
+          NOTE="Anteprima della pull request #$NUMERO (commit ${COMMIT::7}). Per provarla: scarica coop-space.mcaddon dal telefono e aprilo con Minecraft chiuso, poi usa un mondo nuovo. Si cancella da sola quando la pull request viene chiusa."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/coop-space.mcaddon --clobber
+            gh release edit "$TAG" --notes "$NOTE"
+          else
+            gh release create "$TAG" dist/coop-space.mcaddon --prerelease --target "$COMMIT" --title "Anteprima PR #$NUMERO" --notes "$NOTE"
+          fi
+          echo "Anteprima: https://github.com/${GITHUB_REPOSITORY}/releases/download/$TAG/coop-space.mcaddon" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Pubblica in "ultima-versione"
         if: github.ref == 'refs/heads/main'

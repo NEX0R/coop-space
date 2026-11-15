@@ -65,7 +65,7 @@ Scrivi sul gruppo se ha funzionato oppure no.
 1. **Scegli un compito** in [`TASKS.md`](TASKS.md) o nel sito, controllando che nessuno lo stia già facendo, e dillo all'assistente. Appena approvi il suo piano, l'assistente apre una pull request in bozza "In corso: …": è il cartello "occupato" che gli assistenti degli altri vedono quando partono. Due persone non lavorano sulla stessa cosa.
 2. **Chiedi all'assistente.** Ti propone un piano; lo approvi oppure lo correggi; solo dopo scrive i file.
 3. **L'assistente apre una "pull request"**: è una proposta di modifica. GitHub la controlla in automatico con il validatore ufficiale di Mojang.
-4. **Prova sul telefono** il file `.mcaddon` che la pull request produce (te lo indica l'assistente).
+4. **Prova l'anteprima nel gioco**: nel sito, accanto alla pull request, tocca **"scarica l'anteprima"** e apri il file con Minecraft chiuso. Ogni pull request ha la sua anteprima, aggiornata a ogni modifica, che sparisce quando la pull request si chiude.
 5. **Se funziona, si approva** ("Merge") e la modifica entra nella versione di tutti.
 
 Una pull request contiene una cosa sola (una spada, un mob, un blocco). Così, se qualcosa si rompe, si capisce subito dove.

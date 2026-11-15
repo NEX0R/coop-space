@@ -34,6 +34,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Anteprima di ogni pull request scaricabile dal telefono con un tocco (sito o pagina Releases), cancellata da sola alla chiusura della pull request.
 - [x] Telefono e PC: comandi GitHub che funzionano anche nelle sessioni cloud (`gh api`), hook che legge i lavori aperti anche dal cloud e i rami senza pull request, accoglienza delle persone nuove guidata dall'IA, tabella "PC o telefono" nel README.
 - [x] Tolta la dipendenza circolare tra i pack (il resource pack dipendeva dal behavior pack), come chiede la guida Mojang. Versione 0.1.2.
 - [x] Assistenti sempre aggiornati: all'avvio di Claude Code l'hook aggiorna `main` (solo se è sicuro) e scrive l'elenco dei lavori aperti; regola del cartello "occupato" (pull request in bozza subito) e aggiornamento da `main` prima di finire.
