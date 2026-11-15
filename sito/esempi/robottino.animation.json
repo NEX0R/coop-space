@@ -1,0 +1,115 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.coop.robottino.cammina": {
+      "loop": true,
+      "animation_length": 1,
+      "bones": {
+        "gamba_sx": {
+          "rotation": [
+            "math.sin(query.anim_time * 360) * 30",
+            0,
+            0
+          ]
+        },
+        "gamba_dx": {
+          "rotation": [
+            "-math.sin(query.anim_time * 360) * 30",
+            0,
+            0
+          ]
+        },
+        "braccio_sx": {
+          "rotation": [
+            "-math.sin(query.anim_time * 360) * 25",
+            0,
+            0
+          ]
+        },
+        "braccio_dx": {
+          "rotation": [
+            "math.sin(query.anim_time * 360) * 25",
+            0,
+            0
+          ]
+        },
+        "corpo": {
+          "position": [
+            0,
+            "math.abs(math.cos(query.anim_time * 360)) * 0.6",
+            0
+          ]
+        }
+      }
+    },
+    "animation.coop.robottino.saluta": {
+      "loop": true,
+      "animation_length": 1.6,
+      "bones": {
+        "braccio_dx": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "0.3": [
+              0,
+              0,
+              -150
+            ],
+            "0.5": [
+              0,
+              0,
+              -120
+            ],
+            "0.7": [
+              0,
+              0,
+              -150
+            ],
+            "0.9": [
+              0,
+              0,
+              -120
+            ],
+            "1.2": [
+              0,
+              0,
+              -150
+            ],
+            "1.6": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "testa": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "0.6": [
+              0,
+              0,
+              8
+            ],
+            "1.2": [
+              0,
+              0,
+              -8
+            ],
+            "1.6": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    }
+  }
+}

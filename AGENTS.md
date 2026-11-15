@@ -22,6 +22,9 @@ addon/
 scripts/verify.mjs                controllo obbligatorio (npm run verify)
 scripts/package.mjs               crea dist/coop-space.mcaddon (npm run package)
 scripts/avvio-sessione.mjs        installa gli strumenti all'avvio di Claude Code, se mancano
+scripts/sito.mjs                  costruisce il sito del team in out/sito (npm run sito)
+sito/                             pagine del sito: progressi, contenuti, visore 3D
+.github/workflows/sito.yml        pubblica il sito su GitHub Pages a ogni modifica su main
 .claude/settings.json             impostazioni di Claude Code per tutti: permessi, blocchi, hook
 .github/workflows/build.yml       build automatica e release "ultima-versione"
 TASKS.md                          compiti e assegnazioni
@@ -43,7 +46,8 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
    Se il server MCP `minecraft-creator-tools` è disponibile (vedi `.mcp.json`), usa i suoi strumenti come dicono le skill. Se non lo è, scrivi i file a mano seguendo la skill.
 3. Lavora su un **ramo nuovo** e apri una **pull request** verso `main`. Mai push diretti su `main`.
 4. **Un lavoro non è finito finché `npm run verify` non passa: 0 errori e 0 avvisi.** Correggi e rilancia finché non passa. Le voci "likely noise" sono accettate da Bedrock e non bloccano.
-5. Aggiorna `TASKS.md`: sposta il compito nella sezione giusta e scrivi in una riga cosa hai fatto.
+5. Aggiorna `TASKS.md`: sposta il compito nella sezione giusta e scrivi in una riga cosa hai fatto. Il sito del team (<https://nex0r.github.io/coop-space/>) legge proprio questo file: mantieni il formato `- [ ] testo **Chi:** nome`, i titoli `## Sezione` e i gruppi `**A. Nome**`. Il sito non si modifica mai a mano: si rigenera da `TASKS.md` e da `addon/`.
+   Per vedere il sito prima del merge: `npm run sito -- --serve` e apri <http://localhost:8765>. Per i modelli 3D di mob nuovi, il visore del sito mostra modello, texture e animazioni presi da `addon/`.
 6. Nella descrizione della pull request spiega cosa cambia nel gioco e come provarlo.
 
 ## Metodo di lavoro

@@ -1,0 +1,45 @@
+# Sito del team su GitHub Pages: progressi da TASKS.md, contenuti dell'add-on, visore 3D.
+# - Su una pull request: costruisce il sito per controllare che il generatore funzioni (non pubblica).
+# - Su main: costruisce e pubblica su https://nex0r.github.io/coop-space/
+# Il generatore non usa pacchetti npm, quindi non serve npm ci.
+name: Sito del team
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: sito-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  costruisci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Costruisci il sito
+        run: node scripts/sito.mjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out/sito
+
+  pubblica:
+    if: github.ref == 'refs/heads/main'
+    needs: costruisci
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
