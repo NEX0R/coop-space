@@ -18,11 +18,21 @@ Senza l'invito puoi guardare il progetto, ma non modificarlo.
 
 ### 2. Collega il tuo assistente
 
-**Se usi Claude Code** (telefono o PC):
+**PC o telefono?** Funzionano tutti e due, con le stesse regole:
 
-1. Apri [claude.ai/code](https://claude.ai/code) oppure la scheda "Code" nell'app Claude.
+| | Telefono (app Claude, scheda "Code") | PC (Claude Code nel terminale o nell'app desktop) |
+| --- | --- | --- |
+| Dove gira l'IA | Su un computer di Anthropic: non installi niente | Sul tuo PC: servono [Git](https://git-scm.com) e [Node.js](https://nodejs.org) 20 o più |
+| Va bene per | Contenuti semplici (blocchi, oggetti, nomi, texture), correzioni, idee, approvare | Tutto, compresi mob con modelli 3D e lavori lunghi |
+| Prova nel gioco | Scarichi l'anteprima dal sito e la provi sullo stesso telefono | Minecraft sul PC; l'IA controlla da sola i file e il registro |
+
+Termux non serve: l'app ufficiale fa la stessa cosa senza configurazioni.
+
+**Se usi Claude Code**:
+
+1. Telefono: scheda "Code" nell'app Claude. PC: [claude.ai/code](https://claude.ai/code), oppure Claude Code nel terminale dentro la cartella del progetto.
 2. Quando te lo chiede, collega il tuo account GitHub.
-3. Scegli il repository `NEX0R/coop-space` e avvia una sessione.
+3. Scegli il repository `NEX0R/coop-space` e avvia una sessione. All'avvio l'IA si aggiorna da sola, installa gli strumenti (dal telefono può volerci mezzo minuto) e vede cosa stanno facendo gli altri.
 
 **Se usi Codex** (ChatGPT):
 
@@ -37,9 +47,9 @@ Senza l'invito puoi guardare il progetto, ma non modificarlo.
 
 Scrivi al tuo assistente, così com'è:
 
-> Sono nuovo nel progetto. Leggi AGENTS.md e TASKS.md, poi spiegami in parole semplici come funziona e cosa posso fare per primo.
+> Sono nuovo nel progetto. Fai l'accoglienza descritta in AGENTS.md: controlla che io sia pronto, spiegami in parole semplici come lavoriamo e cosa posso fare per primo.
 
-Le regole del progetto le legge da solo: non devi spiegargliele tu.
+Le regole del progetto le legge da solo: non devi spiegargliele tu. Controlla lui accesso, strumenti e versione di Minecraft, e ti dice cosa manca.
 
 ### 4. Prova l'add-on sul telefono
 

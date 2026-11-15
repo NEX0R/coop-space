@@ -81,16 +81,38 @@ async function lavoriAperti() {
       req.on("timeout", () => req.destroy(new Error("timeout")));
       req.on("error", ko);
     });
+  // Nelle sessioni cloud (telefono) Node non passa dal proxy di rete, gh sì: si prova prima gh api
+  // (REST: nel cloud i comandi "gh pr" e "gh issue" sono bloccati), poi la connessione diretta.
+  const leggi = async (p) => {
+    const r = spawnSync("gh", ["api", `repos/${repo}/${p}`], { cwd: root, encoding: "utf8", timeout: 15000 });
+    if (r.status === 0) {
+      try {
+        return JSON.parse(r.stdout);
+      } catch {}
+    }
+    return chiedi(p);
+  };
+  const voci = [];
+  const conPr = new Set();
   try {
-    const [prs, issues] = await Promise.all([chiedi("pulls?state=open&per_page=20"), chiedi("issues?state=open&per_page=20")]);
-    const voci = [
-      ...prs.map((p) => `- PR #${p.number}${p.draft ? " [in corso]" : ""} ${p.title} (di ${p.user.login}, ramo ${p.head.ref})`),
-      ...issues.filter((i) => !i.pull_request).map((i) => `- Richiesta #${i.number}${i.labels.length ? ` [${i.labels.map((l) => l.name).join(", ")}]` : ""} ${i.title} (di ${i.user.login})`),
-    ];
-    righe.push(voci.length ? `Lavori aperti su GitHub (prima di iniziare controlla che nessuno stia già facendo la stessa cosa):\n${voci.join("\n")}` : "Nessuna pull request o richiesta aperta su GitHub.");
+    const [prs, issues] = await Promise.all([leggi("pulls?state=open&per_page=20"), leggi("issues?state=open&per_page=20")]);
+    for (const p of prs) {
+      conPr.add(p.head.ref);
+      voci.push(`- PR #${p.number}${p.draft ? " [in corso]" : ""} ${p.title} (di ${p.user.login}, ramo ${p.head.ref})`);
+    }
+    for (const i of issues.filter((x) => !x.pull_request)) voci.push(`- Richiesta #${i.number}${i.labels.length ? ` [${i.labels.map((l) => l.name).join(", ")}]` : ""} ${i.title} (di ${i.user.login})`);
   } catch {
-    // niente rete o limite di richieste: si va avanti; il sito del team mostra gli stessi dati
+    // niente rete o limite di richieste: restano i rami; il sito del team mostra gli stessi dati
+    voci.push("- Non riesco a leggere pull request e richieste: guardale nel sito del team prima di iniziare.");
   }
+  // Rami su GitHub senza pull request: lavoro iniziato ma non ancora proposto (git passa sempre dal proxy)
+  const mio = git("rev-parse", "--abbrev-ref", "HEAD").out;
+  const rami = git("ls-remote", "--heads", "origin")
+    .out.split("\n")
+    .map((r) => r.split("refs/heads/")[1])
+    .filter((r) => r && r !== "main" && r !== mio && !conPr.has(r));
+  if (rami.length) voci.push(`- Rami senza pull request: ${rami.join(", ")}`);
+  righe.push(voci.length ? `Lavori aperti su GitHub (prima di iniziare controlla che nessuno stia già facendo la stessa cosa):\n${voci.join("\n")}` : "Nessun lavoro aperto su GitHub.");
 }
 
 aggiorna();
