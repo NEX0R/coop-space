@@ -1,0 +1,51 @@
+name: Proponi un contenuto
+description: Un blocco, un oggetto, un mob o una funzione da aggiungere all'add-on.
+title: "Idea: "
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Una buona idea dice tre cose: **cosa succede nel gioco**, **come si ottiene** e **come capisci che funziona**. Questa pagina è pubblica.
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Che cos'è?
+      options:
+        - Blocco
+        - Oggetto (arma, attrezzo, cibo, armatura...)
+        - Mob o creatura
+        - Funzione o regola di gioco
+        - Altro
+    validations:
+      required: true
+  - type: textarea
+    id: cosa
+    attributes:
+      label: Cosa deve succedere nel gioco?
+      placeholder: es. Una spada di smeraldo che incendia i mob colpiti per 3 secondi.
+    validations:
+      required: true
+  - type: textarea
+    id: come
+    attributes:
+      label: Come si ottiene?
+      placeholder: es. Si crea con 2 smeraldi e 1 bastone sul banco da lavoro.
+  - type: textarea
+    id: prova
+    attributes:
+      label: Come capisci che funziona?
+      placeholder: es. Colpisco uno zombie e prende fuoco.
+    validations:
+      required: true
+  - type: textarea
+    id: riferimenti
+    attributes:
+      label: Disegni, modelli o esempi (facoltativo)
+      description: Puoi trascinare qui immagini o il file del modello esportato da Blockbench.
+  - type: checkboxes
+    id: chi
+    attributes:
+      label: Chi lo fa?
+      options:
+        - label: Me ne occupo io

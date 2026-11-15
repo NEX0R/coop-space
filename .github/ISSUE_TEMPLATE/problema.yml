@@ -1,0 +1,45 @@
+name: Segnala un problema nel gioco
+description: Qualcosa dell'add-on non compare, non funziona o dà errore.
+title: "Problema: "
+labels: ["problema"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Incolla gli errori così come sono, senza riassumerli. Questa pagina è pubblica.
+  - type: textarea
+    id: cosa
+    attributes:
+      label: Cosa stavi facendo e cosa ti aspettavi?
+      placeholder: es. Ho piazzato il Blocco di prova, mi aspettavo il messaggio in chat.
+    validations:
+      required: true
+  - type: textarea
+    id: successo
+    attributes:
+      label: Cosa è successo invece?
+    validations:
+      required: true
+  - type: textarea
+    id: registro
+    attributes:
+      label: Registro dei contenuti (se ci sono errori)
+      description: In Minecraft, Impostazioni → Creatore → Cronologia registro dei contenuti → Visualizza → Copia negli appunti, poi incolla qui.
+      render: text
+  - type: dropdown
+    id: dispositivo
+    attributes:
+      label: Dove giochi?
+      options:
+        - Telefono Android
+        - iPhone
+        - PC Windows
+        - Altro
+    validations:
+      required: true
+  - type: input
+    id: versione
+    attributes:
+      label: Versione di Minecraft
+      description: La vedi in basso a destra nel menu principale.
+      placeholder: es. 1.26.63
