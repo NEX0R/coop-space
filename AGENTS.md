@@ -21,7 +21,7 @@ addon/
     textures/  texts/it_IT.lang  texts/en_US.lang
 scripts/verify.mjs                controllo obbligatorio (npm run verify)
 scripts/package.mjs               crea dist/coop-space.mcaddon (npm run package)
-scripts/avvio-sessione.mjs        installa gli strumenti all'avvio di Claude Code, se mancano
+scripts/avvio-sessione.mjs        all'avvio di Claude Code: aggiorna main, installa gli strumenti, elenca i lavori aperti
 scripts/sito.mjs                  costruisce il sito del team in out/sito (npm run sito)
 sito/                             pagine del sito: progressi, contenuti, visore 3D
 .github/workflows/sito.yml        pubblica il sito su GitHub Pages a ogni modifica su main
@@ -49,7 +49,7 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
    Se il server MCP `minecraft-creator-tools` è disponibile (vedi `.mcp.json`), usa i suoi strumenti come dicono le skill. Se non lo è, scrivi i file a mano seguendo la skill.
 3. Lavora su un **ramo nuovo** e apri una **pull request** verso `main`. Mai push diretti su `main`: GitHub li rifiuta (regola "Proteggi main": servono pull request e controllo `build` passato; vietati push forzati e cancellazione).
    - **Cartello "occupato"**: appena approvato il piano, prima di scrivere i file, fai un primo commit (anche solo `TASKS.md` con il compito "In corso" e il nome) e apri subito la pull request **in bozza** con titolo `In corso: <cosa>` (`gh pr create --draft`). Così gli assistenti degli altri la vedono all'avvio. A lavoro finito togli la bozza (`gh pr ready`) e rinomina il titolo. Se il tuo strumento non apre bozze (per esempio Codex), apri la pull request appena puoi e avvisa sul gruppo WhatsApp.
-   - **Prima di finire**: `git fetch origin && git merge origin/main`, risolvi i conflitti (succedono spesso su `texts/*.lang` e `textures/*_texture.json`, file che tutti toccano: tieni le righe di tutti e due), poi rilancia `npm run verify`.
+   - **Prima di finire**: `git fetch origin && git merge origin/main`, risolvi i conflitti (succedono spesso su `texts/*.lang` e `textures/*_texture.json`, file che tutti toccano: tieni le righe di tutti e due; e sulla versione dei due `manifest.json`, se anche l'altro l'ha alzata: usa la versione di `main` più uno), poi rilancia `npm run verify`.
    **Richieste del team**: arrivano come issue dai moduli del sito (etichette `accesso`, `idea`, `problema`); leggile con `gh issue list`. Un'idea approvata dal team diventa un compito in `TASKS.md` e la pull request che la realizza scrive `Chiude #N`. Un problema si affronta con la skill `debug-addon`. Gli inviti (`accesso`) li può mandare solo Samuele: controlla che l'account esista e chiedigli l'ok.
 4. **Un lavoro non è finito finché `npm run verify` non passa: 0 errori e 0 avvisi.** Correggi e rilancia finché non passa. Le voci "likely noise" sono accettate da Bedrock e non bloccano.
 5. Aggiorna `TASKS.md`: sposta il compito nella sezione giusta e scrivi in una riga cosa hai fatto. Il sito del team (<https://nex0r.github.io/coop-space/>) legge proprio questo file: mantieni il formato `- [ ] testo **Chi:** nome`, i titoli `## Sezione` e i gruppi `**A. Nome**`. Il sito non si modifica mai a mano: si rigenera da `TASKS.md` e da `addon/`.
