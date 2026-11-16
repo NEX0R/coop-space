@@ -6,7 +6,7 @@
 #
 # Una fusione fatta da un'automazione di GitHub non fa partire le altre automazioni.
 # Per questo, dopo la fusione, questo file fa lui quello che sarebbe partito da solo:
-# cancella l'anteprima, ricrea "ultima-versione" (build.yml) e ripubblica il sito (sito.yml).
+# cancella l'anteprima e il ramo fuso, ricrea "ultima-versione" (build.yml) e ripubblica il sito (sito.yml).
 name: Merge automatico
 
 on:
@@ -61,7 +61,7 @@ jobs:
           # 2. È pronta?
           DATI=$(gh api "repos/$GH_REPO/pulls/$NUMERO")
           STATO=$(jq -r .state <<<"$DATI"); BOZZA=$(jq -r .draft <<<"$DATI"); BASE=$(jq -r .base.ref <<<"$DATI")
-          TITOLO=$(jq -r .title <<<"$DATI"); SHA=$(jq -r .head.sha <<<"$DATI")
+          TITOLO=$(jq -r .title <<<"$DATI"); SHA=$(jq -r .head.sha <<<"$DATI"); RAMO=$(jq -r .head.ref <<<"$DATI")
           if [ "$STATO" != "open" ] || [ "$BASE" != "main" ]; then nota "La pull request #$NUMERO non è aperta verso main: niente da fare."; exit 0; fi
           if [ "$BOZZA" = "true" ]; then nota "La pull request #$NUMERO è in bozza: non la fondo. Si fonderà quando qualcuno preme Ready for review."; exit 0; fi
           case "$TITOLO" in
@@ -91,5 +91,9 @@ jobs:
 
           # 5. Quello che dopo una fusione fatta a mano sarebbe partito da solo.
           gh release delete "anteprima-pr-$NUMERO" --cleanup-tag --yes >/dev/null 2>&1 || true
+          # Il ramo fuso non serve più: se resta, gli assistenti lo scambiano per un lavoro aperto.
+          if [ "$RAMO" != "main" ]; then
+            gh api -X DELETE "repos/$GH_REPO/git/refs/heads/$RAMO" >/dev/null 2>&1 && nota "Cancellato il ramo $RAMO." || true
+          fi
           gh workflow run build.yml --ref main && nota "Avviata la pubblicazione di \"ultima-versione\"."
           gh workflow run sito.yml --ref main && nota "Avviato l'aggiornamento del sito."
