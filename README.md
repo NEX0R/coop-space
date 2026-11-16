@@ -51,10 +51,12 @@ Da lì in poi il progetto è il punto di contatto del gruppo: quando parte, l'as
 
 ### 4. Prova l'add-on sul telefono
 
-1. Dal telefono apri [l'ultima versione](https://github.com/NEX0R/coop-space/releases/tag/ultima-versione) e scarica `coop-space.mcaddon`.
-2. Apri il file **con Minecraft chiuso**: lo importa da solo. Se il gioco è già aperto dentro un mondo, l'importazione non parte e non te lo dice.
-3. Crea un **mondo nuovo** di prova (anche ogni volta che provi una versione nuova). Nelle impostazioni del mondo attiva "Coop Space" sia in **Pacchetti comportamento** sia in **Pacchetti risorse**.
-4. In creativa cerca "Blocco di prova Coop" e piazzalo: deve comparire un messaggio in chat.
+1. Dal telefono apri il [sito del team](https://nex0r.github.io/coop-space/) e tocca **"Mondo di prova <versione>"**.
+2. Apri il file **con Minecraft chiuso**: Minecraft aggiunge un mondo "Coop Space <versione>", piatto, in creativa, con l'add-on già attivo. Non devi scegliere nessun pacchetto.
+3. Entra nel mondo: in chat compare **"Coop Space <versione> attivo."**. Se non compare, l'add-on non è attivo.
+4. Cerca "Blocco di prova Coop" e "ottone" nell'inventario e piazzali: il blocco di prova scrive un messaggio in chat.
+
+**Per usarlo nei tuoi mondi** scarica invece "Add-on <versione>". Poi, nelle impostazioni del mondo, attiva **"Coop Space"** in **Pacchetti comportamento**: la grafica ("Coop Space - grafica") si aggiunge da sola. Se attivi solo la grafica, i blocchi non ci sono.
 
 Scrivi sul gruppo se ha funzionato oppure no.
 

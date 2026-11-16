@@ -107,6 +107,13 @@ for (const bp of bpDirs) {
 }
 // La guida Mojang (debug-addon) avverte: dipendenze circolari tra pack possono impedirne il caricamento.
 const uuidBp = new Set(bpDirs.map((d) => leggiJson(join(d, "manifest.json"))?.header?.uuid).filter(Boolean));
+// Il behavior pack deve dipendere dal resource pack: così attivando "Coop Space" nei Pacchetti
+// comportamento si attiva da sola anche la grafica (senza, i blocchi sono senza texture o nomi).
+const uuidRp = new Set(rpDirs.map((d) => leggiJson(join(d, "manifest.json"))?.header?.uuid).filter(Boolean));
+for (const bp of bpDirs) {
+  const deps = leggiJson(join(bp, "manifest.json"))?.dependencies || [];
+  if (uuidRp.size && !deps.some((d) => uuidRp.has(d.uuid))) problema(`il behavior pack ${bp.slice(addonDir.length + 1)} non dipende dal resource pack: attivandolo non arriverebbe la grafica. Aggiungi l'uuid e la versione del resource pack nelle sue "dependencies".`);
+}
 for (const rp of rpDirs) {
   const deps = leggiJson(join(rp, "manifest.json"))?.dependencies || [];
   if (deps.some((d) => uuidBp.has(d.uuid))) problema(`il resource pack ${rp.slice(addonDir.length + 1)} dipende dal behavior pack: dipendenza circolare. Togli quella dipendenza (deve dipendere solo il behavior pack dal resource pack).`);

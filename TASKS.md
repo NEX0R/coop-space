@@ -35,6 +35,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Attivazione a prova di errore: pacchetti chiamati "Coop Space" (da attivare) e "Coop Space - grafica" (si aggiunge da sola), messaggio in chat "Coop Space <versione> attivo." all'ingresso, mondo di prova `.mcworld` già pronto in ogni release e anteprima. Causa del 16/11: era attiva solo la grafica.
 - [x] Blocco di ottone (`coop:blocco_ottone`): cubo pieno, suono di metallo, 5 secondi per romperlo, texture 16×16, nomi "Blocco di ottone" / "Brass Block".
 - [x] Versione nel nome dei pack ("Coop Space BP 0.320.996", e "(anteprima PR #N)" nelle anteprime) e sul pulsante di download del sito, così in Minecraft si distinguono.
 - [x] Decisione: le pull request le può approvare chiunque del gruppo, anche Giovanni. Documentato come tornare indietro (pulsante Revert, o `git revert` per gli assistenti). Controllo automatico mensile degli strumenti Mojang (routine cloud, il 7 di ogni mese).

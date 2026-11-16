@@ -135,7 +135,7 @@ async function mostraGitHub(repo) {
             }
             const prima = p.base.ref !== "main" ? prs.find((q) => q.head.ref === p.base.ref) : null;
             const anteprima = anteprime.has(`anteprima-pr-${p.number}`)
-              ? ` <a class="stato ok" href="https://github.com/${repo}/releases/download/anteprima-pr-${p.number}/coop-space.mcaddon">scarica l'anteprima ${esc(anteprime.get(`anteprima-pr-${p.number}`) || "")}</a>`
+              ? ` <a class="stato ok" href="https://github.com/${repo}/releases/download/anteprima-pr-${p.number}/coop-space-mondo-prova.mcworld">mondo di prova ${esc(anteprime.get(`anteprima-pr-${p.number}`) || "")}</a> <a class="stato ok" href="https://github.com/${repo}/releases/download/anteprima-pr-${p.number}/coop-space.mcaddon">add-on</a>`
               : "";
             return `<li><a href="${esc(p.html_url)}" target="_blank" rel="noopener">#${p.number} ${esc(p.title)}</a> ${stato}${anteprima}
               <div class="meta">di ${esc(p.user.login)} · aperta ${fa(p.created_at)}${p.draft ? " · bozza" : ""}${prima ? ` · da fondere dopo la #${prima.number}` : ""}</div></li>`;
@@ -298,12 +298,18 @@ async function avvio() {
     return;
   }
   $("scarica").href = dati.download;
-  $("scarica").textContent = "Scarica l'ultima versione";
+  $("scarica").textContent = "Scarica l'add-on";
+  $("mondo").href = dati.download.replace("coop-space.mcaddon", "coop-space-mondo-prova.mcworld");
   // La versione vera la sa solo la release (la crea la build, dopo il sito): la chiediamo a GitHub.
   github(`repos/${dati.repo}/releases/tags/ultima-versione`)
     .then((r) => {
       const v = versioneDa(r.name);
-      if (v) $("scarica").textContent = `Scarica la versione ${v}`;
+      if (v) {
+        $("scarica").textContent = `Add-on ${v}`;
+        $("mondo").textContent = `Mondo di prova ${v}`;
+      }
+      // Le release vecchie non hanno il mondo di prova: in quel caso il pulsante non si mostra.
+      if (!(r.assets || []).some((a) => a.name === "coop-space-mondo-prova.mcworld")) $("mondo").hidden = true;
     })
     .catch(() => {});
   $("piede").textContent = `Aggiornato dal commit ${dati.commit || "?"}${dati.dataCommit ? ", " + fa(dati.dataCommit) : ""}. Si aggiorna da solo a ogni modifica su main.`;
