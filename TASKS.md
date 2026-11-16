@@ -18,8 +18,8 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 - [ ] Ognuno collega il proprio assistente al repository e fa la prima richiesta scritta nel README. **Chi:** tutti
 
 **C. Prova nel gioco**
-- [ ] Provare `coop-space.mcaddon` sul telefono: importarlo, attivarlo in un mondo, piazzare il "Blocco di prova Coop" e controllare che compaia il messaggio in chat. **Chi:** almeno uno, meglio tutti
-  - Provato su PC da Nexor: funziona dalla versione 0.1.1. Sul telefono la prima importazione è risultata rovinata e la seconda è stata rifiutata ("Pacchetto doppio rilevato"): eliminare il vecchio pacchetto da Impostazioni → Generale → Archiviazione e riprovare con l'ultima versione (ora la versione cambia a ogni pacchetto).
+- [x] Provare `coop-space.mcaddon` sul telefono: importarlo, attivarlo in un mondo, piazzare il "Blocco di prova Coop" e controllare che compaia il messaggio in chat. **Chi:** almeno uno, meglio tutti
+  - Funziona sul telefono di Nexor (16/11, con la versione automatica) e sul suo PC. Agli altri conviene rifarla una volta, durante l'accoglienza. Se compare "Pacchetto doppio rilevato": eliminare il vecchio pacchetto da Impostazioni → Generale → Archiviazione e scaricare di nuovo "Ultima versione".
 
 **D. Decisioni di gruppo**
 - [ ] Chi si occupa di cosa (logica e script, oggetti e mob, grafica e texture)
