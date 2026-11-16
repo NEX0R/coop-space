@@ -27,6 +27,7 @@ sito/                             pagine del sito: progressi, contenuti, visore 
 .github/workflows/sito.yml        pubblica il sito su GitHub Pages a ogni modifica su main
 .claude/settings.json             impostazioni di Claude Code per tutti: permessi, blocchi, hook
 .github/workflows/build.yml       build automatica e release "ultima-versione"
+.github/workflows/merge-automatico.yml  fonde da sola ogni pull request pronta e con la build verde
 TASKS.md                          compiti e assegnazioni
 team.json                         chi fa parte del gruppo e chi ha fatto l'accoglienza
 ```
@@ -52,7 +53,8 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
    - **Cartello "occupato"**: appena approvato il piano, prima di scrivere i file, fai un primo commit (anche solo `TASKS.md` con il compito "In corso" e il nome), `git push -u origin <ramo>` e apri subito la pull request **in bozza** (GitHub non permette di fondere le bozze):
      `gh api repos/NEX0R/coop-space/pulls -f title="In corso: <cosa>" -f head=<ramo> -f base=main -f body="<piano in 2 righe>" -F draft=true`
      Così gli assistenti degli altri la vedono all'avvio. Se `gh` manca (PC senza GitHub CLI), dai all'utente il link che `git push` stampa e fagli scegliere "Create draft pull request". Se il tuo strumento non apre bozze (per esempio Codex), apri la pull request appena puoi e avvisa sul gruppo WhatsApp.
-   - **A lavoro finito**: aggiorna titolo e descrizione (`gh api -X PATCH repos/NEX0R/coop-space/pulls/<N> -f title="<cosa>" -f body="<cosa cambia e come provarlo>"`), poi togli la bozza. Sul PC: `gh pr ready <N>`. Dal telefono non si può da comando: chiedi all'utente di premere **Ready for review** nella pagina della pull request.
+   - **A lavoro finito**: aggiorna titolo e descrizione (`gh api -X PATCH repos/NEX0R/coop-space/pulls/<N> -f title="<cosa>" -f body="<cosa cambia e come provarlo>"`) e **lascia la pull request in bozza**. Di' all'utente che l'anteprima è pronta da provare.
+   - **Togliere la bozza vuol dire fondere** (dal 16/11): una pull request non in bozza, senza titolo "In corso" e con la build verde si fonde da sola in `main` (vedi "Approvare e tornare indietro"). Perciò la bozza la toglie la persona, premendo **Ready for review** nella pagina della pull request, dopo aver provato l'anteprima. L'assistente la toglie solo se l'utente glielo dice in modo esplicito (sul PC: `gh pr ready <N>`; dal telefono non si può da comando). Mai di tua iniziativa.
    - **Prima di finire**: `git fetch origin && git merge origin/main`, risolvi i conflitti (succedono spesso su `texts/*.lang` e `textures/*_texture.json`, file che tutti toccano: tieni le righe di tutti e due), poi rilancia `npm run verify`.
    **Richieste del team**: arrivano come issue dai moduli del sito (etichette `accesso`, `idea`, `problema`, `messaggio`); leggile con `gh api repos/NEX0R/coop-space/issues`. Un'idea approvata dal team diventa un compito in `TASKS.md` e la pull request che la realizza scrive `Chiude #N`. Un problema si affronta con la skill `debug-addon`. Gli inviti (`accesso`) li può mandare solo Nexor: controlla che l'account esista e chiedigli l'ok. I messaggi seguono "Il repository è il centro di contatto", qui sotto.
 4. **Un lavoro non è finito finché `npm run verify` non passa: 0 errori e 0 avvisi.** Correggi e rilancia finché non passa. Le voci "likely noise" sono accettate da Bedrock e non bloccano.
@@ -95,7 +97,7 @@ Il repository è il punto d'ingresso del gruppo: ognuno entra con la propria IA,
 4. **Strumenti**: `npm run verify` deve dare 0 errori e 0 avvisi. Con Claude Code l'hook li installa da solo; con Codex serve `npm ci` come script di setup dell'ambiente.
 5. **Minecraft**: sul dispositivo dove prova, versione almeno 1.26.60 (in basso a destra nel menu principale).
 6. **Prima prova**: il blocco di prova, passo 4 di "Inizia qui" nel README.
-7. **Come si lavora**, in 5 righe: compito da `TASKS.md` o dal sito → piano → cartello "occupato" → `npm run verify` → anteprima da provare nel gioco → merge. Una cosa per pull request, una sessione per compito.
+7. **Come si lavora**, in 5 righe: compito da `TASKS.md` o dal sito → piano → cartello "occupato" → `npm run verify` → anteprima da provare nel gioco → "Ready for review" → si fonde da sola. Una cosa per pull request, una sessione per compito.
 8. **Prima pull request**: aggiorna la sua riga in `team.json` (nome, assistente, dispositivi, `"accoglienza": "fatta"`; se manca, aggiungila). È anche la prova pratica del ciclo di lavoro.
 9. **Messaggi in sospeso**: se c'è un messaggio di benvenuto per lui, rispondi con il riepilogo dell'accoglienza e chiudilo.
 
@@ -138,7 +140,11 @@ Se l'assistente gira sul PC dove è installato Minecraft, può fare da solo i co
 
 ## Approvare e tornare indietro
 
-- **Chi approva**: chiunque del gruppo (deciso il 16/11), dopo aver provato l'anteprima nel gioco. Nessuna approvazione obbligatoria: basta il controllo `build` verde. Non fondere mai una pull request in bozza o con titolo "In corso".
+- **Chi approva**: chiunque del gruppo (deciso il 16/11), dopo aver provato l'anteprima nel gioco. Approvare vuol dire **togliere la bozza** ("Ready for review"): il pulsante "Merge" non serve più.
+- **Merge automatico** (`.github/workflows/merge-automatico.yml`, voluto da Nexor il 16/11): una pull request si fonde da sola in `main` quando non è in bozza, il titolo non inizia con "In corso" e il controllo `build` dell'ultimo commit è verde. Succede quando finisce la build, oppure appena si toglie la bozza se la build era già verde. Vale solo per i rami di questo repository.
+  - Per **tenerla ferma**: lasciala in bozza, o rimettila in bozza (nella pagina della pull request, "Convert to draft").
+  - Se **non riesce** (di solito conflitti con `main`): l'automazione scrive un commento nella pull request. Aggiorna il ramo (`git fetch origin && git merge origin/main`), risolvi, rilancia `npm run verify` e fai push: si fonde alla build successiva.
+  - Dopo la fusione l'automazione cancella l'anteprima, ricrea "ultima-versione" e ripubblica il sito. Li avvia lei perché una fusione fatta da un'automazione di GitHub non fa partire le altre da sola. Se "ultima-versione" o il sito restano indietro dopo una fusione, guarda la scheda Actions.
 - **Tornare indietro (il "backup")**: niente si perde. `main` è protetto (niente push forzati né cancellazioni) e ogni modifica resta nella storia delle pull request.
   - Per la persona: nella pagina della pull request fusa c'è il pulsante **Revert**. Crea una pull request che annulla quella modifica; quando viene fusa, il progetto torna com'era e "Ultima versione" si ricrea con un numero più alto, quindi il telefono la accetta.
   - Per l'assistente, anche dal cloud: `git switch main && git pull && git switch -c annulla-pr-<N>`, poi `git revert -m 1 <commit di merge della PR>` (lo trovi con `git log --merges --oneline`), `npm run verify`, `git push -u origin annulla-pr-<N>` e la pull request con `gh api` come al solito (titolo `Annulla #<N>: …`).
