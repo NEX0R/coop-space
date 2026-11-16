@@ -10,6 +10,9 @@ const md = (s) =>
     .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
     .replace(/&lt;(https?:\/\/[^\s&]+)&gt;/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
 
+// "Ultima versione 0.320.996" o "Anteprima PR #23 (0.320.1000)" -> "0.320.996" / "0.320.1000"
+const versioneDa = (nome) => (String(nome || "").match(/\d+\.\d+\.\d+/) || [""])[0];
+
 const fa = (data) => {
   const sec = Math.round((Date.now() - new Date(data).getTime()) / 1000);
   if (!isFinite(sec)) return "";
@@ -116,8 +119,8 @@ async function mostraGitHub(repo) {
           )
         ),
         github(`repos/${repo}/releases?per_page=30`)
-          .then((r) => new Set(r.map((x) => x.tag_name)))
-          .catch(() => new Set()),
+          .then((r) => new Map(r.map((x) => [x.tag_name, versioneDa(x.name)])))
+          .catch(() => new Map()),
       ]);
       $("pr").innerHTML =
         '<ul class="elenco">' +
@@ -132,7 +135,7 @@ async function mostraGitHub(repo) {
             }
             const prima = p.base.ref !== "main" ? prs.find((q) => q.head.ref === p.base.ref) : null;
             const anteprima = anteprime.has(`anteprima-pr-${p.number}`)
-              ? ` <a class="stato ok" href="https://github.com/${repo}/releases/download/anteprima-pr-${p.number}/coop-space.mcaddon">scarica l'anteprima</a>`
+              ? ` <a class="stato ok" href="https://github.com/${repo}/releases/download/anteprima-pr-${p.number}/coop-space.mcaddon">scarica l'anteprima ${esc(anteprime.get(`anteprima-pr-${p.number}`) || "")}</a>`
               : "";
             return `<li><a href="${esc(p.html_url)}" target="_blank" rel="noopener">#${p.number} ${esc(p.title)}</a> ${stato}${anteprima}
               <div class="meta">di ${esc(p.user.login)} · aperta ${fa(p.created_at)}${p.draft ? " · bozza" : ""}${prima ? ` · da fondere dopo la #${prima.number}` : ""}</div></li>`;
@@ -296,6 +299,13 @@ async function avvio() {
   }
   $("scarica").href = dati.download;
   $("scarica").textContent = "Scarica l'ultima versione";
+  // La versione vera la sa solo la release (la crea la build, dopo il sito): la chiediamo a GitHub.
+  github(`repos/${dati.repo}/releases/tags/ultima-versione`)
+    .then((r) => {
+      const v = versioneDa(r.name);
+      if (v) $("scarica").textContent = `Scarica la versione ${v}`;
+    })
+    .catch(() => {});
   $("piede").textContent = `Aggiornato dal commit ${dati.commit || "?"}${dati.dataCommit ? ", " + fa(dati.dataCommit) : ""}. Si aggiorna da solo a ogni modifica su main.`;
   if (dati.team?.length)
     $("team").innerHTML =

@@ -38,9 +38,13 @@ for (const tipo of ["behavior_packs", "resource_packs"]) {
     if (existsSync(file)) manifest.push({ file, dati: JSON.parse(readFileSync(file, "utf8")) });
   }
 }
+// Il nome mostrato in Minecraft contiene la versione (e, per le anteprime, il numero della pull
+// request, passato da build.yml in COOP_ETICHETTA): così nella lista dei pacchetti si distinguono.
+const etichetta = (process.env.COOP_ETICHETTA || "").trim();
 const nuove = new Map();
 for (const m of manifest) {
   m.dati.header.version = [m.dati.header.version[0], giorno, minuto];
+  m.dati.header.name = `${m.dati.header.name} ${m.dati.header.version.join(".")}${etichetta ? ` (${etichetta})` : ""}`;
   nuove.set(m.dati.header.uuid, m.dati.header.version);
 }
 for (const m of manifest) {
