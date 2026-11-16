@@ -35,7 +35,8 @@ jobs:
       - name: Verifica e crea il .mcaddon
         env:
           # Nelle anteprime il nome del pacchetto in Minecraft diventa "Coop Space BP <versione> (anteprima PR #N)".
-          COOP_ETICHETTA: ${{ github.event_name == 'pull_request' && format('anteprima PR #{0}', github.event.pull_request.number) || '' }}
+          # Tra virgolette: in YAML " #" senza virgolette inizierebbe un commento e romperebbe l'espressione.
+          COOP_ETICHETTA: "${{ github.event_name == 'pull_request' && format('anteprima PR #{0}', github.event.pull_request.number) || '' }}"
         run: npm run package
 
       - name: Allega il .mcaddon alla build
