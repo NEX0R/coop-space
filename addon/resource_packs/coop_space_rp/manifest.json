@@ -1,8 +1,8 @@
 {
   "format_version": 2,
   "header": {
-    "name": "Coop Space RP",
-    "description": "Texture, nomi e suoni dell'add-on Coop Space",
+    "name": "Coop Space - grafica",
+    "description": "Si attiva da sola con Coop Space (Pacchetti comportamento): non attivarla da sola.",
     "uuid": "3173a7cb-09ad-4608-a61a-c3b58c80ec85",
     "version": [0, 1, 2],
     "min_engine_version": [1, 26, 60]

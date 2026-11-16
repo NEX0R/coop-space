@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, existsSync, rmSync, cpSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { leggiZip, scriviZip } from "./zip.mjs";
 
 // fileURLToPath dà un percorso valido anche su Windows (C:\...), a differenza di URL.pathname.
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -52,6 +53,15 @@ for (const m of manifest) {
   writeFileSync(m.file, JSON.stringify(m.dati, null, 2) + "\n");
 }
 const versione = manifest[0]?.dati.header.version.join(".");
+const nomeVersione = `${versione}${etichetta ? ` (${etichetta})` : ""}`;
+
+// Gli script scrivono in chat la versione attiva: se il messaggio non compare, la logica non è attiva.
+const elencaJs = (dir) =>
+  !existsSync(dir) ? [] : readdirSync(dir, { withFileTypes: true }).flatMap((d) => (d.isDirectory() ? elencaJs(join(dir, d.name)) : d.name.endsWith(".js") ? [join(dir, d.name)] : []));
+for (const file of elencaJs(join(copia, "behavior_packs"))) {
+  const testo = readFileSync(file, "utf8");
+  if (testo.includes("__VERSIONE_COOP__")) writeFileSync(file, testo.replaceAll("__VERSIONE_COOP__", nomeVersione));
+}
 
 // Lanciamo il file JS di mct direttamente con node: il collegamento in node_modules/.bin
 // su Windows è un .cmd e non si può avviare così.
@@ -65,4 +75,43 @@ if (r.status !== 0 || !existsSync(out)) {
   console.error("Impacchettamento fallito.");
   process.exit(1);
 }
+
+// Mondo di prova: mondo piatto in creativa con i trucchi attivi e i due pack già attivati dentro.
+// Aprendolo non si deve scegliere nessun pacchetto: è il modo più sicuro per provare, su PC e telefono.
+// Lo esporta Creator Tools; noi cambiamo il nome e spegniamo l'esperimento "Beta API" (gametest),
+// che Creator Tools accende ma a noi non serve (usiamo solo API stabili).
+const mondo = join(dist, "coop-space-mondo-prova.mcworld");
+if (existsSync(mondo)) rmSync(mondo);
+const rw = spawnSync(process.execPath, [mct, "-i", copia, "-o", dist, "--of", mondo, "export", "world"], { stdio: "inherit" });
+if (rw.status !== 0 || !existsSync(mondo)) {
+  console.error("Mondo di prova non creato.");
+  process.exit(1);
+}
+const nomeMondo = `Coop Space ${nomeVersione}`;
+const u16 = (n) => {
+  const b = Buffer.alloc(2);
+  b.writeUInt16LE(n);
+  return b;
+};
+const tagNbt = (tipo, nome) => Buffer.concat([Buffer.from([tipo]), u16(Buffer.byteLength(nome)), Buffer.from(nome)]);
+function sistemaLevelDat(buf) {
+  const i = buf.indexOf(tagNbt(8, "LevelName"));
+  if (i >= 0) {
+    const s = i + tagNbt(8, "LevelName").length;
+    const nuovo = Buffer.from(nomeMondo, "utf8");
+    buf = Buffer.concat([buf.subarray(0, s), u16(nuovo.length), nuovo, buf.subarray(s + 2 + buf.readUInt16LE(s))]);
+  }
+  const g = buf.indexOf(tagNbt(1, "gametest"));
+  if (g >= 0) buf[g + tagNbt(1, "gametest").length] = 0;
+  buf.writeInt32LE(buf.length - 8, 4); // l'intestazione del level.dat contiene la lunghezza del resto
+  return buf;
+}
+const voci = leggiZip(readFileSync(mondo)).map((v) => {
+  if (v.nome === "level.dat" || v.nome === "level.dat_old") v.dati = sistemaLevelDat(v.dati);
+  if (v.nome === "levelname.txt") v.dati = Buffer.from(nomeMondo, "utf8");
+  return v;
+});
+writeFileSync(mondo, scriviZip(voci));
+
 console.log(`\nPronto: ${out} (versione ${versione})`);
+console.log(`Pronto: ${mondo} (mondo "${nomeMondo}")`);
