@@ -33,9 +33,9 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
-- [ ] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): avvia il server senza schermo, carica l'add-on e dice se blocchi, oggetti, mob e script vengono accettati dal gioco. **Chi:** Samuele
-
 ## Fatto
+
+- [x] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): in circa 15 secondi, senza aprire il gioco, dice se il gioco segnala errori caricando l'add-on e se ogni blocco, oggetto e mob `coop:` esiste davvero. Gira anche nella build delle pull request, quando Samuele crea la variabile `EULA_MINECRAFT_ACCETTATA`. Non controlla la grafica.
 
 - [x] Attivazione a prova di errore: pacchetti chiamati "Coop Space" (da attivare) e "Coop Space - grafica" (si aggiunge da sola), messaggio in chat "Coop Space <versione> attivo." all'ingresso, mondo di prova `.mcworld` già pronto in ogni release e anteprima. Causa del 16/11: era attiva solo la grafica.
 - [x] Blocco di ottone (`coop:blocco_ottone`): cubo pieno, suono di metallo, 5 secondi per romperlo, texture 16×16, nomi "Blocco di ottone" / "Brass Block".
