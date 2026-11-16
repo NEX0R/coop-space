@@ -66,7 +66,7 @@ Scrivi sul gruppo se ha funzionato oppure no.
 2. **Chiedi all'assistente.** Ti propone un piano; lo approvi oppure lo correggi; solo dopo scrive i file.
 3. **L'assistente apre una "pull request"**: è una proposta di modifica. GitHub la controlla in automatico con il validatore ufficiale di Mojang.
 4. **Prova l'anteprima nel gioco**: nel sito, accanto alla pull request, tocca **"scarica l'anteprima"** e apri il file con Minecraft chiuso. Ogni pull request ha la sua anteprima, aggiornata a ogni modifica, che sparisce quando la pull request si chiude.
-5. **Se funziona, si approva** ("Merge") e la modifica entra nella versione di tutti.
+5. **Se funziona, si approva** ("Merge") e la modifica entra nella versione di tutti. Può approvare chiunque del gruppo. Se dopo il merge qualcosa non va, nella pagina della pull request c'è il pulsante **"Revert"**: crea una proposta che annulla tutto, e appena è fusa si torna com'era prima. Niente si perde mai: `main` è protetto e la storia resta su GitHub.
 
 Una pull request contiene una cosa sola (una spada, un mob, un blocco). Così, se qualcosa si rompe, si capisce subito dove.
 

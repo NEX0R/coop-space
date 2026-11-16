@@ -24,7 +24,8 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 **D. Decisioni di gruppo**
 - [ ] Chi si occupa di cosa (logica e script, oggetti e mob, grafica e texture)
 - [ ] Il primo add-on vero: tema e 3-5 contenuti da creare
-- [ ] Chi approva le pull request degli altri
+- [x] Chi approva le pull request degli altri
+  - Deciso il 16/11: chiunque del gruppo, anche Jowa, dopo aver provato l'anteprima. Nessuna approvazione obbligatoria: se qualcosa va storto si torna indietro con "Revert" (vedi `AGENTS.md`, "Tornare indietro").
 
 ## Da fare
 
@@ -34,6 +35,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Decisione: le pull request le può approvare chiunque del gruppo, anche Jowa. Documentato come tornare indietro (pulsante Revert, o `git revert` per gli assistenti). Controllo automatico mensile degli strumenti Mojang (routine cloud, il 7 di ogni mese).
 - [x] `npm run verify` controlla anche quello che il validatore Mojang non vede: blocchi senza forma (`minecraft:geometry`), nomi italiano e inglese mancanti, dipendenza circolare tra i pack.
 - [x] Il repository è il centro di contatto tra gli agenti: `team.json` dice chi c'è, l'hook riconosce chi è nuovo e l'assistente avvia l'accoglienza da solo, i messaggi (issue con etichetta `messaggio`) arrivano all'assistente del destinatario all'avvio; modulo "Scrivi al team" nel sito.
 - [x] Versione automatica dei pacchetti (`prima cifra.giorno.minuto`): ogni `.mcaddon` è più nuovo del precedente, così Minecraft non lo rifiuta più come "Pacchetto doppio rilevato" e nessuno deve alzare la versione a mano.
