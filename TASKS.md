@@ -33,6 +33,8 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): avvia il server senza schermo, carica l'add-on e dice se blocchi, oggetti, mob e script vengono accettati dal gioco. **Chi:** Samuele
+
 ## Fatto
 
 - [x] Attivazione a prova di errore: pacchetti chiamati "Coop Space" (da attivare) e "Coop Space - grafica" (si aggiunge da sola), messaggio in chat "Coop Space <versione> attivo." all'ingresso, mondo di prova `.mcworld` già pronto in ogni release e anteprima. Causa del 16/11: era attiva solo la grafica.
