@@ -35,8 +35,8 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): in circa 15 secondi, senza aprire il gioco, dice se il gioco segnala errori caricando l'add-on e se ogni blocco, oggetto e mob `coop:` esiste davvero. Gira anche nella build delle pull request, quando Samuele crea la variabile `EULA_MINECRAFT_ACCETTATA`. Non controlla la grafica.
 - [x] Merge automatico: una pull request si fonde da sola quando qualcuno preme "Ready for review" e il controllo di GitHub è verde. Finché è in bozza resta ferma, per provarla. Dopo la fusione l'anteprima si cancella e "ultima-versione" e il sito si aggiornano da soli.
-
 - [x] Attivazione a prova di errore: pacchetti chiamati "Coop Space" (da attivare) e "Coop Space - grafica" (si aggiunge da sola), messaggio in chat "Coop Space <versione> attivo." all'ingresso, mondo di prova `.mcworld` già pronto in ogni release e anteprima. Causa del 16/11: era attiva solo la grafica.
 - [x] Blocco di ottone (`coop:blocco_ottone`): cubo pieno, suono di metallo, 5 secondi per romperlo, texture 16×16, nomi "Blocco di ottone" / "Brass Block".
 - [x] Versione nel nome dei pack ("Coop Space BP 0.320.996", e "(anteprima PR #N)" nelle anteprime) e sul pulsante di download del sito, così in Minecraft si distinguono.

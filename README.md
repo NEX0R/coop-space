@@ -127,4 +127,7 @@ X (Twitter) e YouTube servono a scoprire le novità; per sapere come si fa davve
 npm install       installa gli strumenti
 npm run verify    controlla l'add-on (deve dare 0 errori e 0 avvisi)
 npm run package   crea dist/coop-space.mcaddon
+npm run prova-server   prova l'add-on sul server ufficiale di Minecraft, senza aprire il gioco
 ```
+
+`npm run prova-server` dice in pochi secondi se il gioco accetta blocchi, oggetti, mob e script. Funziona solo al PC e solo dopo che la persona ha accettato l'EULA di Minecraft (lo spiega `AGENTS.md`, "Prova automatica sul server"). La grafica va comunque guardata nel gioco.

@@ -6,6 +6,7 @@
       "Bash(npm run verify)",
       "Bash(npm run package)",
       "Bash(npm run sito)",
+      "Bash(npm run prova-server)",
       "Bash(npm run skills:*)",
       "Bash(npx mct skills:*)",
       "Bash(npm ci)",
