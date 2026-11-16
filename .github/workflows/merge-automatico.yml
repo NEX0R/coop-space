@@ -1,0 +1,95 @@
+# Merge automatico: una pull request si fonde da sola in main quando
+#   - non è più in bozza (qualcuno ha premuto "Ready for review"),
+#   - il titolo non inizia con "In corso",
+#   - il controllo "build" dell'ultimo commit è verde.
+# Togliere la bozza è quindi il "sì, fondila": lo fa la persona dopo aver provato l'anteprima.
+#
+# Una fusione fatta da un'automazione di GitHub non fa partire le altre automazioni.
+# Per questo, dopo la fusione, questo file fa lui quello che sarebbe partito da solo:
+# cancella l'anteprima, ricrea "ultima-versione" (build.yml) e ripubblica il sito (sito.yml).
+name: Merge automatico
+
+on:
+  # Quando finisce la build di una pull request.
+  workflow_run:
+    workflows: ["Build add-on"]
+    types: [completed]
+  # Quando una pull request esce dalla bozza, cambia titolo o viene riaperta.
+  # pull_request_target usa sempre la versione di questo file che sta su main.
+  pull_request_target:
+    types: [ready_for_review, edited, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+  checks: read
+
+concurrency:
+  group: merge-automatico-${{ github.event.pull_request.number || github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  fondi:
+    # Solo pull request nate da rami di questo repository, mai da copie esterne (fork).
+    if: >-
+      (github.event_name == 'pull_request_target'
+        && github.event.pull_request.head.repo.full_name == github.repository)
+      || (github.event_name == 'workflow_run'
+        && github.event.workflow_run.event == 'pull_request'
+        && github.event.workflow_run.conclusion == 'success'
+        && github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fondi la pull request se è pronta
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NUMERO_EVENTO: ${{ github.event.pull_request.number }}
+          RAMO_BUILD: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          set -u
+          nota() { echo "$1"; echo "$1" >> "$GITHUB_STEP_SUMMARY"; }
+
+          # 1. Di quale pull request parliamo?
+          NUMERO="$NUMERO_EVENTO"
+          if [ -z "$NUMERO" ]; then
+            NUMERO=$(gh api "repos/$GH_REPO/pulls?state=open&base=main&head=$GITHUB_REPOSITORY_OWNER:$RAMO_BUILD" --jq '.[0].number // empty')
+          fi
+          if [ -z "$NUMERO" ]; then nota "Nessuna pull request aperta per il ramo $RAMO_BUILD: niente da fare."; exit 0; fi
+
+          # 2. È pronta?
+          DATI=$(gh api "repos/$GH_REPO/pulls/$NUMERO")
+          STATO=$(jq -r .state <<<"$DATI"); BOZZA=$(jq -r .draft <<<"$DATI"); BASE=$(jq -r .base.ref <<<"$DATI")
+          TITOLO=$(jq -r .title <<<"$DATI"); SHA=$(jq -r .head.sha <<<"$DATI")
+          if [ "$STATO" != "open" ] || [ "$BASE" != "main" ]; then nota "La pull request #$NUMERO non è aperta verso main: niente da fare."; exit 0; fi
+          if [ "$BOZZA" = "true" ]; then nota "La pull request #$NUMERO è in bozza: non la fondo. Si fonderà quando qualcuno preme Ready for review."; exit 0; fi
+          case "$TITOLO" in
+            "In corso"*|"in corso"*) nota "La pull request #$NUMERO ha ancora il titolo \"In corso\": non la fondo."; exit 0 ;;
+          esac
+
+          # 3. La build dell'ultimo commit è verde?
+          ESITO=$(gh api "repos/$GH_REPO/commits/$SHA/check-runs?check_name=build" --jq '[.check_runs[] | select(.app.slug == "github-actions")] | sort_by(.started_at) | last | .conclusion // "assente"')
+          if [ "$ESITO" != "success" ]; then nota "La build dell'ultimo commit di #$NUMERO non è verde ($ESITO): aspetto."; exit 0; fi
+
+          # 4. Fondi. Il parametro sha garantisce che si fonde proprio il commit controllato.
+          FUSA=no
+          for TENTATIVO in 1 2 3 4; do
+            if RISPOSTA=$(gh api -X PUT "repos/$GH_REPO/pulls/$NUMERO/merge" -f merge_method=merge -f sha="$SHA" 2>&1); then FUSA=si; break; fi
+            sleep 6
+          done
+          if [ "$FUSA" != "si" ]; then
+            nota "Non riesco a fondere #$NUMERO: $RISPOSTA"
+            SEGNO="<!-- merge-automatico:$SHA -->"
+            if ! gh api "repos/$GH_REPO/issues/$NUMERO/comments" --paginate --jq '.[].body' | grep -qF "$SEGNO"; then
+              gh api "repos/$GH_REPO/issues/$NUMERO/comments" -f body="$SEGNO
+          Il merge automatico non è riuscito. Di solito sono conflitti con \`main\`: aggiorna il ramo (\`git fetch origin && git merge origin/main\`), risolvi i conflitti e fai push. La pull request si fonderà da sola quando la build torna verde." >/dev/null
+            fi
+            exit 1
+          fi
+          nota "Pull request #$NUMERO fusa in main."
+
+          # 5. Quello che dopo una fusione fatta a mano sarebbe partito da solo.
+          gh release delete "anteprima-pr-$NUMERO" --cleanup-tag --yes >/dev/null 2>&1 || true
+          gh workflow run build.yml --ref main && nota "Avviata la pubblicazione di \"ultima-versione\"."
+          gh workflow run sito.yml --ref main && nota "Avviato l'aggiornamento del sito."
