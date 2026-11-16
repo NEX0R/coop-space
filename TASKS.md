@@ -29,12 +29,12 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 ## Da fare
 
 - [ ] (Facoltativo) Provare Blockbench per modelli 3D e texture, quando faremo il primo mob. **Chi:** ?
-- [ ] Aggiungere a `scripts/verify.mjs` un controllo per i blocchi senza `minecraft:geometry` (il validatore Mojang non lo segnala, il gioco scarta il blocco). **Chi:** ?
 
 ## In corso
 
 ## Fatto
 
+- [x] `npm run verify` controlla anche quello che il validatore Mojang non vede: blocchi senza forma (`minecraft:geometry`), nomi italiano e inglese mancanti, dipendenza circolare tra i pack.
 - [x] Il repository è il centro di contatto tra gli agenti: `team.json` dice chi c'è, l'hook riconosce chi è nuovo e l'assistente avvia l'accoglienza da solo, i messaggi (issue con etichetta `messaggio`) arrivano all'assistente del destinatario all'avvio; modulo "Scrivi al team" nel sito.
 - [x] Versione automatica dei pacchetti (`prima cifra.giorno.minuto`): ogni `.mcaddon` è più nuovo del precedente, così Minecraft non lo rifiuta più come "Pacchetto doppio rilevato" e nessuno deve alzare la versione a mano.
 - [x] Anteprima di ogni pull request scaricabile dal telefono con un tocco (sito o pagina Releases), cancellata da sola alla chiusura della pull request.
