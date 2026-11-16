@@ -39,6 +39,25 @@ jobs:
           COOP_ETICHETTA: "${{ github.event_name == 'pull_request' && format('anteprima PR #{0}', github.event.pull_request.number) || '' }}"
         run: npm run package
 
+      - name: Prova sul server ufficiale Bedrock
+        # Parte solo se il proprietario del repository ha accettato l'EULA di Minecraft anche per GitHub,
+        # creando lui la variabile EULA_MINECRAFT_ACCETTATA = true
+        # (Settings → Secrets and variables → Actions → Variables). Vedi AGENTS.md.
+        # Codice 1: l'add-on ha problemi e la build fallisce. Codice 3: la prova non è potuta partire
+        # (per esempio il sito di Minecraft non risponde): resta un avviso e la build continua.
+        if: vars.EULA_MINECRAFT_ACCETTATA == 'true'
+        env:
+          MCTOOLS_I_ACCEPT_EULA_AT_MINECRAFTDOTNETSLASHEULA: ${{ vars.EULA_MINECRAFT_ACCETTATA }}
+        run: |
+          set +e
+          node scripts/prova-server.mjs
+          CODICE=$?
+          if [ "$CODICE" -eq 3 ]; then
+            echo "::warning::La prova sul server Bedrock non è partita: guarda il riepilogo della build."
+            exit 0
+          fi
+          exit "$CODICE"
+
       - name: Allega il .mcaddon alla build
         uses: actions/upload-artifact@v4
         with:
