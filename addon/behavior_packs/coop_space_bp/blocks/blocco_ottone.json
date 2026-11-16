@@ -1,0 +1,29 @@
+{
+  "format_version": "1.26.60",
+  "minecraft:block": {
+    "description": {
+      "identifier": "coop:blocco_ottone",
+      "menu_category": {
+        "category": "construction"
+      }
+    },
+    "components": {
+      "minecraft:geometry": {
+        "identifier": "minecraft:geometry.full_block"
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 5
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 6
+      },
+      "minecraft:map_color": "#B5A642",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "coop_blocco_ottone",
+          "render_method": "opaque"
+        }
+      }
+    }
+  }
+}

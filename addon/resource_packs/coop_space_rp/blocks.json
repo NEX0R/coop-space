@@ -2,5 +2,8 @@
   "format_version": "1.21.40",
   "coop:blocco_prova": {
     "sound": "stone"
+  },
+  "coop:blocco_ottone": {
+    "sound": "metal"
   }
 }
