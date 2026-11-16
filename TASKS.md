@@ -35,6 +35,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Blocco di ottone (`coop:blocco_ottone`): cubo pieno, suono di metallo, 5 secondi per romperlo, texture 16×16, nomi "Blocco di ottone" / "Brass Block".
 - [x] Versione nel nome dei pack ("Coop Space BP 0.320.996", e "(anteprima PR #N)" nelle anteprime) e sul pulsante di download del sito, così in Minecraft si distinguono.
 - [x] Decisione: le pull request le può approvare chiunque del gruppo, anche Giovanni. Documentato come tornare indietro (pulsante Revert, o `git revert` per gli assistenti). Controllo automatico mensile degli strumenti Mojang (routine cloud, il 7 di ogni mese).
 - [x] `npm run verify` controlla anche quello che il validatore Mojang non vede: blocchi senza forma (`minecraft:geometry`), nomi italiano e inglese mancanti, dipendenza circolare tra i pack.

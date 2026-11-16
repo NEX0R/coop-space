@@ -6,6 +6,9 @@
   "texture_data": {
     "coop_blocco_prova": {
       "textures": "textures/blocks/blocco_prova"
+    },
+    "coop_blocco_ottone": {
+      "textures": "textures/blocks/blocco_ottone"
     }
   }
 }
