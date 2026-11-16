@@ -21,6 +21,7 @@ addon/
     textures/  texts/it_IT.lang  texts/en_US.lang
 scripts/verify.mjs                controllo obbligatorio (npm run verify)
 scripts/package.mjs               crea dist/coop-space.mcaddon (npm run package)
+scripts/prova-server.mjs          prova l'add-on sul server ufficiale Bedrock (npm run prova-server)
 scripts/avvio-sessione.mjs        all'avvio di Claude Code: aggiorna main, installa gli strumenti, elenca i lavori aperti
 scripts/sito.mjs                  costruisce il sito del team in out/sito (npm run sito)
 sito/                             pagine del sito: progressi, contenuti, visore 3D
@@ -56,6 +57,7 @@ Solo i file dentro `addon/` finiscono nel gioco. Non mettere altro lì dentro: i
    - **Prima di finire**: `git fetch origin && git merge origin/main`, risolvi i conflitti (succedono spesso su `texts/*.lang` e `textures/*_texture.json`, file che tutti toccano: tieni le righe di tutti e due), poi rilancia `npm run verify`.
    **Richieste del team**: arrivano come issue dai moduli del sito (etichette `accesso`, `idea`, `problema`, `messaggio`); leggile con `gh api repos/NEX0R/coop-space/issues`. Un'idea approvata dal team diventa un compito in `TASKS.md` e la pull request che la realizza scrive `Chiude #N`. Un problema si affronta con la skill `debug-addon`. Gli inviti (`accesso`) li può mandare solo Nexor: controlla che l'account esista e chiedigli l'ok. I messaggi seguono "Il repository è il centro di contatto", qui sotto.
 4. **Un lavoro non è finito finché `npm run verify` non passa: 0 errori e 0 avvisi.** Correggi e rilancia finché non passa. Le voci "likely noise" sono accettate da Bedrock e non bloccano.
+   Se hai toccato `addon/` e lavori su un PC dove la persona ha accettato l'EULA, lancia anche `npm run prova-server` (vedi "Prova automatica sul server"). Dal telefono lo fa la build della pull request.
 5. Aggiorna `TASKS.md`: sposta il compito nella sezione giusta e scrivi in una riga cosa hai fatto. Il sito del team (<https://nex0r.github.io/coop-space/>) legge proprio questo file: mantieni il formato `- [ ] testo **Chi:** nome`, i titoli `## Sezione` e i gruppi `**A. Nome**`. Il sito non si modifica mai a mano: si rigenera da `TASKS.md` e da `addon/`.
    Per vedere il sito prima del merge: `npm run sito -- --serve` e apri <http://localhost:8765>. Per i modelli 3D di mob nuovi, il visore del sito mostra modello, texture e animazioni presi da `addon/`.
 6. Nella descrizione della pull request spiega cosa cambia nel gioco e come provarlo, con il link dell'anteprima: `https://github.com/NEX0R/coop-space/releases/download/anteprima-pr-<N>/coop-space.mcaddon`.
@@ -111,8 +113,8 @@ Il repository è il punto d'ingresso del gruppo: ognuno entra con la propria IA,
 - **Forma dei blocchi**: ogni blocco deve avere `minecraft:geometry` (per un cubo pieno: `"minecraft:geometry": "minecraft:geometry.full_block"`). Senza, il gioco scarta il blocco senza avvisi visibili: non compare nell'inventario e `/give` dà errore di sintassi. Il validatore Mojang non se ne accorge: lo controlla `npm run verify` nel passo "Controlli del progetto", insieme ai nomi italiano e inglese e alla dipendenza circolare tra i pack.
 - **Avvisi di sicurezza npm** (Dependabot, `npm audit`): arrivano dalle dipendenze di `@minecraft/creator-tools`, non dall'add-on (nel `.mcaddon` finisce solo `addon/`). Le versioni corrette sono imposte dalla sezione `overrides` di `package.json` (vedi "Aggiornare gli strumenti"). **Mai `npm audit fix --force`**: riporta `creator-tools` alla 0.15.6, senza skill, e rompe la verifica.
 - **Generatori automatici**: i comandi `mct add` e lo strumento `createMinecraftContent` possono riscrivere i manifest. Dopo averli usati controlla `git diff` sui due `manifest.json` e ripristina UUID, nomi e dipendenze originali.
-- **EULA di Minecraft**: non accettarla mai al posto dell'utente. Se un comando la chiede, digli di eseguire lui `npx -y @minecraft/creator-tools@0.21.0 eula`. Validazione ed export non ne hanno bisogno.
-- Non lanciare come comandi bloccanti `mct view`, `mct serve` o `mct mcp`: restano attivi finché non vengono fermati.
+- **EULA di Minecraft**: non accettarla mai al posto dell'utente, nemmeno se te lo chiede (il comando è anche bloccato in `.claude/settings.json`). Se un comando la chiede, digli di eseguire lui `npx -y @minecraft/creator-tools@0.21.0 eula` (in Claude Code: nel prompt, con `!` davanti). Vale per quel PC, una volta sola. Serve a `npm run prova-server` e ai comandi server di `mct`; validazione ed export non ne hanno bisogno. Su GitHub l'accettazione è la variabile `EULA_MINECRAFT_ACCETTATA`, che crea solo il proprietario del repository.
+- Non lanciare come comandi bloccanti `mct view`, `mct serve` o `mct mcp`: restano attivi finché non vengono fermati. Non usare `mct autotest`: con il server 1.26.65 resta appeso (il suo debugger è di una versione diversa) e non dice se la prova è passata. Usa `npm run prova-server`.
 
 ## Provare l'add-on sul telefono
 
@@ -135,6 +137,22 @@ Se l'assistente gira sul PC dove è installato Minecraft, può fare da solo i co
 - **Pack installati**: `%APPDATA%\Minecraft Bedrock\Users\Shared\games\com.mojang\behavior_packs` e `resource_packs` (cartelle `CoopSpaceB`, `CoopSpaceR`; le versioni successive finiscono in `CoopSpaceB(1)`, ecc.). Le versioni vecchie restano accanto e confondono le prove: dopo una prova riuscita si possono eliminare, **controllando prima** nel loro `manifest.json` che siano davvero quelle vecchie, e solo con l'ok dell'utente.
 - **Mondi**: `%APPDATA%\Minecraft Bedrock\Users\<numero>\games\com.mojang\minecraftWorlds\<cartella>`; `world_behavior_packs.json` dice quali pack e versioni usa il mondo.
 - **Registro su file**: chiedi all'utente di attivare **Abilita file registro dei contenuti** (stesso gruppo in Impostazioni → Creatore). Il gioco scrive `%APPDATA%\Minecraft Bedrock\logs\ContentLog*.txt`. Se il file è vuoto, fai chiudere Minecraft e rileggilo. Cerca le righe con `[error]` o `[warning]` che citano `coop`.
+
+## Prova automatica sul server (`npm run prova-server`)
+
+Risponde senza aprire il gioco alla domanda "l'add-on si carica e i contenuti esistono?". Avvia il **Bedrock Dedicated Server** ufficiale di Mojang (un Minecraft senza schermo), con un mondo nuovo e senza esperimenti come sul telefono, e in circa 15 secondi controlla:
+
+- gli **errori del registro dei contenuti** durante il caricamento: blocchi, oggetti e mob scartati, script che si fermano (con file e riga);
+- che ogni **blocco, oggetto e mob `coop:`** dei behavior pack esista davvero nel gioco. È la prova `/give` del punto 5 qui sopra, fatta dalla console del server: se il gioco non conosce l'identificativo, risponde con un errore di sintassi.
+
+Cosa **non** controlla: la grafica (texture, modelli, nomi), e tutto quello che succede solo con un giocatore dentro (messaggi in chat, piazzare, usare). Quello si guarda ancora nel gioco, con l'anteprima.
+
+- **Risultato**: `✓`/`✗` riga per riga. Codice 0 = superata, 1 = problemi nell'add-on (da correggere), 3 = la prova non è potuta partire (EULA mancante, download fallito, server non avviato): non è colpa dell'add-on. Il registro completo del server è in `out/prova-server.log`.
+- **Sul PC** (Windows o Linux): serve l'EULA accettata dalla persona (vedi "Regole tecniche"). Il server si scarica da solo dal sito ufficiale la prima volta e a ogni versione nuova (circa 500 MB, in `%LOCALAPPDATA%\coop-space-server`; si può cancellare quando si vuole). Usa la porta 19432 e non compare tra i mondi in rete locale.
+- **Su GitHub**: la build di ogni pull request lo lancia dopo `npm run package`, se esiste la variabile del repository `EULA_MINECRAFT_ACCETTATA` = `true`. La crea solo il proprietario (Nexor): `gh variable set EULA_MINECRAFT_ACCETTATA --body true --repo NEX0R/coop-space`, oppure Settings → Secrets and variables → Actions → Variables. Senza variabile il passo viene saltato. Con codice 3 la build mostra un avviso e continua.
+- **Dal telefono** (sessioni cloud) il comando non parte: guarda il riepilogo della build nella pull request.
+- **Provare una copia**: `npm run prova-server -- --addon <cartella>` prova un'altra cartella che contiene `behavior_packs/` (utile per riprodurre un errore senza toccare `addon/`).
+- I test con giocatore finto (GameTest, `@minecraft/server-gametest`) esistono solo in versione beta e richiedono l'esperimento "Beta API": per ora non si usano (vedi "Script API").
 
 ## Approvare e tornare indietro
 

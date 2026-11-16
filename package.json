@@ -8,7 +8,8 @@
     "verify": "node scripts/verify.mjs",
     "package": "node scripts/package.mjs",
     "skills": "mct skills",
-    "sito": "node scripts/sito.mjs"
+    "sito": "node scripts/sito.mjs",
+    "prova-server": "node scripts/prova-server.mjs"
   },
   "devDependencies": {
     "@minecraft/creator-tools": "0.21.0",
