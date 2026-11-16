@@ -35,6 +35,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Versione nel nome dei pack ("Coop Space BP 0.320.996", e "(anteprima PR #N)" nelle anteprime) e sul pulsante di download del sito, così in Minecraft si distinguono.
 - [x] Decisione: le pull request le può approvare chiunque del gruppo, anche Jowa. Documentato come tornare indietro (pulsante Revert, o `git revert` per gli assistenti). Controllo automatico mensile degli strumenti Mojang (routine cloud, il 7 di ogni mese).
 - [x] `npm run verify` controlla anche quello che il validatore Mojang non vede: blocchi senza forma (`minecraft:geometry`), nomi italiano e inglese mancanti, dipendenza circolare tra i pack.
 - [x] Il repository è il centro di contatto tra gli agenti: `team.json` dice chi c'è, l'hook riconosce chi è nuovo e l'assistente avvia l'accoglienza da solo, i messaggi (issue con etichetta `messaggio`) arrivano all'assistente del destinatario all'avvio; modulo "Scrivi al team" nel sito.
