@@ -49,6 +49,8 @@ section { background: var(--superficie); border: 1px solid var(--bordo); border-
 .azioni { display: flex; flex-wrap: wrap; gap: 8px; }
 .etichetta { font-size: 0.8rem; border-radius: 10px; padding: 0 8px; margin-left: 4px; border: 1px solid var(--bordo); color: var(--tenue); white-space: nowrap; }
 .bottone.piccolo { padding: 6px 12px; font-size: 0.9rem; margin-top: 8px; }
+.bottone.secondario { background: transparent; color: var(--verde-testo); border: 2px solid var(--verde); }
+[hidden] { display: none !important; }
 .numeri { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
 .numero { border: 1px solid var(--bordo); border-radius: 10px; padding: 10px 12px; }
 .numero b { display: block; font-size: 1.5rem; }
