@@ -136,9 +136,19 @@ Se l'assistente gira sul PC dove è installato Minecraft, può fare da solo i co
 - **Mondi**: `%APPDATA%\Minecraft Bedrock\Users\<numero>\games\com.mojang\minecraftWorlds\<cartella>`; `world_behavior_packs.json` dice quali pack e versioni usa il mondo.
 - **Registro su file**: chiedi all'utente di attivare **Abilita file registro dei contenuti** (stesso gruppo in Impostazioni → Creatore). Il gioco scrive `%APPDATA%\Minecraft Bedrock\logs\ContentLog*.txt`. Se il file è vuoto, fai chiudere Minecraft e rileggilo. Cerca le righe con `[error]` o `[warning]` che citano `coop`.
 
+## Approvare e tornare indietro
+
+- **Chi approva**: chiunque del gruppo (deciso il 16/11), dopo aver provato l'anteprima nel gioco. Nessuna approvazione obbligatoria: basta il controllo `build` verde. Non fondere mai una pull request in bozza o con titolo "In corso".
+- **Tornare indietro (il "backup")**: niente si perde. `main` è protetto (niente push forzati né cancellazioni) e ogni modifica resta nella storia delle pull request.
+  - Per la persona: nella pagina della pull request fusa c'è il pulsante **Revert**. Crea una pull request che annulla quella modifica; quando viene fusa, il progetto torna com'era e "Ultima versione" si ricrea con un numero più alto, quindi il telefono la accetta.
+  - Per l'assistente, anche dal cloud: `git switch main && git pull && git switch -c annulla-pr-<N>`, poi `git revert -m 1 <commit di merge della PR>` (lo trovi con `git log --merges --oneline`), `npm run verify`, `git push -u origin annulla-pr-<N>` e la pull request con `gh api` come al solito (titolo `Annulla #<N>: …`).
+  - Per un solo file: `git checkout <commit buono> -- <file>` su un ramo nuovo, poi pull request.
+
 ## Aggiornare gli strumenti
 
 Le skill ufficiali arrivano con il pacchetto `@minecraft/creator-tools`. Per aggiornarle basta alzare la sua versione in `package.json` e in `.mcp.json` (controlla con `npm view @minecraft/creator-tools version`), poi `npm install` e `npm run verify`. Funziona anche da una sessione cloud, perché usa solo npm.
+
+**Controllo automatico mensile**: il 7 di ogni mese alle 9 (ora italiana) una routine cloud dell'account di Samuele confronta la versione di `creator-tools`. Se ce n'è una nuova, prepara l'aggiornamento con la procedura qui sotto e apre una pull request "Aggiorna gli strumenti Mojang a <versione>"; se le prove falliscono, apre invece un messaggio per tutti. Quella pull request va provata e approvata come le altre. Gestione: <https://claude.ai/code/routines/trig_013BpMMcqkMkNY3MDbDx1Luf>.
 
 **Versioni forzate (`overrides` in `package.json`).** `creator-tools` 0.21.0 fissava librerie con falle note (`axios`, `@modelcontextprotocol/sdk`, `@hono/node-server`, `zod`). Dal 15/11/2026 il progetto impone le versioni corrette, provate con: `npm ci`, `npm audit` (0 vulnerabilità), `npm run verify`, `npm run package` (`.mcaddon` identico a prima), `mct skills`, server MCP (20 strumenti, `validateFile`, `createMinecraftContent` con file identici a quelli prodotti con le versioni originali).
 Quando aggiorni `creator-tools`: **togli tutta la sezione `overrides`**, poi `npm install` e `npm audit`. Rimetti solo le voci ancora necessarie, con l'ultima versione corretta, e rifai le stesse prove. Lasciate lì, le versioni forzate potrebbero imporre librerie più vecchie di quelle che la versione nuova si porta dietro.
