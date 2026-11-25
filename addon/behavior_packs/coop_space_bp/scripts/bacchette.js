@@ -388,6 +388,7 @@ function costruisci(player, bacchetta, blocco, faccia) {
     return;
   }
   puntiX.delete(player.id);
+  anteprime.delete(player.id);
   const fatte = piazza(p.dimensione, p.libere, p.permutazione, player);
   if (fatte.length === 0) return;
   if (!p.creativa) {
@@ -409,10 +410,14 @@ function costruisci(player, bacchetta, blocco, faccia) {
 
 // Anteprima, come i blocchi trasparenti di Building Gadgets: mentre guardi un blocco
 // con la bacchetta in mano, scintille verdi segnano dove andranno i blocchi.
-// La scintilla "coop:anteprima_bacchetta" (resource pack) dura mezzo secondo, quanto il giro
-// dell'anteprima: così non resta in aria quando sposti lo sguardo.
+// Il mirino si controlla ogni 2 tick (0,1 secondi): appena cambia quello che guardi, le scintille
+// si ridisegnano subito. Se non cambia niente, si ridisegnano ogni 5 tick (0,25 secondi), quanto
+// dura la scintilla "coop:anteprima_bacchetta" (resource pack): così non restano scie in aria.
+// I calcoli (caselle libere, inventario) si rifanno solo quando cambia qualcosa.
 const DISTANZA_ANTEPRIMA = 10;
-const GIRO_ANTEPRIMA = 8; // tick (0,4 secondi)
+const GIRO_MIRINO = 2; // tick
+const GIRO_SCINTILLE = 5; // tick
+const anteprime = new Map(); // id giocatore -> { chiave, punti, tick }
 const PUNTI_PIENI = 48; // oltre, si segnano solo gli spigoli della forma
 
 // Solo gli spigoli della scatola che contiene la forma: molte meno scintille, forma riconoscibile.
@@ -429,14 +434,38 @@ export function spigoli(posizioni) {
 }
 function anteprima(player) {
   const bacchetta = player.getComponent("minecraft:equippable")?.getEquipment(EquipmentSlot.Mainhand);
-  if (!eUnaBacchetta(bacchetta) || player.isSneaking) return;
+  if (!eUnaBacchetta(bacchetta) || player.isSneaking) {
+    anteprime.delete(player.id);
+    return;
+  }
   const mira = player.getBlockFromViewDirection({ maxDistance: DISTANZA_ANTEPRIMA });
-  if (!mira) return;
-  const p = progetto(player, bacchetta, mira.block, mira.face);
-  if (p.errore) return;
-  const x = leggiPuntoX(player);
-  const punti = x && p.scelta.modo === "da_x_a_y" ? [x, ...spigoli(p.libere)] : spigoli(p.libere);
-  for (const pos of punti) {
+  if (!mira) {
+    anteprime.delete(player.id);
+    return;
+  }
+  // Tutto quello che cambia la forma: se è uguale a prima, si riusano i punti già calcolati.
+  const b = mira.block.location;
+  const avanti = avantiDa(player.getViewDirection());
+  const piedi = player.location;
+  const chiave = [
+    player.dimension.id, b.x, b.y, b.z, mira.face, mira.block.typeId, bacchetta.typeId,
+    avanti.x, avanti.z, Math.floor(piedi.x), Math.floor(piedi.y), Math.floor(piedi.z),
+    player.getDynamicProperty(PROP_SCELTA), player.getDynamicProperty(PROP_BLOCCO),
+    JSON.stringify(leggiPuntoX(player) ?? null),
+  ].join("|");
+  const adesso = system.currentTick;
+  let stato = anteprime.get(player.id);
+  if (!stato || stato.chiave !== chiave) {
+    const p = progetto(player, bacchetta, mira.block, mira.face);
+    const x = leggiPuntoX(player);
+    let punti = p.errore ? [] : spigoli(p.libere);
+    if (x && p.scelta.modo === "da_x_a_y") punti = [x, ...punti];
+    stato = { chiave, punti, tick: -100 };
+    anteprime.set(player.id, stato);
+  }
+  if (adesso - stato.tick < GIRO_SCINTILLE) return;
+  stato.tick = adesso;
+  for (const pos of stato.punti) {
     try {
       player.spawnParticle("coop:anteprima_bacchetta", { x: pos.x + 0.5, y: pos.y + 0.5, z: pos.z + 0.5 });
     } catch {}
@@ -450,6 +479,7 @@ function annulla(player) {
     return;
   }
   ultimaCostruzione.delete(player.id);
+  anteprime.delete(player.id);
   const dimensione = world.getDimension(ultima.dimensione);
   let tolti = 0;
   for (const pos of ultima.posizioni) {
@@ -577,7 +607,7 @@ system.runInterval(() => {
       anteprima(player);
     } catch {}
   }
-}, GIRO_ANTEPRIMA);
+}, GIRO_MIRINO);
 
 world.afterEvents.itemUse.subscribe(({ source, itemStack }) => {
   if (!eUnaBacchetta(itemStack) || troppoPresto(source)) return;
