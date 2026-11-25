@@ -3,7 +3,9 @@
 // Avvia il "Bedrock Dedicated Server" di Mojang (un Minecraft senza schermo), gli fa caricare
 // l'add-on e controlla due cose che `npm run verify` non può sapere:
 //   1. se il gioco scrive errori mentre carica i pack (blocchi scartati, script che si fermano...);
-//   2. se ogni blocco, oggetto e mob `coop:` esiste davvero nel gioco (come fare /give a mano).
+//   2. se ogni blocco, oggetto e mob `coop:` esiste davvero nel gioco (come fare /give a mano);
+//   3. se gli script hanno il "pulsante di prova" (scripts/prove.js del behavior pack), lo preme con
+//      `/scriptevent coop:autotest` e legge l'esito di ogni prova, più gli errori scritti DOPO l'avvio.
 // Non controlla la grafica: texture e modelli li disegna solo il gioco vero.
 //
 // Il mondo di prova è nuovo a ogni avvio e senza esperimenti, come sul telefono.
@@ -38,6 +40,9 @@ const eseguibile = join(serverDir, windows ? "bedrock_server.exe" : "bedrock_ser
 const VAR_EULA = "MCTOOLS_I_ACCEPT_EULA_AT_MINECRAFTDOTNETSLASHEULA";
 const ELENCO_VERSIONI = "https://net-secondary.web.minecraft-services.net/api/v1.0/download/links";
 const SENTINELLA = "coop:sentinella_che_non_esiste";
+const FINE_PROVE = "COOP-TEST FINE";
+// Zona tenuta carica per le prove degli script: deve coprire ORIGINE di scripts/prove.js.
+const ZONA_PROVE = "tickingarea add 0 100 0 15 110 15 coop_prove";
 
 // La prova non è potuta partire: non è colpa dell'add-on (codice 3).
 function nonPartita(messaggio) {
@@ -209,7 +214,7 @@ function contenuti(pack) {
 // ---------------------------------------------------------------------------------------------
 // 4. Avvio: aspetta "Server started", manda i comandi dalla console, poi spegne.
 // ---------------------------------------------------------------------------------------------
-function avviaServer(comandi) {
+function avviaServer(comandi, aspettaProve) {
   return new Promise((fine) => {
     const righe = [];
     const prima = []; // scritte durante il caricamento (prima dei comandi)
@@ -227,7 +232,7 @@ function avviaServer(comandi) {
       try { srv.stdin.write("stop\n"); } catch { /* già chiuso */ }
       setTimeout(() => { try { srv.kill(); } catch { /* già chiuso */ } }, 10000);
     };
-    const tempoMassimo = setTimeout(spegni, 180000);
+    const tempoMassimo = setTimeout(spegni, 240000);
 
     async function mandaComandi() {
       await attesa(2000); // lascia finire gli script di avvio
@@ -238,6 +243,8 @@ function avviaServer(comandi) {
       }
       // La sentinella è un blocco inventato: quando il server la rifiuta, ha letto tutti i comandi.
       for (let i = 0; i < 60 && !dopo.some((r) => r.includes(SENTINELLA)); i++) await attesa(250);
+      // Le prove degli script girano nei tick del gioco: si aspetta la loro riga finale (massimo 60 s).
+      if (aspettaProve) for (let i = 0; i < 240 && !dopo.some((r) => r.includes(FINE_PROVE)); i++) await attesa(250);
       spegni();
     }
 
@@ -271,17 +278,28 @@ function leggiRisultato(esito, pack, elenco) {
   const altri = [];
   const parole = ["coop", "development_", "[Scripting]", ...pack.flatMap((p) => [p.nome, p.titolo])].filter(Boolean);
 
-  for (const riga of esito.prima) {
+  // Errori del caricamento e, dopo i comandi, degli script (per esempio un TypeError dentro una prova).
+  // Dopo i comandi contano solo le righe degli script: le risposte ai comandi sono volute.
+  for (const riga of [...esito.prima, ...esito.dopo.filter((r) => r.includes("[Scripting]"))]) {
+    if (riga.includes("COOP-TEST")) continue;
     if (!/\b(ERROR|WARN)\]/.test(riga) || RUMORE.some((r) => r.test(riga))) continue;
     const testo = riga.replace(/^\[[^\]]*\]\s*/, "");
     (parole.some((p) => riga.includes(p)) ? problemi : altri).push(testo);
   }
 
+  // Esito del pulsante di prova: una riga "COOP-TEST <nome> OK|FALLITO ..." per prova.
+  const prove = [];
+  for (const riga of esito.dopo) {
+    const m = riga.match(/COOP-TEST (\S+) (OK|FALLITO)(.*)$/);
+    if (m) prove.push({ nome: m[1], ok: m[2] === "OK", dettaglio: m[3].replace(/^[:\s]+/, "").trim() });
+  }
+  const proveFinite = esito.dopo.some((r) => r.includes(FINE_PROVE));
+
   const rifiutati = new Set();
   for (const riga of esito.dopo) for (const m of riga.matchAll(/Unexpected "([^"]+)"/g)) rifiutati.add(m[1]);
   const comandiLetti = rifiutati.has(SENTINELLA);
   const mancanti = elenco.filter((c) => rifiutati.has(c.id));
-  return { problemi, altri, comandiLetti, mancanti };
+  return { problemi, altri, comandiLetti, mancanti, prove, proveFinite };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -298,7 +316,13 @@ const versione = await preparaServer();
 const pack = preparaMondo();
 const elenco = contenuti(pack);
 console.log(`Avvio il server Bedrock ${versione} con ${pack.map((p) => p.titolo).join(" + ")}...`);
-const esito = await avviaServer(elenco.map((c) => c.comando));
+// Il pulsante di prova si preme solo se qualche script del behavior pack lo ascolta.
+const conProve = pack.filter((p) => p.tipo === "behavior").some((p) =>
+  readdirSync(p.cartella, { recursive: true })
+    .some((f) => /\.js$/.test(f) && readFileSync(join(p.cartella, f), "utf8").includes("coop:autotest")));
+const comandi = elenco.map((c) => c.comando);
+if (conProve) comandi.push(ZONA_PROVE, "scriptevent coop:autotest");
+const esito = await avviaServer(comandi, conProve);
 
 mkdirSync(join(root, "out"), { recursive: true });
 writeFileSync(join(root, "out", "prova-server.log"), esito.righe.join("\n"));
@@ -308,24 +332,28 @@ if (!esito.partito) {
   nonPartita(`il server non si è avviato${esito.errore ? ` (${esito.errore.message})` : ""}. Registro completo: out/prova-server.log`);
 }
 
-const { problemi, altri, comandiLetti, mancanti } = leggiRisultato(esito, pack, elenco);
+const { problemi, altri, comandiLetti, mancanti, prove, proveFinite } = leggiRisultato(esito, pack, elenco);
 if (!comandiLetti) nonPartita("il server si è avviato ma non ha risposto ai comandi. Registro completo: out/prova-server.log");
 
 const righeRiepilogo = [];
 const scrivi = (riga) => { console.log(riga); righeRiepilogo.push(riga); };
 scrivi(`\nProva sul server Bedrock ${versione}`);
-scrivi(problemi.length ? `✗ Il gioco ha segnalato ${problemi.length} problemi caricando l'add-on:` : "✓ Nessun errore durante il caricamento dell'add-on");
+scrivi(problemi.length ? `✗ Il gioco ha segnalato ${problemi.length} problemi (caricamento o script):` : "✓ Nessun errore durante il caricamento dell'add-on");
 for (const p of problemi) scrivi(`    - ${p}`);
 if (!elenco.length) scrivi("- Nessun blocco, oggetto o mob da controllare");
 for (const c of elenco) {
   const manca = mancanti.includes(c);
   scrivi(`${manca ? "✗" : "✓"} ${c.cosa} ${c.id} ${manca ? `NON esiste nel gioco: è stato scartato (${c.file})` : "esiste nel gioco"}`);
 }
+if (conProve) {
+  for (const p of prove) scrivi(`${p.ok ? "✓" : "✗"} prova degli script "${p.nome}"${p.dettaglio ? `: ${p.dettaglio}` : ""}`);
+  if (!proveFinite) scrivi("✗ Le prove degli script non sono finite entro 60 secondi (bloccate o in errore)");
+}
 if (altri.length) {
   scrivi("- Altri messaggi del server (non riguardano l'add-on):");
   for (const a of altri) scrivi(`    - ${a}`);
 }
-const fallita = problemi.length > 0 || mancanti.length > 0;
+const fallita = problemi.length > 0 || mancanti.length > 0 || prove.some((p) => !p.ok) || (conProve && !proveFinite);
 scrivi(fallita ? "\nProva sul server FALLITA: correggi i problemi qui sopra." : "\nProva sul server superata. La grafica va comunque guardata nel gioco.");
 riepilogoGitHub("### Prova sul server Bedrock\n\n```\n" + righeRiepilogo.join("\n").trim() + "\n```\n");
 process.exit(fallita ? 1 : 0);
