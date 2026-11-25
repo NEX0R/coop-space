@@ -33,10 +33,9 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
-- [ ] Potere delle bacchette (come la mod Building Gadgets): menu con i modi di costruire, misure regolabili, massimo di blocchi per materiale. **Chi:** Samuele
-
 ## Fatto
 
+- [x] Potere delle bacchette, come la mod Building Gadgets: tocco su un blocco = costruisce; accovacciato + tocco (o tocco in aria) = menu con 8 modi (muro, pavimento, colonna verticale e orizzontale, fino a me, scale, superficie, blocco pieno), misure regolabili, scelta del blocco e "annulla l'ultima costruzione". Massimo per colpo: legno 4, pietra 8, ferro 16, oro 32, diamante 64, netherite 128. In sopravvivenza consuma i blocchi dell'inventario e 1 punto di durata a colpo.
 - [x] Bacchette da costruzione a 6 livelli (`coop:bacchetta_legno`, `_pietra`, `_ferro`, `_oro`, `_diamante`, `_netherite`): oggetti con texture, nomi italiano e inglese, durata come gli attrezzi di Minecraft, ricette al banco da lavoro (netherite al tavolo da forgiatura). Ancora senza il potere di costruire.
 - [x] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): in circa 15 secondi, senza aprire il gioco, dice se il gioco segnala errori caricando l'add-on e se ogni blocco, oggetto e mob `coop:` esiste davvero. Gira anche nella build delle pull request, quando Samuele crea la variabile `EULA_MINECRAFT_ACCETTATA`. Non controlla la grafica.
 - [x] Merge automatico: una pull request si fonde da sola quando qualcuno preme "Ready for review" e il controllo di GitHub è verde. Finché è in bozza resta ferma, per provarla. Dopo la fusione l'anteprima si cancella e "ultima-versione" e il sito si aggiornano da soli.
