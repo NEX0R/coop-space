@@ -145,7 +145,8 @@ Se l'assistente gira sul PC dove è installato Minecraft, può fare da solo i co
 Risponde senza aprire il gioco alla domanda "l'add-on si carica e i contenuti esistono?". Avvia il **Bedrock Dedicated Server** ufficiale di Mojang (un Minecraft senza schermo), con un mondo nuovo e senza esperimenti come sul telefono, e in circa 15 secondi controlla:
 
 - gli **errori del registro dei contenuti** durante il caricamento: blocchi, oggetti e mob scartati, script che si fermano (con file e riga);
-- che ogni **blocco, oggetto e mob `coop:`** dei behavior pack esista davvero nel gioco. È la prova `/give` del punto 5 qui sopra, fatta dalla console del server: se il gioco non conosce l'identificativo, risponde con un errore di sintassi.
+- che ogni **blocco, oggetto e mob `coop:`** dei behavior pack esista davvero nel gioco. È la prova `/give` del punto 5 qui sopra, fatta dalla console del server: se il gioco non conosce l'identificativo, risponde con un errore di sintassi;
+- le **prove degli script** registrate in `scripts/prove.js` (vedi "Pulsante di prova degli script" più sotto) e gli errori degli script dopo l'avvio.
 
 Cosa **non** controlla: la grafica (texture, modelli, nomi), e tutto quello che succede solo con un giocatore dentro (messaggi in chat, piazzare, usare). Quello si guarda ancora nel gioco, con l'anteprima.
 
@@ -155,6 +156,7 @@ Cosa **non** controlla: la grafica (texture, modelli, nomi), e tutto quello che 
 - **Dal telefono** (sessioni cloud) il comando non parte: guarda il riepilogo della build nella pull request.
 - **Provare una copia**: `npm run prova-server -- --addon <cartella>` prova un'altra cartella che contiene `behavior_packs/` (utile per riprodurre un errore senza toccare `addon/`).
 - I test con giocatore finto (GameTest, `@minecraft/server-gametest`) esistono solo in versione beta e richiedono l'esperimento "Beta API": per ora non si usano (vedi "Script API").
+- **Pulsante di prova degli script** (dal 25/11): la logica (minatori, tubi, menu...) si prova senza giocatori. In `scripts/prove.js` del behavior pack ogni contenuto registra una prova con `prova("nome", async ({ dim, origine, aspetta }) => { ... })`: prepara i blocchi vicino a `origine`, chiama la funzione del contenuto e lancia un errore (`throw new Error("...")`) se il risultato non è quello atteso. `npm run prova-server` tiene caricata la zona di prova (`tickingarea`), manda `/scriptevent coop:autotest` e stampa una riga `✓`/`✗` per ogni prova; legge anche gli errori degli script scritti dopo l'avvio (prima li ignorava e diceva "superata"). Nel gioco, con i trucchi attivi, `/scriptevent coop:autotest <nome>` fa una prova sola. Per provare la logica conviene scriverla come funzione esportata (per esempio `scavaVena(dimensione, posizione, piccone)`) che l'evento del giocatore chiama: così la prova la chiama direttamente. Trappola già vista: i menu di `@minecraft/server-ui` si creano dentro un evento, non all'avvio dello script.
 
 ## Approvare e tornare indietro
 

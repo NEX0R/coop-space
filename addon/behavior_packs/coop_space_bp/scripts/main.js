@@ -1,6 +1,8 @@
 // Script principale del behavior pack.
 // Usa solo l'API stabile di @minecraft/server: non servono esperimenti nel mondo.
 import { world } from "@minecraft/server";
+// Pulsante di prova (/scriptevent coop:autotest): vedi prove.js.
+import "./prove.js";
 
 // npm run package sostituisce questo segnaposto con la versione del pacchetto (es. "0.320.1024").
 const VERSIONE = "__VERSIONE_COOP__";
