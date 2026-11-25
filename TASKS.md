@@ -33,6 +33,8 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Potere delle bacchette (come la mod Building Gadgets): menu con i modi di costruire, misure regolabili, massimo di blocchi per materiale. **Chi:** Nexor
+
 ## Fatto
 
 - [x] Bacchette da costruzione a 6 livelli (`coop:bacchetta_legno`, `_pietra`, `_ferro`, `_oro`, `_diamante`, `_netherite`): oggetti con texture, nomi italiano e inglese, durata come gli attrezzi di Minecraft, ricette al banco da lavoro (netherite al tavolo da forgiatura). Ancora senza il potere di costruire.
