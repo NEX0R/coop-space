@@ -13,18 +13,20 @@ import { ActionFormData, ModalFormData, FormCancelationReason } from "@minecraft
 
 const ETICHETTA = "coop:bacchetta_costruzione";
 
-// Massimo di blocchi per colpo, per materiale.
+// Massimo di blocchi per colpo, per materiale, presi dalle mod:
+// pietra 9, ferro 27 e diamante 128 come le bacchette della mod Construction Wand;
+// netherite 225 = un muro 15x15, il massimo di Building Gadgets. Legno e oro scelti per stare in mezzo.
 export const MASSIMI = {
   "coop:bacchetta_legno": 4,
-  "coop:bacchetta_pietra": 8,
-  "coop:bacchetta_ferro": 16,
-  "coop:bacchetta_oro": 32,
-  "coop:bacchetta_diamante": 64,
-  "coop:bacchetta_netherite": 128,
+  "coop:bacchetta_pietra": 9,
+  "coop:bacchetta_ferro": 27,
+  "coop:bacchetta_oro": 64,
+  "coop:bacchetta_diamante": 128,
+  "coop:bacchetta_netherite": 225,
 };
 
-// Le misure di ogni lato arrivano al massimo a questo valore (oltre, il menu diventa scomodo).
-const LATO_MASSIMO = 32;
+// Ogni lato arriva al massimo a 15, come il "raggio" di Building Gadgets.
+const LATO_MASSIMO = 15;
 
 // I modi di costruire, come nella mod. "misure" dice quali cursori mostra il menu.
 export const MODI = {
@@ -289,10 +291,11 @@ function occupataDalGiocatore(player, pos) {
   return pos.x === x && pos.z === z && (pos.y === y || pos.y === y + 1);
 }
 
-function costruisci(player, bacchetta, blocco, faccia) {
+// Prepara una costruzione: quali caselle riempire e con quale blocco. Serve sia per
+// costruire sia per l'anteprima. Se non si può costruire, "errore" spiega perché.
+function progetto(player, bacchetta, blocco, faccia) {
   const massimo = MASSIMI[bacchetta.typeId] ?? 4;
   const permutazione = leggiBloccoScelto(player) ?? blocco.permutation;
-  const scelta = leggiScelta(player);
   const tipoToccato = blocco.typeId;
   const dimensione = player.dimension;
 
@@ -301,7 +304,7 @@ function costruisci(player, bacchetta, blocco, faccia) {
     faccia,
     vista: player.getViewDirection(),
     giocatore: player.location,
-    scelta,
+    scelta: leggiScelta(player),
     massimo,
     uguale: (pos) => {
       try {
@@ -321,45 +324,68 @@ function costruisci(player, bacchetta, blocco, faccia) {
       return false;
     }
   });
-  if (libere.length === 0) {
-    avviso(player, "§eNiente da costruire qui: le caselle sono già piene.");
-    return;
-  }
+  const risultato = { dimensione, permutazione, massimo, richieste, libere, creativa: inCreativa(player) };
+  if (libere.length === 0) return { ...risultato, errore: "§eNiente da costruire qui: le caselle sono già piene." };
 
   // In sopravvivenza servono i blocchi nell'inventario.
-  const creativa = inCreativa(player);
-  const oggetto = permutazione.getItemStack(1)?.typeId;
-  const contenitore = player.getComponent("minecraft:inventory")?.container;
-  if (!creativa) {
-    if (!oggetto || !contenitore) {
-      avviso(player, "§cQuesto blocco non si può costruire con la bacchetta.");
-      return;
-    }
+  if (!risultato.creativa) {
+    const oggetto = permutazione.getItemStack(1)?.typeId;
+    const contenitore = player.getComponent("minecraft:inventory")?.container;
+    if (!oggetto || !contenitore) return { ...risultato, errore: "§cQuesto blocco non si può costruire con la bacchetta." };
     const disponibili = contaNellInventario(contenitore, oggetto);
     if (disponibili === 0) {
-      player.sendMessage({ rawtext: [{ text: "§cNon hai blocchi di " }, nomeBlocco(permutazione), { text: " nell'inventario." }] });
-      return;
+      return {
+        ...risultato,
+        errore: { rawtext: [{ text: "§cNon hai blocchi di " }, nomeBlocco(permutazione), { text: " nell'inventario." }] },
+      };
     }
-    libere = libere.slice(0, disponibili);
+    risultato.libere = libere.slice(0, disponibili);
+    risultato.oggetto = oggetto;
+    risultato.contenitore = contenitore;
   }
+  return risultato;
+}
 
-  const fatte = piazza(dimensione, libere, permutazione, player);
+function costruisci(player, bacchetta, blocco, faccia) {
+  const p = progetto(player, bacchetta, blocco, faccia);
+  if (p.errore) {
+    avviso(player, p.errore);
+    return;
+  }
+  const fatte = piazza(p.dimensione, p.libere, p.permutazione, player);
   if (fatte.length === 0) return;
-  if (!creativa) {
-    togliDallInventario(contenitore, oggetto, fatte.length);
+  if (!p.creativa) {
+    togliDallInventario(p.contenitore, p.oggetto, fatte.length);
     consumaDurata(player);
   }
   ultimaCostruzione.set(player.id, {
-    dimensione: dimensione.id,
+    dimensione: p.dimensione.id,
     posizioni: fatte,
-    tipo: permutazione.type.id,
-    oggetto: creativa ? undefined : oggetto,
+    tipo: p.permutazione.type.id,
+    oggetto: p.oggetto,
   });
-  dimensione.playSound("dig.stone", fatte[0]);
+  p.dimensione.playSound("dig.stone", fatte[0]);
 
   let testo = `§aCostruiti ${fatte.length} blocchi`;
-  if (richieste > massimo) testo += ` §e(questa bacchetta ne fa al massimo ${massimo})`;
+  if (p.richieste > p.massimo) testo += ` §e(questa bacchetta ne fa al massimo ${p.massimo})`;
   avviso(player, testo);
+}
+
+// Anteprima, come i blocchi trasparenti di Building Gadgets: mentre guardi un blocco
+// con la bacchetta in mano, scintille verdi segnano dove andranno i blocchi.
+const DISTANZA_ANTEPRIMA = 10;
+function anteprima(player) {
+  const bacchetta = player.getComponent("minecraft:equippable")?.getEquipment(EquipmentSlot.Mainhand);
+  if (!eUnaBacchetta(bacchetta) || player.isSneaking) return;
+  const mira = player.getBlockFromViewDirection({ maxDistance: DISTANZA_ANTEPRIMA });
+  if (!mira) return;
+  const p = progetto(player, bacchetta, mira.block, mira.face);
+  if (p.errore) return;
+  for (const pos of p.libere) {
+    try {
+      player.spawnParticle("minecraft:villager_happy", { x: pos.x + 0.5, y: pos.y + 0.5, z: pos.z + 0.5 });
+    } catch {}
+  }
 }
 
 function annulla(player) {
@@ -488,6 +514,14 @@ world.beforeEvents.playerInteractWithBlock.subscribe((evento) => {
     else costruisci(player, itemStack, block, blockFace);
   });
 });
+
+system.runInterval(() => {
+  for (const player of world.getAllPlayers()) {
+    try {
+      anteprima(player);
+    } catch {}
+  }
+}, 8);
 
 world.afterEvents.itemUse.subscribe(({ source, itemStack }) => {
   if (!eUnaBacchetta(itemStack) || troppoPresto(source)) return;
