@@ -33,6 +33,8 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Bacchette da costruzione a 6 livelli (legno, pietra, ferro, oro, diamante, netherite): oggetti, ricette e texture, ancora senza potere. **Chi:** Samuele
+
 ## Fatto
 
 - [x] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): in circa 15 secondi, senza aprire il gioco, dice se il gioco segnala errori caricando l'add-on e se ogni blocco, oggetto e mob `coop:` esiste davvero. Gira anche nella build delle pull request, quando Samuele crea la variabile `EULA_MINECRAFT_ACCETTATA`. Non controlla la grafica.
