@@ -1,6 +1,7 @@
 // Pulsante di prova: il comando `/scriptevent coop:autotest` fa girare le prove registrate con
-// `prova(...)`, anche senza giocatori. `npm run prova-server` lo preme da solo e legge l'esito.
-// Nel gioco funziona solo con i trucchi attivi; `/scriptevent coop:autotest <nome>` fa una prova sola.
+// `prova(...)`. `npm run prova-server` lo preme da solo e legge l'esito.
+// SICUREZZA: le prove svuotano una zona del mondo, quindi partono SOLO se nel mondo non c'è nessun
+// giocatore (il server di prova). Nel gioco vero il comando viene rifiutato e non tocca niente.
 //
 // Come si scrive una prova (in qualsiasi file di scripts/ importato da main.js):
 //   import { prova } from "./prove.js";
@@ -36,11 +37,18 @@ async function zonaPronta(dim) {
 function svuota(dim) {
   const { x, y, z } = ORIGINE;
   dim.runCommand(`fill ${x} ${y} ${z} ${x + 15} ${y + 10} ${z + 15} air`);
-  for (const e of dim.getEntities({ type: "minecraft:item" })) e.remove();
+  // Solo gli oggetti a terra dentro la zona di prova.
+  for (const e of dim.getEntities({ type: "minecraft:item", location: ORIGINE, volume: { x: 15, y: 10, z: 15 } })) e.remove();
 }
 
 system.afterEvents.scriptEventReceive.subscribe(async (evento) => {
   if (evento.id !== "coop:autotest") return;
+  if (world.getAllPlayers().length > 0) {
+    const avviso = "Il pulsante di prova funziona solo sul server di prova (npm run prova-server): in un mondo con giocatori cancellerebbe blocchi. Non ho toccato niente.";
+    evento.sourceEntity?.sendMessage?.(`§e${avviso}`);
+    console.warn(`COOP-TEST rifiutato: ${avviso}`);
+    return;
+  }
   const dim = world.getDimension("overworld");
   if (!(await zonaPronta(dim))) {
     console.error("COOP-TEST zona FALLITO: la zona di prova non si è caricata (manca tickingarea?)");
