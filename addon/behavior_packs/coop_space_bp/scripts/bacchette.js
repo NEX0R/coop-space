@@ -32,6 +32,7 @@ const LATO_MASSIMO = 15;
 export const MODI = {
   muro: { nome: "Muro verticale", misure: ["larghezza", "altezza"] },
   pavimento: { nome: "Pavimento", misure: ["larghezza", "profondita"] },
+  da_x_a_y: { nome: "Da X a Y", misure: [] },
   colonna: { nome: "Colonna verticale", misure: ["lunghezza"] },
   fila: { nome: "Colonna orizzontale", misure: ["lunghezza"] },
   fino_a_me: { nome: "Fino a me", misure: [] },
@@ -98,8 +99,9 @@ function inAvanti(n) {
  * @param {object} p.scelta                         modo e misure
  * @param {number} p.massimo                        massimo di blocchi della bacchetta
  * @param {(pos:{x:number,y:number,z:number}) => boolean} [p.uguale] per "Superficie": la casella sotto è come il blocco toccato?
+ * @param {{x:number,y:number,z:number}} [p.puntoX] per "Da X a Y": la casella segnata col primo tocco
  */
-export function calcolaPosizioni({ blocco, faccia, vista, giocatore, scelta, massimo, uguale }) {
+export function calcolaPosizioni({ blocco, faccia, vista, giocatore, scelta, massimo, uguale, puntoX }) {
   const n = NORMALI[faccia];
   const partenza = somma(blocco, n);
   const verticale = n.y !== 0;
@@ -119,6 +121,7 @@ export function calcolaPosizioni({ blocco, faccia, vista, giocatore, scelta, mas
   const N = lim(scelta.lunghezza);
 
   const posizioni = [];
+  let origine = partenza; // si costruisce prima vicino a qui
   const metti = (a, b, c, assA, assB, assC) =>
     posizioni.push(somma(somma(somma(partenza, per(assA, a)), per(assB, b)), per(assC, c)));
 
@@ -155,6 +158,21 @@ export function calcolaPosizioni({ blocco, faccia, vista, giocatore, scelta, mas
         }
       break;
     }
+    case "da_x_a_y": {
+      // Senza X segnato: solo la casella del primo tocco. Con X: tutto lo spazio da X a qui.
+      if (!puntoX) {
+        posizioni.push(partenza);
+        break;
+      }
+      origine = puntoX;
+      const min = { x: Math.min(puntoX.x, partenza.x), y: Math.min(puntoX.y, partenza.y), z: Math.min(puntoX.z, partenza.z) };
+      const max = { x: Math.max(puntoX.x, partenza.x), y: Math.max(puntoX.y, partenza.y), z: Math.max(puntoX.z, partenza.z) };
+      const volume = (max.x - min.x + 1) * (max.y - min.y + 1) * (max.z - min.z + 1);
+      if (volume > 20000) return { posizioni: [], richieste: volume, troppoGrande: true };
+      for (let x = min.x; x <= max.x; x++)
+        for (let y = min.y; y <= max.y; y++) for (let z = min.z; z <= max.z; z++) posizioni.push({ x, y, z });
+      break;
+    }
     case "blocco":
       for (const d of inAvanti(P))
         for (const h of inAvanti(A)) for (const w of centrati(L)) metti(w, h, d, assL, su, assP);
@@ -162,7 +180,7 @@ export function calcolaPosizioni({ blocco, faccia, vista, giocatore, scelta, mas
   }
 
   const distanza = (p) =>
-    Math.abs(p.x - partenza.x) + Math.abs(p.y - partenza.y) + Math.abs(p.z - partenza.z);
+    Math.abs(p.x - origine.x) + Math.abs(p.y - origine.y) + Math.abs(p.z - origine.z);
   posizioni.sort((a, b) => distanza(a) - distanza(b));
   return { posizioni: posizioni.slice(0, massimo), richieste: posizioni.length };
 }
@@ -173,6 +191,12 @@ const PROP_SCELTA = "coop:bacchetta_scelta";
 const PROP_BLOCCO = "coop:bacchetta_blocco";
 const ultimaCostruzione = new Map(); // id giocatore -> { dimensione, posizioni, tipo, oggetto }
 const ultimoUso = new Map(); // id giocatore -> tick
+const puntiX = new Map(); // id giocatore -> { dimensione, pos } del modo "Da X a Y"
+
+function leggiPuntoX(player) {
+  const punto = puntiX.get(player.id);
+  return punto && punto.dimensione === player.dimension.id ? punto.pos : undefined;
+}
 
 function leggiScelta(player) {
   try {
@@ -299,13 +323,15 @@ function progetto(player, bacchetta, blocco, faccia) {
   const tipoToccato = blocco.typeId;
   const dimensione = player.dimension;
 
-  const { posizioni, richieste } = calcolaPosizioni({
+  const scelta = leggiScelta(player);
+  const { posizioni, richieste, troppoGrande } = calcolaPosizioni({
     blocco: blocco.location,
     faccia,
     vista: player.getViewDirection(),
     giocatore: player.location,
-    scelta: leggiScelta(player),
+    scelta,
     massimo,
+    puntoX: scelta.modo === "da_x_a_y" ? leggiPuntoX(player) : undefined,
     uguale: (pos) => {
       try {
         return dimensione.getBlock(pos)?.typeId === tipoToccato;
@@ -324,7 +350,8 @@ function progetto(player, bacchetta, blocco, faccia) {
       return false;
     }
   });
-  const risultato = { dimensione, permutazione, massimo, richieste, libere, creativa: inCreativa(player) };
+  const risultato = { dimensione, permutazione, massimo, richieste, libere, creativa: inCreativa(player), scelta };
+  if (troppoGrande) return { ...risultato, errore: "§cDa X a Y: i due punti sono troppo lontani." };
   if (libere.length === 0) return { ...risultato, errore: "§eNiente da costruire qui: le caselle sono già piene." };
 
   // In sopravvivenza servono i blocchi nell'inventario.
@@ -347,11 +374,20 @@ function progetto(player, bacchetta, blocco, faccia) {
 }
 
 function costruisci(player, bacchetta, blocco, faccia) {
+  // "Da X a Y": il primo tocco segna X, il secondo costruisce.
+  if (leggiScelta(player).modo === "da_x_a_y" && !leggiPuntoX(player)) {
+    puntiX.set(player.id, { dimensione: player.dimension.id, pos: somma(blocco.location, NORMALI[faccia]) });
+    avviso(player, "§bPunto X segnato. Ora tocca il blocco Y.");
+    player.playSound("random.orb");
+    return;
+  }
   const p = progetto(player, bacchetta, blocco, faccia);
   if (p.errore) {
     avviso(player, p.errore);
+    if (p.scelta.modo === "da_x_a_y" && p.richieste > 20000) puntiX.delete(player.id);
     return;
   }
+  puntiX.delete(player.id);
   const fatte = piazza(p.dimensione, p.libere, p.permutazione, player);
   if (fatte.length === 0) return;
   if (!p.creativa) {
@@ -373,7 +409,24 @@ function costruisci(player, bacchetta, blocco, faccia) {
 
 // Anteprima, come i blocchi trasparenti di Building Gadgets: mentre guardi un blocco
 // con la bacchetta in mano, scintille verdi segnano dove andranno i blocchi.
+// La scintilla "coop:anteprima_bacchetta" (resource pack) dura mezzo secondo, quanto il giro
+// dell'anteprima: così non resta in aria quando sposti lo sguardo.
 const DISTANZA_ANTEPRIMA = 10;
+const GIRO_ANTEPRIMA = 8; // tick (0,4 secondi)
+const PUNTI_PIENI = 48; // oltre, si segnano solo gli spigoli della forma
+
+// Solo gli spigoli della scatola che contiene la forma: molte meno scintille, forma riconoscibile.
+export function spigoli(posizioni) {
+  if (posizioni.length <= PUNTI_PIENI) return posizioni;
+  const assi = ["x", "y", "z"];
+  const min = {};
+  const max = {};
+  for (const a of assi) {
+    min[a] = Math.min(...posizioni.map((p) => p[a]));
+    max[a] = Math.max(...posizioni.map((p) => p[a]));
+  }
+  return posizioni.filter((p) => assi.filter((a) => p[a] === min[a] || p[a] === max[a]).length >= 2);
+}
 function anteprima(player) {
   const bacchetta = player.getComponent("minecraft:equippable")?.getEquipment(EquipmentSlot.Mainhand);
   if (!eUnaBacchetta(bacchetta) || player.isSneaking) return;
@@ -381,9 +434,11 @@ function anteprima(player) {
   if (!mira) return;
   const p = progetto(player, bacchetta, mira.block, mira.face);
   if (p.errore) return;
-  for (const pos of p.libere) {
+  const x = leggiPuntoX(player);
+  const punti = x && p.scelta.modo === "da_x_a_y" ? [x, ...spigoli(p.libere)] : spigoli(p.libere);
+  for (const pos of punti) {
     try {
-      player.spawnParticle("minecraft:villager_happy", { x: pos.x + 0.5, y: pos.y + 0.5, z: pos.z + 0.5 });
+      player.spawnParticle("coop:anteprima_bacchetta", { x: pos.x + 0.5, y: pos.y + 0.5, z: pos.z + 0.5 });
     } catch {}
   }
 }
@@ -480,6 +535,7 @@ async function sceltaMisure(player, modo, scelta, massimo) {
     misure.forEach((m, i) => (nuova[m] = numeri[i] ?? nuova[m]));
   }
   player.setDynamicProperty(PROP_SCELTA, JSON.stringify(nuova));
+  puntiX.delete(player.id);
   const totale = misure.reduce((t, m) => t * nuova[m], 1);
   let testo = `§aModo: ${MODI[modo].nome}`;
   if (misure.length > 0) testo += ` ${misure.map((m) => nuova[m]).join("×")}`;
@@ -521,7 +577,7 @@ system.runInterval(() => {
       anteprima(player);
     } catch {}
   }
-}, 8);
+}, GIRO_ANTEPRIMA);
 
 world.afterEvents.itemUse.subscribe(({ source, itemStack }) => {
   if (!eUnaBacchetta(itemStack) || troppoPresto(source)) return;
