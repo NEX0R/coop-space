@@ -18,6 +18,16 @@ function git(...args) {
   return { ok: r.status === 0, out: (r.stdout || "").trim(), err: (r.stderr || "").trim() };
 }
 
+// ---------- 0. la cartella è collegata al progetto giusto? ----------
+// Chi ha accesso in scrittura lavora sul repository del gruppo, non su una sua copia (fork):
+// da una copia main resta vecchio, e anteprime e fusione automatica non partono.
+function collegamento() {
+  const url = git("remote", "get-url", "origin").out;
+  const m = url.match(/github\.com[:/]([^/]+)\/([^/.\s]+)/i);
+  if (!m || `${m[1]}/${m[2]}`.toLowerCase() === "nex0r/coop-space") return;
+  righe.push(`ATTENZIONE: questa cartella è collegata a ${m[1]}/${m[2]}, una copia (fork), non al progetto del gruppo NEX0R/coop-space. Da qui main resta vecchio e anteprime e fusione automatica non partono. Prima di lavorare spiegalo all'utente e, con il suo ok, ricollegala: git remote set-url origin https://github.com/NEX0R/coop-space.git && git fetch origin.`);
+}
+
 // ---------- 1. aggiornamento da GitHub ----------
 function aggiorna() {
   if (!git("rev-parse", "--is-inside-work-tree").ok) return;
@@ -158,6 +168,7 @@ function accoglienza(chi) {
   }
 }
 
+collegamento();
 aggiorna();
 strumenti();
 await lavoriAperti();

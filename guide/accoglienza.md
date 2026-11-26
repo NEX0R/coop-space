@@ -24,6 +24,7 @@ Controlla tu, in quest'ordine, e sistema quello che manca. Ogni comando che la p
 **Per tutte le strade**
 - `git --version`, `node --version` (serve 20 o più), `gh --version` e `gh auth status`.
 - `npm ci`, poi `npm run verify`: deve dare 0 errori e 0 avvisi.
+- Progetto giusto: `git remote get-url origin` deve puntare a `NEX0R/coop-space`, non a una copia nel proprio account (fork). Da un fork main resta vecchio e anteprime e fusione automatica non partono: con l'ok della persona `git remote set-url origin https://github.com/NEX0R/coop-space.git`. Il fork non serve più e la persona può cancellarlo dal sito di GitHub (Settings → Delete).
 - Accesso in scrittura: `gh api repos/NEX0R/coop-space --jq .permissions.push` deve dare `true`. Se dà `false` o un errore, l'invito non è stato accettato: <https://github.com/NEX0R/coop-space/invitations>. Se non c'è nessun invito, va usato "Chiedi l'accesso" nel sito e Nexor lo manda.
 - Sicurezza: autenticazione a due fattori attiva su GitHub (chiedilo, non puoi verificarlo).
 

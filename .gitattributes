@@ -1,0 +1,9 @@
+# Lavoro in parallelo senza conflitti inutili.
+# Quando si unisce main in un ramo sul computer (passo 5 di AGENTS.md: git merge origin/main),
+# per questi file git tiene le righe di tutti e due invece di fermarsi su un conflitto.
+# Nella storia vera 6 fusioni su 7 si erano fermate su TASKS.md (prova del 26/11).
+# npm run verify blocca i doppioni che l'unione può lasciare (stessa chiave, stesso compito).
+# GitHub non usa questa regola quando fonde dal sito: se una pull request risulta in conflitto,
+# si rifà sul computer git merge origin/main, che con questa regola non si ferma più su questi file.
+TASKS.md merge=union
+addon/resource_packs/*/texts/*.lang merge=union

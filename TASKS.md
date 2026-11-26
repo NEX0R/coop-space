@@ -36,6 +36,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Lavoro in parallelo: `TASKS.md` e i nomi (`texts/*.lang`) si uniscono da soli quando si aggiorna un ramo con main (`.gitattributes`: nella storia vera 6 fusioni su 7 si erano fermate su TASKS.md, con la regola 1 sola, per un conflitto vero di codice); `npm run verify` blocca nomi e compiti scritti due volte; l'avvio di Claude avvisa se la cartella è collegata a una copia (fork) invece che a NEX0R/coop-space. **Chi:** Nexor
 - [x] Scavo multiplo per picconi, asce e pale (`scripts/scavo.js`): menu da accovacciati con Vena sì/no e forme (Muro, Pavimento, Colonna, Tunnel, Scale, Blocco pieno, Da X a Y); rompe solo blocchi uguali, 1 punto di durata per blocco, Fortuna e Tocco di velluto valgono, limiti come le bacchette (rame 16), anteprima con scintille rosse. Il blocco di ottone ora è "da piccone". **Chi:** Nexor
 - [x] Bacchetta da costruzione di rame (`coop:bacchetta_rame`): 16 blocchi per colpo (tra pietra 9 e ferro 27), durata 190, ricetta con lingotti di rame, texture e nomi. **Chi:** Nexor
 - [x] Sito: oggetti in rilievo nel visore 3D (un cubetto per pixel); tenendo premuto su un blocco compaiono le crepe con il tempo di rottura vero e un suono imitato per materiale; i prototipi si aprono nel visore. Corretto l'errore che bloccava il gruppo Prototipi ("anteprime is not defined"). **Chi:** Nexor

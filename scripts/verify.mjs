@@ -78,6 +78,29 @@ const nomi = (chiave, cosa, file) => {
   if (!it.has(chiave)) problema(`${cosa} (${file}) non ha il nome italiano: aggiungi "${chiave}=..." in texts/it_IT.lang.`);
   if (!en.has(chiave)) problema(`${cosa} (${file}) non ha il nome inglese: aggiungi "${chiave}=..." in texts/en_US.lang.`);
 };
+// Doppioni che l'unione automatica dei file comuni può lasciare (.gitattributes, merge=union).
+const doppioni = (file, chiaveDi, messaggio) => {
+  if (!existsSync(file)) return;
+  const viste = new Set();
+  for (const riga of readFileSync(file, "utf8").split(/\r?\n/)) {
+    const k = chiaveDi(riga);
+    if (!k) continue;
+    if (viste.has(k)) problema(messaggio(k));
+    viste.add(k);
+  }
+};
+for (const d of rpDirs)
+  for (const lingua of ["it_IT.lang", "en_US.lang"])
+    doppioni(
+      join(d, "texts", lingua),
+      (r) => (r.trim().startsWith("#") ? "" : r.split("=")[0].trim()),
+      (k) => `la chiave ${k} compare due volte in texts/${lingua}: tieni una sola riga.`,
+    );
+doppioni(
+  join(root, "TASKS.md"),
+  (r) => (r.match(/^- \[[ xX]\] (.+)$/) || [])[1]?.trim(),
+  (k) => `in TASKS.md il compito "${k.slice(0, 70)}" compare due volte: tieni una sola riga (di solito quella con [x]).`,
+);
 let contenuti = 0;
 for (const bp of bpDirs) {
   for (const file of elencaJson(join(bp, "blocks"))) {
