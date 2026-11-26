@@ -27,6 +27,14 @@ import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+// Per accendere l'esperimento "Beta API" serve scrivere il level.dat (NBT): lo fa un modulo interno dei
+// Creator Tools. Se un aggiornamento lo sposta, le prove da giocatore risultano "saltate" e il resto continua.
+let WorldLevelDat = null;
+try {
+  WorldLevelDat = (await import("../node_modules/@minecraft/creator-tools/lib/minecraft/WorldLevelDat.js")).default.default;
+} catch (errore) {
+  console.log(`Prove da giocatore saltate: non trovo il modulo per scrivere level.dat (${errore.message}).`);
+}
 const argomenti = process.argv.slice(2);
 const iAddon = argomenti.indexOf("--addon");
 const addonDir = resolve(iAddon >= 0 ? argomenti[iAddon + 1] : join(root, "addon"));
@@ -41,6 +49,8 @@ const VAR_EULA = "MCTOOLS_I_ACCEPT_EULA_AT_MINECRAFTDOTNETSLASHEULA";
 const ELENCO_VERSIONI = "https://net-secondary.web.minecraft-services.net/api/v1.0/download/links";
 const SENTINELLA = "coop:sentinella_che_non_esiste";
 const FINE_PROVE = "COOP-TEST FINE";
+const FINE_PROVE_GIOCATORE = "COOP-GIOCATORE FINE";
+const DIR_PROVE_GIOCATORE = join(root, "scripts", "prove-giocatore");
 // Zona tenuta carica per le prove degli script: deve coprire ORIGINE di scripts/prove.js.
 const ZONA_PROVE = "tickingarea add 0 100 0 15 110 15 coop_prove";
 
@@ -151,6 +161,20 @@ function preparaMondo() {
       pack.push({ tipo, nome, cartella: join(addonDir, sorgente, nome), uuid: intestazione.uuid, versione: intestazione.version, titolo: intestazione.name });
     }
   }
+  // Questo pack beta vive solo nel server usa-e-getta. Non viene mai copiato in addon/.
+  if (WorldLevelDat) {
+  const packGiocatore = leggiJson(join(DIR_PROVE_GIOCATORE, "manifest.json"));
+  cpSync(DIR_PROVE_GIOCATORE, join(serverDir, "development_behavior_packs", "coop_prove_giocatore"), { recursive: true });
+  pack.push({
+    tipo: "behavior",
+    nome: "prove-giocatore",
+    cartella: DIR_PROVE_GIOCATORE,
+    uuid: packGiocatore.header.uuid,
+    versione: packGiocatore.header.version,
+    titolo: packGiocatore.header.name,
+    soloProveGiocatore: true,
+  });
+  }
   if (!pack.some((p) => p.tipo === "behavior")) nonPartita(`in ${addonDir} non c'è nessun behavior pack.`);
 
   const mondo = join(serverDir, "worlds", "prova");
@@ -159,6 +183,20 @@ function preparaMondo() {
   const riferimenti = (tipo) => pack.filter((p) => p.tipo === tipo).map((p) => ({ pack_id: p.uuid, version: p.versione }));
   writeFileSync(join(mondo, "world_behavior_packs.json"), JSON.stringify(riferimenti("behavior"), null, 2));
   writeFileSync(join(mondo, "world_resource_packs.json"), JSON.stringify(riferimenti("resource"), null, 2));
+  // Creator Tools Mojang scrive il level.dat NBT Bedrock e il tag experiments.gametest.
+  // Il modulo è già una dipendenza dev del progetto; nessuna libreria viene aggiunta.
+  if (WorldLevelDat) {
+  const level = new WorldLevelDat();
+  level.levelName = "prova";
+  level.betaApisExperiment = true;
+  level.savedWithToggledExperiments = true;
+  level.experimentsEverUsed = true;
+  level.commandsEnabled = true;
+  level.cheatsEnabled = true;
+  level.ensureDefaults();
+  level.persist();
+  writeFileSync(join(mondo, "level.dat"), Buffer.from(level.getBytes()));
+  }
 
   // Impostazioni del server: porta diversa da quella normale e invisibile in rete locale,
   // così non disturba chi sta giocando; registro dei contenuti scritto sulla console.
@@ -214,7 +252,7 @@ function contenuti(pack) {
 // ---------------------------------------------------------------------------------------------
 // 4. Avvio: aspetta "Server started", manda i comandi dalla console, poi spegne.
 // ---------------------------------------------------------------------------------------------
-function avviaServer(comandi, aspettaProve) {
+function avviaServer(comandi, aspettaProve, aspettaProveGiocatore) {
   return new Promise((fine) => {
     const righe = [];
     const prima = []; // scritte durante il caricamento (prima dei comandi)
@@ -245,6 +283,8 @@ function avviaServer(comandi, aspettaProve) {
       for (let i = 0; i < 60 && !dopo.some((r) => r.includes(SENTINELLA)); i++) await attesa(250);
       // Le prove degli script girano nei tick del gioco: si aspetta la loro riga finale (massimo 60 s).
       if (aspettaProve) for (let i = 0; i < 240 && !dopo.some((r) => r.includes(FINE_PROVE)); i++) await attesa(250);
+      // Prove da giocatore: si aspetta la loro riga finale (massimo 60 s), poi Saltato se non è arrivata.
+      if (aspettaProveGiocatore) for (let i = 0; i < 240 && !dopo.some((r) => r.includes(FINE_PROVE_GIOCATORE)); i++) await attesa(250);
       spegni();
     }
 
@@ -276,12 +316,15 @@ const RUMORE = [/bootstrap\.json/, /cdn_config\.json/];
 function leggiRisultato(esito, pack, elenco) {
   const problemi = [];
   const altri = [];
-  const parole = ["coop", "development_", "[Scripting]", ...pack.flatMap((p) => [p.nome, p.titolo])].filter(Boolean);
+  // Gli errori del pack opzionale non devono trasformarsi in errori dell'add-on: se Gametest
+  // non si carica, più sotto la sua prova risulta saltata e il motivo resta nel log completo.
+  const parole = ["coop", "development_", "[Scripting]", ...pack.filter((p) => !p.soloProveGiocatore).flatMap((p) => [p.nome, p.titolo])].filter(Boolean);
 
   // Errori del caricamento e, dopo i comandi, degli script (per esempio un TypeError dentro una prova).
   // Dopo i comandi contano solo le righe degli script: le risposte ai comandi sono volute.
   for (const riga of [...esito.prima, ...esito.dopo.filter((r) => r.includes("[Scripting]"))]) {
-    if (riga.includes("COOP-TEST")) continue;
+    if (riga.includes("COOP-TEST") || riga.includes("COOP-GIOCATORE")) continue;
+    if (riga.includes("prove-giocatore") || riga.includes("Coop Space - prove da giocatore")) continue;
     if (!/\b(ERROR|WARN)\]/.test(riga) || RUMORE.some((r) => r.test(riga))) continue;
     const testo = riga.replace(/^\[[^\]]*\]\s*/, "");
     (parole.some((p) => riga.includes(p)) ? problemi : altri).push(testo);
@@ -294,12 +337,18 @@ function leggiRisultato(esito, pack, elenco) {
     if (m) prove.push({ nome: m[1], ok: m[2] === "OK", dettaglio: m[3].replace(/^[:\s]+/, "").trim() });
   }
   const proveFinite = esito.dopo.some((r) => r.includes(FINE_PROVE));
+  const proveGiocatore = [];
+  for (const riga of esito.dopo) {
+    const m = riga.match(/COOP-GIOCATORE (\S+) (OK|FALLITO|SALTATO)(.*)$/);
+    if (m) proveGiocatore.push({ nome: m[1], stato: m[2], ok: m[2] === "OK", dettaglio: m[3].replace(/^[:\s()]+|[()]+$/g, "").trim() });
+  }
+  const proveGiocatoreFinite = esito.dopo.some((r) => r.includes(FINE_PROVE_GIOCATORE));
 
   const rifiutati = new Set();
   for (const riga of esito.dopo) for (const m of riga.matchAll(/Unexpected "([^"]+)"/g)) rifiutati.add(m[1]);
   const comandiLetti = rifiutati.has(SENTINELLA);
   const mancanti = elenco.filter((c) => rifiutati.has(c.id));
-  return { problemi, altri, comandiLetti, mancanti, prove, proveFinite };
+  return { problemi, altri, comandiLetti, mancanti, prove, proveFinite, proveGiocatore, proveGiocatoreFinite };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -321,8 +370,10 @@ const conProve = pack.filter((p) => p.tipo === "behavior").some((p) =>
   readdirSync(p.cartella, { recursive: true })
     .some((f) => /\.js$/.test(f) && readFileSync(join(p.cartella, f), "utf8").includes("coop:autotest")));
 const comandi = elenco.map((c) => c.comando);
+comandi.push("tickingarea add 32 100 0 47 110 15 coop_prove_giocatore");
 if (conProve) comandi.push(ZONA_PROVE, "scriptevent coop:autotest");
-const esito = await avviaServer(comandi, conProve);
+comandi.push("scriptevent coop:prove_giocatore");
+const esito = await avviaServer(comandi, conProve, true);
 
 mkdirSync(join(root, "out"), { recursive: true });
 writeFileSync(join(root, "out", "prova-server.log"), esito.righe.join("\n"));
@@ -332,7 +383,7 @@ if (!esito.partito) {
   nonPartita(`il server non si è avviato${esito.errore ? ` (${esito.errore.message})` : ""}. Registro completo: out/prova-server.log`);
 }
 
-const { problemi, altri, comandiLetti, mancanti, prove, proveFinite } = leggiRisultato(esito, pack, elenco);
+const { problemi, altri, comandiLetti, mancanti, prove, proveFinite, proveGiocatore, proveGiocatoreFinite } = leggiRisultato(esito, pack, elenco);
 if (!comandiLetti) nonPartita("il server si è avviato ma non ha risposto ai comandi. Registro completo: out/prova-server.log");
 
 const righeRiepilogo = [];
@@ -349,11 +400,16 @@ if (conProve) {
   for (const p of prove) scrivi(`${p.ok ? "✓" : "✗"} prova degli script "${p.nome}"${p.dettaglio ? `: ${p.dettaglio}` : ""}`);
   if (!proveFinite) scrivi("✗ Le prove degli script non sono finite entro 60 secondi (bloccate o in errore)");
 }
+for (const p of proveGiocatore) {
+  const stato = p.stato === "OK" ? "✓" : p.stato === "SALTATO" ? "↷" : "✗";
+  scrivi(`${stato} prova da giocatore "${p.nome}"${p.dettaglio ? `: ${p.dettaglio}` : ""}`);
+}
+if (!proveGiocatoreFinite) scrivi("↷ prove da giocatore saltate: il pack beta o il comando Gametest non ha risposto");
 if (altri.length) {
   scrivi("- Altri messaggi del server (non riguardano l'add-on):");
   for (const a of altri) scrivi(`    - ${a}`);
 }
-const fallita = problemi.length > 0 || mancanti.length > 0 || prove.some((p) => !p.ok) || (conProve && !proveFinite);
+const fallita = problemi.length > 0 || mancanti.length > 0 || prove.some((p) => !p.ok) || (conProve && !proveFinite) || proveGiocatore.some((p) => p.stato === "FALLITO");
 scrivi(fallita ? "\nProva sul server FALLITA: correggi i problemi qui sopra." : "\nProva sul server superata. La grafica va comunque guardata nel gioco.");
 riepilogoGitHub("### Prova sul server Bedrock\n\n```\n" + righeRiepilogo.join("\n").trim() + "\n```\n");
 process.exit(fallita ? 1 : 0);
