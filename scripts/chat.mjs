@@ -1,6 +1,6 @@
-// Chat tra gli assistenti del gruppo (Claude Code e Codex), tipo WhatsApp, attraverso il repository.
-// Ogni coppia di persone ha una richiesta (issue) "Chat: A e B" con l'etichetta "chat"; ogni commento è un messaggio.
-// "Chat: tutti" è il gruppo. Qui dentro non c'è IA: zero token. Con Claude Code la usa il subagente
+// WhatsIApp: la chat tra gli assistenti del gruppo (Claude Code e Codex), attraverso il repository.
+// Ogni coppia di persone ha una richiesta (issue) "WhatsIApp: A e B" con l'etichetta "chat"; ogni commento è un messaggio.
+// "WhatsIApp: tutti" è il gruppo. Qui dentro non c'è IA: zero token. Con Claude Code la usa il subagente
 // "postino" (Haiku, .claude/agents/postino.md); gli hook mostrano da soli i messaggi nuovi (.claude/settings.json).
 //
 //   node scripts/chat.mjs manda <soprannome|tutti> "<testo>"   manda un messaggio
@@ -55,13 +55,17 @@ function io(stato) {
 }
 
 // ---------- le chat ----------
-const titoloChat = (a, b) => (b === "tutti" ? "Chat: tutti" : `Chat: ${[a, b].sort((x, y) => x.localeCompare(y)).join(" e ")}`);
+// Titoli "WhatsIApp: A e B"; "Chat: A e B" è il nome delle prime chat (27/11) e vale ancora.
+const NOME = "WhatsIApp";
+const senzaPrefisso = (t) => t.replace(/^(WhatsIApp|Chat): /, "");
+const titoloChat = (a, b) => `${NOME}: ${b === "tutti" ? "tutti" : [a, b].sort((x, y) => x.localeCompare(y)).join(" e ")}`;
+const trovaChat = (titolo) => tutteLeChat().find((i) => senzaPrefisso(i.title) === senzaPrefisso(titolo));
 const tutteLeChat = () => gh([`repos/${REPO}/issues?labels=${ETICHETTA}&state=all&per_page=100`]).filter((i) => !i.pull_request);
-const eMia = (chat, me) => chat.title === "Chat: tutti" || chat.title.replace(/^Chat: /, "").split(" e ").some((n) => stesso(n, me.nome));
+const eMia = (chat, me) => senzaPrefisso(chat.title) === "tutti" || senzaPrefisso(chat.title).split(" e ").some((n) => stesso(n, me.nome));
 
 function chatCon(me, altro) {
   const titolo = titoloChat(me.nome, altro);
-  const c = tutteLeChat().find((i) => i.title === titolo);
+  const c = trovaChat(titolo);
   if (c) {
     if (c.state === "closed") gh([`repos/${REPO}/issues/${c.number}`, "-X", "PATCH", "-f", "state=open"]);
     return c.number;
@@ -69,13 +73,13 @@ function chatCon(me, altro) {
   try {
     gh([`repos/${REPO}/labels/${ETICHETTA}`]);
   } catch {
-    gh([`repos/${REPO}/labels`, "-X", "POST"], { name: ETICHETTA, color: "25D366", description: "Chat tra gli assistenti (scripts/chat.mjs)" });
+    gh([`repos/${REPO}/labels`, "-X", "POST"], { name: ETICHETTA, color: "25D366", description: "WhatsIApp, la chat tra gli assistenti (scripts/chat.mjs)" });
   }
   // Assegnati = le due persone: GitHub avvisa chi è assegnato (app GitHub Mobile) a ogni messaggio nuovo.
   const assegnabili = new Set(gh([`repos/${REPO}/assignees?per_page=100`]).map((u) => u.login.toLowerCase()));
   const assegnati = altro === "tutti" ? [] : [me.login, perNome(altro)?.github].filter((l) => l && assegnabili.has(l.toLowerCase()));
-  const chi = altro === "tutti" ? "tutti gli assistenti del gruppo" : `gli assistenti di ${titolo.replace(/^Chat: /, "")}`;
-  const body = `Chat tra ${chi}: ogni commento è un messaggio. La usano \`scripts/chat.mjs\` e il subagente \`postino\` (vedi \`guide/messaggi.md\`).\n\nÈ pubblica: solo soprannomi, niente dati personali.`;
+  const chi = altro === "tutti" ? "tutti gli assistenti del gruppo" : `gli assistenti di ${senzaPrefisso(titolo)}`;
+  const body = `${NOME}, la chat tra ${chi}: ogni commento è un messaggio. La usano \`scripts/chat.mjs\` e il subagente \`postino\` (vedi \`guide/messaggi.md\`).\n\nÈ pubblica: solo soprannomi, niente dati personali.`;
   return gh([`repos/${REPO}/issues`, "-X", "POST"], { title: titolo, body, labels: [ETICHETTA], assignees: assegnati }).number;
 }
 
@@ -127,7 +131,7 @@ async function main() {
     if (altro !== "tutti" && stesso(altro, me.nome)) throw new Error("non puoi scrivere a te stesso");
     const n = chatCon(me, altro);
     gh([`repos/${REPO}/issues/${n}/comments`, "-X", "POST"], { body: `${testo}\n\n— assistente di ${me.nome} (${me.assistente})` });
-    console.log(`Mandato a ${altro} (chat #${n}).`);
+    console.log(`${NOME}: mandato a ${altro} (chat #${n}).`);
   } else if (comando === "nuovi") {
     const stato = leggiStato();
     if (hook && Date.now() - (stato.controllo || 0) < 60000) return; // negli hook al massimo un controllo al minuto
@@ -136,8 +140,8 @@ async function main() {
     segnaLetti(stato, msg);
     if (msg.length) {
       const testa = hook
-        ? `CHAT TRA ASSISTENTI: messaggi nuovi per l'assistente di ${me.nome}. Rispondi tu (con Claude Code tramite il subagente postino) se puoi farlo senza decidere al posto della persona; altrimenti riferiscili alla persona con parole semplici. Vedi guide/messaggi.md.`
-        : `Messaggi nuovi per l'assistente di ${me.nome}:`;
+        ? `WHATSIAPP (chat tra assistenti): messaggi nuovi per l'assistente di ${me.nome}. Rispondi tu (con Claude Code tramite il subagente postino) se puoi farlo senza decidere al posto della persona; altrimenti riferiscili alla persona con parole semplici. Vedi guide/messaggi.md.`
+        : `${NOME}: messaggi nuovi per l'assistente di ${me.nome}:`;
       console.log(`${testa}\n${msg.map(riga).join("\n")}`);
     } else if (!hook) console.log("Nessun messaggio nuovo.");
   } else if (comando === "aspetta") {
@@ -152,7 +156,7 @@ async function main() {
         errori = 0;
         if (msg.length) {
           segnaLetti(stato, msg);
-          console.log(`Messaggi nuovi per l'assistente di ${me.nome}:\n${msg.map(riga).join("\n")}`);
+          console.log(`${NOME}: messaggi nuovi per l'assistente di ${me.nome}:\n${msg.map(riga).join("\n")}`);
           return;
         }
       } catch (e) {
@@ -166,7 +170,7 @@ async function main() {
     const altro = stesso(a, "tutti") ? "tutti" : perNome(a)?.nome;
     if (!altro) throw new Error("uso: node scripts/chat.mjs storia <soprannome|tutti> [quanti]");
     const me = io();
-    const c = tutteLeChat().find((i) => i.title === titoloChat(me.nome, altro));
+    const c = trovaChat(titoloChat(me.nome, altro));
     if (!c) return console.log(`Nessuna chat con ${altro}.`);
     const tutti = gh([`repos/${REPO}/issues/${c.number}/comments?per_page=100`]);
     const ultimi = tutti.slice(-(Number(quanti) > 0 ? Number(quanti) : 10));
@@ -178,6 +182,6 @@ async function main() {
 
 main().catch((e) => {
   if (hook) process.exit(0); // un hook non deve mai disturbare la sessione
-  console.error(`Chat: ${e.message}`);
+  console.error(`${NOME}: ${e.message}`);
   process.exit(1);
 });
