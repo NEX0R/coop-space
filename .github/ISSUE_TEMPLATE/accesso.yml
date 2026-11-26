@@ -11,9 +11,9 @@ body:
   - type: input
     id: nome
     attributes:
-      label: Come ti chiamiamo nel team?
-      description: Solo il nome, va in TASKS.md accanto ai compiti che prendi.
-      placeholder: es. Giovanni
+      label: Il tuo soprannome nel team
+      description: Solo un soprannome, mai il nome vero. Va in TASKS.md e nel sito accanto ai compiti che prendi.
+      placeholder: es. Voltex
     validations:
       required: true
   - type: dropdown

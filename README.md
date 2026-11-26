@@ -1,76 +1,122 @@
 # Coop Space
 
-Add-on per Minecraft Bedrock fatti in tre, con Claude Code e Codex. Nessuno di noi è programmatore: scriviamo cosa vogliamo nel gioco, l'assistente IA lo costruisce, un controllo automatico verifica che funzioni.
+Add-on per Minecraft Bedrock fatti insieme da un gruppo di amici: **Nexor, Jowa, ReverendoLupo, Lepsy e Voltex**. Nessuno di noi è programmatore: scriviamo cosa vogliamo nel gioco, l'assistente IA (Claude Code o Codex) lo costruisce, i controlli automatici verificano che funzioni e noi lo proviamo giocando.
 
-**Il sito del team: <https://nex0r.github.io/coop-space/>** (funziona anche da telefono). Mostra a che punto siamo (da `TASKS.md`), le proposte di modifica aperte con l'esito del controllo, i contenuti dell'add-on con cosa manca a ognuno, un visore 3D con le animazioni e il pulsante per scaricare l'ultima versione. Si aggiorna da solo: non va mai modificato a mano.
+**Il sito del team: <https://nex0r.github.io/coop-space/>** (funziona anche da telefono). Mostra a che punto siamo, le proposte aperte, i contenuti dell'add-on, i **prototipi** da provare e il pulsante per scaricare l'ultima versione. Si aggiorna da solo.
 
-## Inizia qui (se sei nuovo)
+> **Privacy.** Il progetto è pubblico: chiunque può leggerlo. Qui dentro usiamo **solo i soprannomi**. Non scrivere mai nomi veri, email, numeri di telefono o altri dati personali, né nei moduli del sito né nei messaggi. Gli assistenti lo sanno e lo rispettano.
 
-Fai questi passi in ordine. Servono 15 minuti.
+## Cos'è un add-on
 
-### 1. Fatti dare l'accesso
+Un add-on aggiunge cose nuove a Minecraft Bedrock senza modificare il gioco: blocchi, oggetti, armi, cibo, mob, ricette, e comportamenti speciali (come le nostre bacchette che costruiscono muri). È fatto di due parti, che viaggiano sempre insieme:
+
+- **la logica** ("behavior pack", in Minecraft si chiama **"Coop Space"**): cosa fanno le cose, quanto durano, come si fabbricano, cosa succede quando le usi;
+- **la grafica** ("resource pack", in Minecraft **"Coop Space - grafica"**): come appaiono, cioè immagini, modelli 3D, nomi in italiano e inglese.
+
+Funziona su telefono, PC e console, ed è lo stesso file per tutti.
+
+## Glossario
+
+Le parole che vedrai e che gli assistenti useranno con te.
+
+| Parola | Cosa vuol dire |
+| --- | --- |
+| **Assistente** | L'IA che lavora per te sul progetto: Claude Code oppure Codex. Scrive i file, lancia i controlli, prepara le prove. |
+| **Repository** | Il progetto su GitHub, con tutti i file e la loro storia: <https://github.com/NEX0R/coop-space>. |
+| **Compito** | Una cosa da fare, scritta in `TASKS.md` (la vedi anche nel sito). |
+| **Proposta** (in inglese *pull request*) | Una modifica pronta da provare: per esempio "aggiungi la spada di smeraldo". Ognuna ha un numero, come #31. |
+| **Bozza** | Una proposta ancora in prova. Finché è in bozza non entra nel gioco di nessuno. Serve anche da **cartello "occupato"**: gli altri vedono che ci stai lavorando. |
+| **Controlli automatici** | Prove che GitHub e l'assistente fanno da soli a ogni modifica: verde = va bene, rosso = c'è un errore da correggere. |
+| **Anteprima** | Il file di prova di una proposta, aggiornato a ogni modifica. Sparisce quando la proposta si chiude. |
+| **Mondo di prova** | Un mondo piatto in creativa con l'add-on già attivo, da aprire sul telefono. |
+| **Laboratorio** | Sul PC: il mondo "Coop Space - laboratorio", sempre lo stesso. A ogni prova l'assistente ci mette dentro la versione nuova e apre Minecraft; quello che hai costruito resta. |
+| **Prototipo** | Una cosa nuova ancora in prova (in una proposta aperta). Nel sito ha un gruppo tutto suo. |
+| **Come provarlo** | La lista di 4-6 controlli da fare nel gioco, scritta in ogni proposta (la vedi anche nel sito). |
+| **Ready for review** | Il pulsante, nella pagina della proposta, che vuol dire "l'ho provata, va bene": la proposta entra da sola nella versione stabile. |
+| **Versione stabile** | Quello che è già approvato. Nel sito: "Ultima versione". |
+| **Revert** | Il pulsante per annullare una proposta già approvata. Niente si perde mai. |
+| **Messaggio** | Un avviso per qualcuno del gruppo, scritto nel repository. Il tuo assistente te lo riferisce quando parte. |
+
+## Inizia qui
+
+### 1. Account e accesso
 
 1. Crea un account gratuito su [github.com](https://github.com/signup), se non lo hai, e attiva l'**autenticazione a due fattori** (Settings → Password and authentication).
-2. Nel [sito del team](https://nex0r.github.io/coop-space/) premi **Chiedi l'accesso** e compila il modulo. In alternativa manda a Samuele il tuo nome utente GitHub. Mai l'email: il progetto è pubblico.
-3. Quando Samuele ti invita, accetta da qui: <https://github.com/NEX0R/coop-space/invitations> (ti arriva anche un'email).
+2. Nel [sito del team](https://nex0r.github.io/coop-space/) premi **Chiedi l'accesso** e scrivi il tuo **soprannome**. Oppure manda a Nexor il tuo nome utente GitHub (mai l'email).
+3. Quando Nexor ti invita, accetta da qui: <https://github.com/NEX0R/coop-space/invitations>.
 
-Senza l'invito puoi guardare il progetto, ma non modificarlo.
+### 2. Scegli la tua strada
 
-### 2. Collega il tuo assistente
-
-**PC o telefono?** Funzionano tutti e due, con le stesse regole:
-
-| | Telefono (app Claude, scheda "Code") | PC (Claude Code nel terminale o nell'app desktop) |
+| Strada | Per chi | Cosa ti serve |
 | --- | --- | --- |
-| Dove gira l'IA | Su un computer di Anthropic: non installi niente | Sul tuo PC: servono [Git](https://git-scm.com) e [Node.js](https://nodejs.org) 20 o più |
-| Va bene per | Contenuti semplici (blocchi, oggetti, nomi, texture), correzioni, idee, approvare | Tutto, compresi mob con modelli 3D e lavori lunghi |
-| Prova nel gioco | Scarichi l'anteprima dal sito e la provi sullo stesso telefono | Minecraft sul PC; l'IA controlla da sola i file e il registro |
+| **A. PC + Claude Code** | Nexor, Jowa | PC, abbonamento Claude |
+| **B. Telefono + app Claude** | chi ha Claude e vuole lavorare dal telefono | app Claude |
+| **C. PC + Codex** | ReverendoLupo, Voltex | PC, account ChatGPT (anche gratuito, con dei limiti) |
+| **D. Telefono + Codex da Ubuntu** | Lepsy | telefono Android, account ChatGPT |
 
-Termux non serve: l'app ufficiale fa la stessa cosa senza configurazioni.
+Su PC (strade A e C) il tuo assistente prepara anche Minecraft per le prove. Dal telefono (strade B e D) provi con il mondo di prova.
 
-**Se usi Claude Code**:
+**A. PC + Claude Code**
+1. Installa [Git](https://git-scm.com), [Node.js](https://nodejs.org) (versione LTS) e [Claude Code](https://code.claude.com/docs).
+2. Apri il terminale e scrivi, una riga alla volta:
+   ```
+   git clone https://github.com/NEX0R/coop-space.git
+   cd coop-space
+   claude
+   ```
 
-1. Telefono: scheda "Code" nell'app Claude. PC: [claude.ai/code](https://claude.ai/code), oppure Claude Code nel terminale dentro la cartella del progetto.
-2. Quando te lo chiede, collega il tuo account GitHub.
-3. Scegli il repository `NEX0R/coop-space` e avvia una sessione. All'avvio l'IA si aggiorna da sola, installa gli strumenti (dal telefono può volerci mezzo minuto) e vede cosa stanno facendo gli altri.
+**B. Telefono + app Claude**: nell'app Claude apri la scheda **Code**, collega GitHub quando te lo chiede, scegli `NEX0R/coop-space` e avvia una sessione. Non devi installare niente.
 
-**Se usi Codex** (ChatGPT):
+**C. PC + Codex**
+1. Installa [Git](https://git-scm.com) e [Node.js](https://nodejs.org) (versione LTS).
+2. Apri il terminale e scrivi, una riga alla volta:
+   ```
+   npm install -g @openai/codex
+   git clone https://github.com/NEX0R/coop-space.git
+   cd coop-space
+   codex
+   ```
+3. La prima volta Codex ti chiede di entrare con il tuo account ChatGPT.
 
-1. Apri [chatgpt.com/codex](https://chatgpt.com/codex) oppure la sezione Codex nell'app ChatGPT.
-2. Collega il tuo account GitHub.
-3. Scegli il repository `NEX0R/coop-space`.
-4. Nelle impostazioni dell'ambiente (Environment) di Codex, come **script di setup** scrivi `npm ci`: installa gli strumenti di Mojang a ogni avvio. I blocchi automatici di Claude Code non valgono per Codex, quindi le regole di `AGENTS.md` contano ancora di più.
+**D. Telefono + Codex da Ubuntu** (Android). È la strada più tecnica, ma i comandi sono da copiare così come sono.
+1. Installa **Termux** da [F-Droid](https://f-droid.org/packages/com.termux/) (la versione del Play Store è vecchia e non funziona bene).
+2. Apri Termux e scrivi, una riga alla volta (alcune ci mettono qualche minuto):
+   ```
+   pkg update && pkg upgrade -y
+   pkg install -y proot-distro
+   proot-distro install ubuntu
+   proot-distro login ubuntu
+   ```
+3. Ora sei dentro Ubuntu. Scrivi:
+   ```
+   apt update && apt install -y git curl
+   curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+   apt install -y nodejs
+   npm install -g @openai/codex
+   git clone https://github.com/NEX0R/coop-space.git
+   cd coop-space
+   codex
+   ```
+4. Le volte successive basta: apri Termux, `proot-distro login ubuntu`, `cd coop-space`, `codex`.
 
-**Se il repository non compare nell'elenco:** avvisa Samuele. L'app GitHub dell'assistente deve essere installata dal proprietario del repository, e possono servire alcuni minuti prima che compaia. In alternativa, al PC: installa [Git](https://git-scm.com) e [Node.js](https://nodejs.org), poi nel terminale scrivi `git clone https://github.com/NEX0R/coop-space.git` e avvia il tuo assistente dentro quella cartella.
+Non è una strada ufficiale di OpenAI, ma la usa la comunità. Se un passo dà errore, copia l'errore e mandalo al gruppo.
 
 ### 3. Saluta il tuo assistente
 
-Avvia una sessione sul progetto e scrivi quello che vuoi, anche solo "ciao". L'assistente si accorge da solo che sei nuovo (con Codex ti chiede il nome utente GitHub) e ti accoglie: controlla accesso, strumenti e versione di Minecraft, ti dice cosa manca e ti spiega come lavoriamo. Le regole le legge da solo: non devi spiegargliele tu.
+Scrivi: **"Ciao, sono <il tuo soprannome>, sono nuovo"**. Al resto pensa lui: controlla accesso e strumenti, sistema quello che manca, ti fa fare la prima prova nel gioco e ti spiega come lavoriamo. Ti chiede solo le cose che non può fare da solo.
 
-Da lì in poi il progetto è il punto di contatto del gruppo: quando parte, l'assistente ti riferisce i messaggi che gli altri (o i loro assistenti) ti hanno lasciato, e scrive i tuoi quando serve.
+Se fai già add-on per conto tuo, dillo: il tuo assistente confronta il tuo modo di lavorare con il nostro e lo racconta al gruppo, così prendiamo il meglio di tutti e due.
 
-### 4. Prova l'add-on sul telefono
+## Il giro di lavoro
 
-1. Dal telefono apri il [sito del team](https://nex0r.github.io/coop-space/) e tocca **"Mondo di prova <versione>"**.
-2. Apri il file **con Minecraft chiuso**: Minecraft aggiunge un mondo "Coop Space <versione>", piatto, in creativa, con l'add-on già attivo. Non devi scegliere nessun pacchetto.
-3. Entra nel mondo: in chat compare **"Coop Space <versione> attivo."**. Se non compare, l'add-on non è attivo.
-4. Cerca "Blocco di prova Coop" e "ottone" nell'inventario e piazzali: il blocco di prova scrive un messaggio in chat.
+1. **Scegli un compito** nel sito o in `TASKS.md`, o proponi un'idea, e dillo al tuo assistente.
+2. **L'assistente ti propone un piano.** Lo approvi o lo correggi. Solo dopo scrive i file.
+3. **Apre una proposta in bozza**: il cartello "occupato" che vedono tutti.
+4. **Prova da solo** con i controlli automatici e prepara la lista "Come provarlo".
+5. **Tu provi nel gioco**: sul PC trovi Minecraft già aperto con il laboratorio; dal telefono scarichi il mondo di prova dal sito, nel gruppo "Prototipi".
+6. **Se va bene, premi "Ready for review"** nella pagina della proposta (o dillo al tuo assistente). La proposta entra da sola nella versione stabile. Se poi qualcosa non va, c'è "Revert".
 
-**Per usarlo nei tuoi mondi** scarica invece "Add-on <versione>". Poi, nelle impostazioni del mondo, attiva **"Coop Space"** in **Pacchetti comportamento**: la grafica ("Coop Space - grafica") si aggiunge da sola. Se attivi solo la grafica, i blocchi non ci sono.
-
-Scrivi sul gruppo se ha funzionato oppure no.
-
-**Se Minecraft dice "Pacchetto doppio rilevato"** o il pacchetto risulta vuoto o rovinato: Impostazioni → **Generale** → **Archiviazione** → **Pacchetti di comportamenti**, poi **Pacchetti di risorse** (e **Non valido**, se c'è) → seleziona "Coop Space" → **Elimina**. Poi scarica di nuovo l'ultima versione: ogni pacchetto ha una versione nuova, quindi Minecraft lo accetta.
-
-## Come lavoriamo
-
-1. **Scegli un compito** in [`TASKS.md`](TASKS.md) o nel sito, controllando che nessuno lo stia già facendo, e dillo all'assistente. Appena approvi il suo piano, l'assistente apre una pull request in bozza "In corso: …": è il cartello "occupato" che gli assistenti degli altri vedono quando partono. Due persone non lavorano sulla stessa cosa.
-2. **Chiedi all'assistente.** Ti propone un piano; lo approvi oppure lo correggi; solo dopo scrive i file.
-3. **L'assistente apre una "pull request"**: è una proposta di modifica. GitHub la controlla in automatico con il validatore ufficiale di Mojang.
-4. **Prova l'anteprima nel gioco**: nel sito, accanto alla pull request, tocca **"scarica l'anteprima"** e apri il file con Minecraft chiuso. Ogni pull request ha la sua anteprima, aggiornata a ogni modifica, che sparisce quando la pull request si chiude.
-5. **Se funziona, premi "Ready for review"** nella pagina della pull request (o dillo all'assistente): da quel momento la modifica **si fonde da sola** appena il controllo di GitHub è verde, ed entra nella versione di tutti. Non c'è più il pulsante "Merge" da premere. Può farlo chiunque del gruppo. Finché la pull request è "in bozza" non si fonde: è il tempo per provarla. Se dopo il merge qualcosa non va, nella pagina della pull request c'è il pulsante **"Revert"**: crea una proposta che annulla tutto, e appena è fusa si torna com'era prima. Niente si perde mai: `main` è protetto e la storia resta su GitHub.
-
-Una pull request contiene una cosa sola (una spada, un mob, un blocco). Così, se qualcosa si rompe, si capisce subito dove.
+Una proposta contiene **una cosa sola** (una spada, un mob, un blocco): se qualcosa si rompe, si capisce subito dove.
 
 ## Come chiedere bene all'assistente
 
@@ -81,53 +127,25 @@ Una buona richiesta dice tre cose: **cosa deve succedere nel gioco**, **come si 
 | "Fammi una spada forte" | "Voglio una spada di smeraldo: 9 di danno, dura il doppio di quella di diamante, si crea con 2 smeraldi e 1 bastone. Quando colpisce un mob lo incendia per 3 secondi." |
 | "Non funziona" | "Ho piazzato il blocco ma non compare il messaggio in chat. Ecco cosa c'è scritto nel registro dei contenuti: ..." |
 
-Altre abitudini utili:
-
 - **Un compito per conversazione.** Finito un compito, apri una sessione nuova: l'assistente lavora meglio e consuma meno.
-- **Chiedi il piano prima.** Se non capisci una proposta, scrivi "spiegamelo più semplice": è una richiesta normale.
+- **Se non capisci, scrivi "spiegamelo più semplice"**: è una richiesta normale.
 - **Incolla gli errori così come sono**, senza riassumerli.
 - **Non sai cosa scegliere?** Chiedi "quali sono le opzioni e quale consigli, e perché?".
-- **Se sbaglia due volte la stessa cosa**, non insistere: apri una sessione nuova e riformula la richiesta con quello che hai capito.
-- **Scegli il modello giusto** (Claude Code, comando `/model`): **Sonnet** per il lavoro normale (blocchi, oggetti, nomi, texture), **Opus** solo per i problemi difficili, come un errore che non si capisce dopo due tentativi. Opus consuma molto di più dei limiti del vostro abbonamento.
+- **Se sbaglia due volte la stessa cosa**, apri una sessione nuova e riformula la richiesta.
+- **Claude Code**: usa **Sonnet** per il lavoro normale e **Opus** solo per i problemi difficili (comando `/model`): Opus consuma molto di più. **Codex gratuito** ha un limite d'uso: il comando `/status` ti dice quanto ne resta.
 
-### Claude Code è già configurato
+## Cosa vedrai e cosa vuol dire
 
-Il file `.claude/settings.json` vale per tutti, sul PC e nelle sessioni cloud:
-- **Meno richieste di permesso**: i comandi sicuri del progetto (controllo, pacchetto, guide Mojang, stato di git) partono senza chiedere.
-- **Comandi pericolosi bloccati**: `npm audit fix --force`, il cambio degli UUID, l'accettazione della EULA di Minecraft, il push diretto o forzato su `main`. Anche se l'assistente sbaglia, non può lanciarli.
-- **Strumenti installati da soli**: all'avvio, se mancano o sono cambiati, Claude Code li installa (`npm ci`). Se è tutto a posto non fa niente e non consuma.
-- **Server MCP di Mojang attivo senza conferme**: le sue descrizioni (circa 20.000 token) vengono caricate solo quando servono.
+- **"Coop Space <versione> attivo."** in chat, entrando in un mondo: l'add-on funziona.
+- **Proposta con controllo rosso**: c'è un errore; il tuo assistente lo vede e lo corregge.
+- **"Pacchetto doppio rilevato"** sul telefono: quella versione è già installata. Impostazioni → **Generale** → **Archiviazione** → **Pacchetti di comportamenti** (poi **Pacchetti di risorse**) → seleziona "Coop Space" → **Elimina**, poi scarica di nuovo.
+- **Hai attivato solo "Coop Space - grafica"** in un tuo mondo: i blocchi non ci sono. Va attivato **"Coop Space"** nei **Pacchetti comportamento**: la grafica si aggiunge da sola.
+- **Qualcosa non va nel gioco**: dillo al tuo assistente con parole tue; ti guida lui a leggere il registro degli errori di Minecraft.
 
-Chi usa **Codex** legge le stesse regole in `AGENTS.md`; i blocchi automatici però valgono solo per Claude Code.
+## Per chi è curioso
 
-## Strumenti
-
-| Strumento | A cosa serve | Chi lo installa |
-| --- | --- | --- |
-| Claude Code o Codex | Scrive i file dell'add-on | Ognuno il suo |
-| Minecraft Creator Tools (Mojang) | Validatore ufficiale, guide per gli assistenti, creazione del `.mcaddon` | Nessuno: è già nel progetto |
-| GitHub | Tiene il progetto, controlla ogni modifica, pubblica il file per il telefono | Serve solo l'account |
-| [Blockbench](https://www.blockbench.net) | Modelli 3D, texture e animazioni. È lo strumento indicato nella documentazione ufficiale di Minecraft; funziona anche dal browser su [web.blockbench.net](https://web.blockbench.net). Un modello esportato si può guardare animato nel sito del team ("Prova un tuo modello") prima di metterlo nell'add-on | Facoltativo, quando faremo mob o modelli |
-
-## Dove imparare (fonti dirette)
-
-Meglio leggere la fonte che il riassunto di qualcun altro. Puoi anche dare questi link al tuo assistente e chiedergli di spiegarteli.
-
-- **Add-on Bedrock, documentazione ufficiale:** <https://learn.microsoft.com/minecraft/creator/>
-- **Wiki della comunità Bedrock** (guide pratiche): <https://wiki.bedrock.dev>
-- **Esempi ufficiali Mojang:** <https://github.com/microsoft/minecraft-samples>
-- **Claude Code, documentazione:** <https://code.claude.com/docs>
-- **Codex, documentazione:** <https://developers.openai.com/codex>
-
-X (Twitter) e YouTube servono a scoprire le novità; per sapere come si fa davvero una cosa valgono le pagine qui sopra.
-
-## Comandi (per gli assistenti o al PC)
-
-```
-npm install       installa gli strumenti
-npm run verify    controlla l'add-on (deve dare 0 errori e 0 avvisi)
-npm run package   crea dist/coop-space.mcaddon
-npm run prova-server   prova l'add-on sul server ufficiale di Minecraft, senza aprire il gioco
-```
-
-`npm run prova-server` dice in pochi secondi se il gioco accetta blocchi, oggetti, mob e script. Funziona solo al PC e solo dopo che la persona ha accettato l'EULA di Minecraft (lo spiega `AGENTS.md`, "Prova automatica sul server"). La grafica va comunque guardata nel gioco.
+- **Strumenti**: Claude Code o Codex (scrivono i file); Minecraft Creator Tools di Mojang (controlli e guide ufficiali, già nel progetto); GitHub (tiene il progetto e pubblica le prove); [Blockbench](https://www.blockbench.net), facoltativo, per modelli 3D e animazioni (funziona anche dal browser su [web.blockbench.net](https://web.blockbench.net)).
+- **Claude Code è già configurato** (`.claude/settings.json`): niente richieste di permesso per i comandi sicuri, comandi pericolosi bloccati, strumenti installati da soli all'avvio. Codex legge le stesse regole in `AGENTS.md`, ma senza i blocchi automatici.
+- **Le regole per gli assistenti** sono in `AGENTS.md`; le procedure lunghe nella cartella `guide/`, che gli assistenti leggono solo quando servono.
+- **Dove imparare** (fonti dirette, puoi darle al tuo assistente e chiedergli di spiegartele): [documentazione ufficiale degli add-on](https://learn.microsoft.com/minecraft/creator/), [wiki della comunità Bedrock](https://wiki.bedrock.dev), [esempi ufficiali Mojang](https://github.com/microsoft/minecraft-samples), [Claude Code](https://code.claude.com/docs), [Codex](https://developers.openai.com/codex).
+- **Comandi** (li lancia l'assistente): `npm run verify` (controllo, 0 errori e 0 avvisi), `npm run prova-mc` (Minecraft pronto sul PC), `npm run package` (crea i file da provare), `npm run prova-server` (prova sul server ufficiale, solo PC), `npm run sito -- --serve` (il sito in prova sul PC).

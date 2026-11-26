@@ -53,8 +53,13 @@ function strumenti() {
   const manca = !existsSync(tool) || !existsSync(installed);
   const vecchio = !manca && statSync(lock).mtimeMs > statSync(installed).mtimeMs;
   if (!manca && !vecchio) return;
-  const r = spawnSync("npm ci --no-audit --no-fund --loglevel=error", { cwd: root, encoding: "utf8", shell: true });
-  righe.push(r.status === 0 ? `Strumenti del progetto ${manca ? "installati" : "aggiornati"} (npm ci).` : `npm ci non è riuscito: lancia "npm install" e leggi l'errore.\n${(r.stderr || "").slice(-600)}`);
+  // npm ci cancella tutta la cartella node_modules: su Windows fallisce a metà (EPERM) se il server MCP
+  // di Mojang, avviato con la sessione, tiene aperto un suo file. Per aggiornare basta npm install,
+  // che segue package-lock.json e non tocca i file già giusti (problema visto il 26/11).
+  const comando = manca && !existsSync(path.join(root, "node_modules")) ? "npm ci" : "npm install";
+  let r = spawnSync(`${comando} --no-audit --no-fund --loglevel=error`, { cwd: root, encoding: "utf8", shell: true });
+  if (r.status !== 0 && comando === "npm ci") r = spawnSync("npm install --no-audit --no-fund --loglevel=error", { cwd: root, encoding: "utf8", shell: true });
+  righe.push(r.status === 0 ? `Strumenti del progetto ${manca ? "installati" : "aggiornati"}.` : `L'installazione degli strumenti non è riuscita: chiudi le altre sessioni sul progetto, lancia "npm install" e leggi l'errore.\n${(r.stderr || "").slice(-600)}`);
 }
 
 // ---------- 3. lavori aperti ----------
@@ -125,7 +130,7 @@ async function lavoriAperti() {
     .map((r) => r.split("refs/heads/")[1])
     .filter((r) => r && r !== "main" && r !== mio && !conPr.has(r));
   if (rami.length) voci.push(`- Rami senza pull request: ${rami.join(", ")}`);
-  if (messaggi.length) righe.push(`MESSAGGI DEL TEAM${chi ? ` PER ${chi}` : ""} (riferiscili all'utente con parole semplici e chiedi se rispondere; vedi "Il repository è il centro di contatto" in AGENTS.md):\n${messaggi.join("\n")}`);
+  if (messaggi.length) righe.push(`MESSAGGI DEL TEAM${chi ? ` PER ${chi}` : ""} (riferiscili all'utente con parole semplici e chiedi se rispondere; vedi guide/messaggi.md):\n${messaggi.join("\n")}`);
   righe.push(voci.length ? `Lavori aperti su GitHub (prima di iniziare controlla che nessuno stia già facendo la stessa cosa):\n${voci.join("\n")}` : "Nessun lavoro aperto su GitHub.");
 }
 
@@ -144,12 +149,12 @@ function accoglienza(chi) {
   } catch {
     return;
   }
-  const io = membri.find((m) => chi && m.github.toLowerCase() === chi.toLowerCase());
-  const daFare = membri.filter((m) => m.accoglienza !== "fatta").map((m) => m.github);
+  const io = membri.find((m) => chi && (m.github || "").toLowerCase() === chi.toLowerCase());
+  const daFare = membri.filter((m) => m.accoglienza !== "fatta").map((m) => (m.github ? `${m.nome || m.github} (${m.github})` : `${m.nome} (account GitHub ancora da scrivere)`));
   if (chi && (!io || io.accoglienza !== "fatta")) {
-    righe.push(`PERSONA NUOVA: l'account GitHub ${chi} ${io ? "non ha ancora fatto l'accoglienza" : "non è in team.json"}. Alla tua prima risposta, prima di qualsiasi altra cosa, avvia tu l'accoglienza (AGENTS.md, "Accoglienza di una persona nuova"), anche se l'utente ha scritto solo "ciao"; poi riprendi la sua richiesta.`);
+    righe.push(`PERSONA NUOVA: l'account GitHub ${chi} ${io ? "non ha ancora fatto l'accoglienza" : "non è in team.json"}. Alla tua prima risposta, prima di qualsiasi altra cosa, avvia tu l'accoglienza (guide/accoglienza.md), anche se l'utente ha scritto solo "ciao"; poi riprendi la sua richiesta.`);
   } else if (!chi && daFare.length) {
-    righe.push(`Non so quale account GitHub sta usando l'utente. In team.json l'accoglienza è ancora da fare per: ${daFare.join(", ")}. Alla prima risposta chiedigli il suo nome utente GitHub: se è uno di questi, o non è in team.json, avvia l'accoglienza (AGENTS.md).`);
+    righe.push(`Non so quale account GitHub sta usando l'utente. In team.json l'accoglienza è ancora da fare per: ${daFare.join(", ")}. Alla prima risposta chiedigli soprannome e nome utente GitHub: se è uno di questi, o non è in team.json, avvia l'accoglienza (guide/accoglienza.md).`);
   }
 }
 
