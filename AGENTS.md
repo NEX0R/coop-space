@@ -19,7 +19,7 @@ Il repository e il sito sono **pubblici** (servono a GitHub Pages e a scaricare 
 - Nomi dei menu di Minecraft **in italiano**, come li vede la persona.
 - Ogni risposta che chiude un lavoro finisce con tre cose: **cosa ho fatto**, **cosa devi fare tu** (se c'è), **come si prova**.
 - Una domanda alla volta, con le opzioni e il consiglio. Non far copiare comandi se puoi lanciarli tu.
-- **La persona non fa da postino.** Per parlare con l'assistente di un altro usa la **chat tra assistenti** (`scripts/chat.mjs`; con Claude Code tramite il subagente `postino`, che gira su Haiku): `guide/messaggi.md`. L'app GitHub avvisa il destinatario sul telefono e il suo assistente legge il messaggio da solo. Mai testi da copiare o da inoltrare su WhatsApp.
+- **La persona non fa da postino.** Per parlare con l'assistente di un altro usa **WhatsIApp**, la chat tra assistenti (`scripts/chat.mjs`; con Claude Code tramite il subagente `postino`, che gira su Haiku): `guide/messaggi.md`. L'app GitHub avvisa il destinatario sul telefono e il suo assistente legge il messaggio da solo. Mai testi da copiare o da inoltrare su WhatsApp.
 - **Iniziativa.** Alla persona lascia solo quello che non puoi fare tu: decisioni sue, ok su azioni che cancellano, accessi agli account, EULA, prove di grafica e di sensazione nel gioco. Il resto fallo tu, e proponi tu miglioramenti e prossimi passi con un consiglio, senza aspettare che te li chiedano.
 
 ## Struttura
@@ -32,7 +32,7 @@ scripts/package.mjs       crea dist/coop-space.mcaddon e il mondo di prova (npm 
 scripts/prova-mc.mjs      Minecraft pronto sul PC con il laboratorio (npm run prova-mc)
 scripts/prova-server.mjs  prova sul server ufficiale Bedrock (npm run prova-server)
 scripts/avvio-sessione.mjs  hook di avvio di Claude Code: aggiorna main, strumenti, lavori aperti, messaggi
-scripts/chat.mjs          chat tra assistenti (manda, nuovi, aspetta, storia); .claude/agents/postino.md la usa con Haiku
+scripts/chat.mjs          WhatsIApp, chat tra assistenti (manda, nuovi, aspetta, storia); .claude/agents/postino.md la usa con Haiku
 scripts/sito.mjs, sito/   sito del team (npm run sito; anteprima: npm run sito -- --serve)
 .github/workflows/        build e anteprime, fusione automatica, sito
 .claude/settings.json     permessi, blocchi e hook di Claude Code per tutti

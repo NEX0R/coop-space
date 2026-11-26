@@ -120,7 +120,7 @@ async function lavoriAperti() {
     }
     for (const i of issues.filter((x) => !x.pull_request)) {
       const etichette = i.labels.map((l) => l.name);
-      if (etichette.includes("chat")) continue; // le chat le mostra scripts/chat.mjs (secondo hook di avvio)
+      if (etichette.includes("chat")) continue; // le chat di WhatsIApp le mostra scripts/chat.mjs (secondo hook di avvio)
       if (etichette.includes("messaggio")) {
         const destinatari = (i.assignees || []).map((a) => a.login);
         if (destinatari.length && chi && !destinatari.includes(chi)) continue; // messaggio per un altro
