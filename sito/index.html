@@ -75,9 +75,12 @@
     <section aria-labelledby="t-visore" id="visore-sezione">
       <h2 id="t-visore">Visore 3D</h2>
       <div class="visore">
-        <div class="tela" id="tela-box">
-          <canvas id="tela" aria-label="Modello 3D"></canvas>
-          <p class="avviso" id="visore-stato">Scegli un modello.</p>
+        <div>
+          <div class="tela" id="tela-box">
+            <canvas id="tela" aria-label="Modello 3D"></canvas>
+            <p class="avviso" id="visore-stato">Scegli un modello.</p>
+          </div>
+          <p class="nota" id="visore-tempo" hidden></p>
         </div>
         <div class="comandi">
           <label>Modello
@@ -87,6 +90,7 @@
             <select id="scelta-animazione" disabled><option value="">Nessuna</option></select>
           </label>
           <p class="nota">Trascina per ruotare, due dita o rotella per lo zoom.</p>
+          <button class="bottone secondario piccolo" id="suono-visore" type="button" aria-pressed="true">Suono sì</button>
           <details>
             <summary>Prova un tuo modello</summary>
             <p class="nota">Esporta da <a href="https://web.blockbench.net" target="_blank" rel="noopener">Blockbench</a> (progetto "Bedrock Entity") il modello <code>.geo.json</code>, la texture <code>.png</code> e, se vuoi, le animazioni <code>.animation.json</code>. Restano sul tuo dispositivo: non vengono caricati da nessuna parte.</p>
