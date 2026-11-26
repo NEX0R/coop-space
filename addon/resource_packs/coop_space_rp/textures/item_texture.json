@@ -1,0 +1,24 @@
+{
+  "resource_pack_name": "coop_space_rp",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "coop_bacchetta_legno": {
+      "textures": "textures/items/bacchetta_legno"
+    },
+    "coop_bacchetta_pietra": {
+      "textures": "textures/items/bacchetta_pietra"
+    },
+    "coop_bacchetta_ferro": {
+      "textures": "textures/items/bacchetta_ferro"
+    },
+    "coop_bacchetta_oro": {
+      "textures": "textures/items/bacchetta_oro"
+    },
+    "coop_bacchetta_diamante": {
+      "textures": "textures/items/bacchetta_diamante"
+    },
+    "coop_bacchetta_netherite": {
+      "textures": "textures/items/bacchetta_netherite"
+    }
+  }
+}

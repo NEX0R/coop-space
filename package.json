@@ -14,7 +14,8 @@
   },
   "devDependencies": {
     "@minecraft/creator-tools": "0.21.0",
-    "@minecraft/server": "2.11.0"
+    "@minecraft/server": "2.11.0",
+    "@minecraft/server-ui": "^2.3.0"
   },
   "overrides": {
     "axios": "1.21.1",
