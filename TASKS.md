@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Guida per tutti e privacy: soprannomi ovunque, guida per chi non ha mai fatto add-on, istruzioni degli assistenti più leggere, accoglienza su misura. **Chi:** Nexor
 
 ## Fatto
 
