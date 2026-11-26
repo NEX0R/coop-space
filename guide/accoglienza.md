@@ -24,7 +24,22 @@ Controlla tu, in quest'ordine, e sistema quello che manca. Ogni comando che la p
 **Per tutte le strade**
 - `git --version`, `node --version` (serve 20 o più), `gh --version` e `gh auth status`.
 - `npm ci`, poi `npm run verify`: deve dare 0 errori e 0 avvisi.
-- Accesso in scrittura: `gh api repos/NEX0R/coop-space --jq .permissions.push` deve dare `true`. Se dà `false` o un errore, l'invito non è stato accettato: <https://github.com/NEX0R/coop-space/invitations>. Se non c'è nessun invito, va usato "Chiedi l'accesso" nel sito e Nexor lo manda.
+- **Accesso in scrittura** (automatico: la persona non deve fare niente, Nexor scrive solo "ok"):
+  1. `gh api repos/NEX0R/coop-space --jq .permissions.push` dà `true`? Allora c'è già.
+  2. Se no, c'è un invito da accettare? `gh api user/repository_invitations --jq '.[] | select(.repository.full_name=="NEX0R/coop-space") | .id'`. Se esce un numero, accettalo tu: `gh api -X PATCH user/repository_invitations/<numero>`, e ricontrolla il punto 1.
+  3. Se non c'è nessun invito, guarda se la richiesta è già aperta: `gh api "repos/NEX0R/coop-space/issues?state=open&creator=<account>" --jq '.[] | select(.title | startswith("Accesso:")) | .html_url'`. Se non c'è, aprila tu, con **esattamente** questo titolo e questo corpo (nel corpo solo soprannome e assistente, niente dati personali):
+     titolo `Accesso: <soprannome>`, corpo:
+     ```
+     ### Il tuo soprannome nel team
+
+     <soprannome>
+
+     ### Che assistente usi?
+
+     <Claude Code oppure Codex (ChatGPT)>
+     ```
+     (per esempio scrivi il corpo in un file e usa `gh api repos/NEX0R/coop-space/issues -f title="Accesso: <soprannome>" -F body=@<file>`).
+  4. GitHub risponde da solo nella richiesta e chiede l'ok a Nexor. Spiega alla persona che deve aspettare l'"ok" di Nexor (gliel'ha chiesto GitHub con una notifica) e intanto continua con i passi che non richiedono l'accesso. Quando Nexor ha approvato (nella richiesta compare "✓ Invito mandato"), ripeti il punto 2: anche in una sessione successiva.
 - Sicurezza: autenticazione a due fattori attiva su GitHub (chiedilo, non puoi verificarlo).
 
 **A. PC + Claude Code**: l'hook di avvio installa gli strumenti e aggiorna il progetto da solo. Se manca `gh`: su Windows `winget install GitHub.cli`, poi la persona scrive nel prompt `! gh auth login`. Per la prova sul server (facoltativa) la persona accetta l'EULA di Minecraft scrivendo lei `! npx -y @minecraft/creator-tools@0.21.0 eula`.

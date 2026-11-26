@@ -1,0 +1,42 @@
+# Accesso automatico: chi entra nel gruppo chiede l'accesso (lo fa il suo assistente), Nexor risponde "ok"
+# e GitHub fa il resto: invito, team.json, chiusura della richiesta. Nessuna IA accesa: lo script è
+# scripts/accesso.mjs. Per invitare serve il segreto TOKEN_INVITI (guide/messaggi.md, "Accesso automatico").
+name: Accesso automatico
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: accesso-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  accesso:
+    # Solo richieste di accesso (etichetta del modulo, o titolo "Accesso: ..." scritto da un assistente),
+    # mai pull request. Per i commenti conta solo quello del proprietario: lo script lo ricontrolla.
+    if: >-
+      !github.event.issue.pull_request
+      && (contains(github.event.issue.labels.*.name, 'accesso') || startsWith(github.event.issue.title, 'Accesso:'))
+      && (github.event_name == 'issues' || github.event.comment.user.login == github.repository_owner)
+    runs-on: ubuntu-latest
+    steps:
+      # Lo script si prende sempre da main: chi apre la richiesta non può cambiarlo.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: scripts/accesso.mjs
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/accesso.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN_INVITI: ${{ secrets.TOKEN_INVITI }}

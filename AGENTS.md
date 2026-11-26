@@ -30,6 +30,7 @@ scripts/package.mjs       crea dist/coop-space.mcaddon e il mondo di prova (npm 
 scripts/prova-mc.mjs      Minecraft pronto sul PC con il laboratorio (npm run prova-mc)
 scripts/prova-server.mjs  prova sul server ufficiale Bedrock (npm run prova-server)
 scripts/avvio-sessione.mjs  hook di avvio di Claude Code: aggiorna main, strumenti, lavori aperti, messaggi
+scripts/accesso.mjs       accesso automatico degli amici (lo lancia GitHub, .github/workflows/accesso.yml)
 scripts/sito.mjs, sito/   sito del team (npm run sito; anteprima: npm run sito -- --serve)
 .github/workflows/        build e anteprime, fusione automatica, sito
 .claude/settings.json     permessi, blocchi e hook di Claude Code per tutti

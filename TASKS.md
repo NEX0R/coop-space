@@ -8,7 +8,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 **A. Accesso**
 - [x] Jowa ha accettato l'invito (15/11, accesso in scrittura)
-- [ ] ReverendoLupo, Lepsy e Voltex mandano a Nexor il nome utente GitHub (o usano "Chiedi l'accesso" nel sito) e accettano l'invito
+- [ ] ReverendoLupo, Lepsy e Voltex chiedono l'accesso (lo fa il loro assistente all'accoglienza) e Nexor risponde "ok"
 - [x] Nexor installa sul proprio account GitHub l'app "ChatGPT Codex Connector" per `coop-space` (serve a chi usa Codex)
   - Installata il 15/11 solo su `coop-space`.
 
@@ -33,10 +33,10 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
-- [ ] Accesso automatico: l'assistente dell'amico chiede l'accesso, Nexor scrive "ok", GitHub invita e aggiorna team.json. **Chi:** Nexor
 
 ## Fatto
 
+- [x] Accesso automatico degli amici: l'assistente della persona nuova chiede l'accesso con il suo soprannome, GitHub controlla `team.json` e chiede l'ok a Nexor; con "ok" manda l'invito, aggiorna `team.json` con una proposta che si fonde da sola e l'assistente accetta l'invito. Nessuna IA accesa: lo fa un'automazione di GitHub. Serve il segreto `TOKEN_INVITI` di Nexor.
 - [x] Pulsante di prova degli script: `npm run prova-server` preme `/scriptevent coop:autotest` e fa girare le prove della logica scritte in `scripts/prove.js` (senza giocatori; nei mondi veri il comando viene rifiutato e non tocca niente). Ora vede anche gli errori degli script dopo l'avvio, che prima ignorava.
 - [x] Guida per tutti e privacy: solo soprannomi in file, sito, proposte e messaggi (Nexor, Jowa, ReverendoLupo, Lepsy, Voltex); `README.md` per chi non ha mai fatto add-on, con glossario e 4 strade (PC o telefono, Claude Code o Codex); `AGENTS.md` lungo un terzo, con privacy e linguaggio semplice, e procedure in `guide/` lette solo quando servono; accoglienza preparata dall'assistente per ogni strada; confronto delle tecniche per chi fa già add-on.
 - [x] Prototipi sul sito: nella sezione "Contenuti" il gruppo "Prototipi: non ancora nella versione stabile" mostra, per ogni pull request aperta con l'anteprima, i contenuti nuovi (icona e nome), i pulsanti del mondo di prova e la lista "Come provarlo" da spuntare. Nuove regole: ogni pull request ha la sezione "## Come provarlo" (4-6 controlli nel gioco) e niente pull request che partono dal ramo di un'altra ancora aperta. Sul PC `npm run prova-mc -- <N>` installa add-on e mondo di prova della pull request #N e avvia Minecraft.

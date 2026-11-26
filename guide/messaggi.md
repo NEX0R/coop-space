@@ -24,4 +24,14 @@ Arrivano come issue con le etichette `accesso`, `idea`, `problema`, `messaggio`;
 
 - **idea**: se il team la approva diventa un compito in `TASKS.md`, e la pull request che la realizza scrive `Chiude #N`.
 - **problema**: si affronta con la skill `debug-addon` e `guide/prova-nel-gioco.md`.
-- **accesso**: gli inviti li può mandare solo Nexor (proprietario del repository). Controlla che l'account esista e chiedigli l'ok.
+- **accesso**: le gestisce l'automazione `.github/workflows/accesso.yml` (script `scripts/accesso.mjs`, nessuna IA accesa). Alla richiesta (titolo `Accesso: <soprannome>` o modulo del sito) GitHub controlla il soprannome in `team.json` e chiede l'ok a Nexor; quando **Nexor** (solo lui, proprietario del repository) risponde `ok`, GitHub manda l'invito, apre la proposta che scrive l'account in `team.json` (si fonde da sola) e chiude la richiesta. Se sei l'assistente di Nexor, riferiscigli le richieste aperte e ricordagli che basta rispondere `ok` se conosce la persona.
+
+## Accesso automatico: il segreto `TOKEN_INVITI`
+
+Le automazioni normali di GitHub non possono invitare persone: serve un token di Nexor, salvato come segreto del repository. Si crea **una volta** (e si rinnova alla scadenza; se è scaduto, l'automazione lo scrive nella richiesta). Guida Nexor passo per passo, ma **il token non deve mai passare dalla chat né finire in un file**:
+
+1. GitHub → foto in alto a destra → **Settings** → **Developer settings** → **Personal access tokens** → **Fine-grained tokens** → **Generate new token**.
+2. Nome `coop-space inviti`; scadenza 1 anno; **Repository access** → **Only select repositories** → `coop-space`.
+3. **Permissions** del repository: **Administration** → Read and write (serve per gli inviti); **Contents** → Read and write; **Pull requests** → Read and write. Nient'altro.
+4. **Generate token** e copia il token.
+5. Sul PC Nexor scrive lui nel prompt `! gh secret set TOKEN_INVITI --repo NEX0R/coop-space` e incolla il token quando lo chiede (oppure: repository → Settings → Secrets and variables → Actions → New repository secret).

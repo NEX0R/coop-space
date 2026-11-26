@@ -42,8 +42,7 @@ Le parole che vedrai e che gli assistenti useranno con te.
 ### 1. Account e accesso
 
 1. Crea un account gratuito su [github.com](https://github.com/signup), se non lo hai, e attiva l'**autenticazione a due fattori** (Settings → Password and authentication).
-2. Nel [sito del team](https://nex0r.github.io/coop-space/) premi **Chiedi l'accesso** e scrivi il tuo **soprannome**. Oppure manda a Nexor il tuo nome utente GitHub (mai l'email).
-3. Quando Nexor ti invita, accetta da qui: <https://github.com/NEX0R/coop-space/invitations>.
+2. Il resto lo fa il tuo assistente: al passo 3 chiede l'accesso per te. Nexor riceve una notifica e risponde "ok"; GitHub manda l'invito da solo e il tuo assistente lo accetta. Se preferisci farlo a mano: **Chiedi l'accesso** nel [sito del team](https://nex0r.github.io/coop-space/), con il tuo **soprannome**.
 
 ### 2. Scegli la tua strada
 
