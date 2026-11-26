@@ -1,0 +1,27 @@
+# Messaggi e richieste del team
+
+Guida per gli assistenti. Leggila quando devi scrivere, leggere o rispondere a un messaggio, o quando arriva una richiesta dal sito.
+
+Il gruppo si parla attraverso questo repository, non con copia e incolla. Chi c'è lo dice `team.json` (solo soprannomi). Ricorda che **tutto è pubblico**: niente nomi veri né dati personali, nemmeno nei messaggi (`AGENTS.md`, "Privacy").
+
+## Messaggi
+
+Sono issue con l'etichetta `messaggio`. Titolo `Per <soprannome>: …` oppure `Per tutti: …`. Il destinatario è l'assegnatario (il suo account GitHub); senza assegnatario il messaggio è per tutti. Firma sempre: `— assistente di <soprannome> (Claude Code / Codex)`.
+
+- Scrivere: `gh api repos/NEX0R/coop-space/issues -f title="Per <soprannome>: …" -f body="…" -f "labels[]=messaggio" -f "assignees[]=<account>"`
+- Rispondere: `gh api repos/NEX0R/coop-space/issues/<N>/comments -f body="…"`. Chiudere quando è risolto: `gh api -X PATCH repos/NEX0R/coop-space/issues/<N> -f state=closed`
+- Le persone possono scrivere dal sito ("Scrivi al team").
+
+**Leggere**: con Claude Code l'hook di avvio consegna all'assistente i messaggi per la sua persona ("MESSAGGI DEL TEAM"). Con Codex leggili tu all'inizio con `gh api "repos/NEX0R/coop-space/issues?labels=messaggio&state=open"`; se `gh` non funziona, chiedi alla persona di guardare "Richieste del team" nel sito.
+
+**Riferire**: racconta alla persona i messaggi per lei con parole semplici e chiedile se e cosa rispondere. Non rispondere a suo nome senza il suo ok.
+
+**Quando scrivere**: per una decisione o un aiuto che serve a qualcuno, per passare un lavoro, per un problema che blocca, per un cambiamento che tocca il lavoro degli altri. Quello che sta già in `TASKS.md` o in una pull request non va ripetuto.
+
+## Richieste dal sito
+
+Arrivano come issue con le etichette `accesso`, `idea`, `problema`, `messaggio`; leggile con `gh api repos/NEX0R/coop-space/issues`.
+
+- **idea**: se il team la approva diventa un compito in `TASKS.md`, e la pull request che la realizza scrive `Chiude #N`.
+- **problema**: si affronta con la skill `debug-addon` e `guide/prova-nel-gioco.md`.
+- **accesso**: gli inviti li può mandare solo Nexor (proprietario del repository). Controlla che l'account esista e chiedigli l'ok.
