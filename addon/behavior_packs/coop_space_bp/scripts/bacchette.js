@@ -277,7 +277,7 @@ function consumaDurata(player) {
   const bacchetta = equip?.getEquipment(EquipmentSlot.Mainhand);
   const durata = bacchetta?.getComponent("minecraft:durability");
   if (!durata) return;
-  if (durata.damage + 1 >= durata.maxDurability) {
+  if (durata.damage + 1 > durata.maxDurability) { // si rompe quando il danno supera il massimo, come gli attrezzi
     equip.setEquipment(EquipmentSlot.Mainhand, undefined);
     player.playSound("random.break");
     return;
