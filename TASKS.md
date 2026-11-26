@@ -36,6 +36,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Bacchetta da costruzione di rame (`coop:bacchetta_rame`): 16 blocchi per colpo (tra pietra 9 e ferro 27), durata 190, ricetta con lingotti di rame, texture e nomi. **Chi:** Nexor
 - [x] Sito: oggetti in rilievo nel visore 3D (un cubetto per pixel); tenendo premuto su un blocco compaiono le crepe con il tempo di rottura vero e un suono imitato per materiale; i prototipi si aprono nel visore. Corretto l'errore che bloccava il gruppo Prototipi ("anteprime is not defined"). **Chi:** Nexor
 - [x] Prove da giocatore automatiche: a ogni build un giocatore simulato di Mojang (`scripts/prove-giocatore/`, modulo beta solo sul server di prova, mai nel gioco) usa la bacchetta in creativa e in sopravvivenza e controlla blocchi, inventario e durata. Le prove nuove si aggiungono lì (`guide/prova-server.md`). **Chi:** Nexor
 - [x] Pulsante di prova degli script: `npm run prova-server` preme `/scriptevent coop:autotest` e fa girare le prove della logica scritte in `scripts/prove.js` (senza giocatori; nei mondi veri il comando viene rifiutato e non tocca niente). Ora vede anche gli errori degli script dopo l'avvio, che prima ignorava.
