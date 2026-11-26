@@ -2,12 +2,13 @@
 //
 //   npm run prova-mc              crea il pacchetto da addon/ (npm run package) e lo installa
 //   npm run prova-mc -- 31        scarica l'anteprima della pull request #31 e la installa
-//   opzioni: --pulisci            cancella i mondi di prova "Coop Space ..." vecchi (non quelli tuoi)
+//   opzioni: --mondo-nuovo        rifà da zero il mondo "Coop Space - laboratorio" (solo se serve davvero)
+//            --pulisci            cancella i mondi di prova "Coop Space ..." vecchi (non quelli tuoi)
 //            --non-avviare        installa senza aprire Minecraft
 //
 // Cosa fa: chiude Minecraft se è aperto, sostituisce i pack "Coop Space" installati con quelli
-// nuovi (riconosciuti dall'UUID del manifest, non dal nome), aggiunge il mondo di prova in cima
-// alla lista dei mondi e avvia il gioco. Codici: 0 = pronto, 3 = non è stato possibile prepararlo.
+// nuovi (riconosciuti dall'UUID del manifest, non dal nome), aggiorna l'add-on nel mondo fisso
+// "Coop Space - laboratorio" (lo crea la prima volta), lo mette in cima alla lista e avvia il gioco. Codici: 0 = pronto, 3 = non è stato possibile prepararlo.
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -22,9 +23,18 @@ const pr = args.find((a) => /^\d+$/.test(a));
 const pulisci = args.includes("--pulisci");
 const avvia = !args.includes("--non-avviare");
 
+// Uscita con codice 3. Non usa process.exit: dopo un download, su Windows Node si blocca chiudendo.
+const FERMATO = Symbol("fermato");
+process.on("uncaughtException", (e) => {
+  if (e !== FERMATO) {
+    console.error(e);
+    process.exitCode = 1;
+  }
+});
 const ferma = (msg) => {
   console.error(`\n✗ ${msg}`);
-  process.exit(3);
+  process.exitCode = 3;
+  throw FERMATO;
 };
 const leggiJson = (file) => {
   try {
@@ -56,7 +66,10 @@ if (pr) {
     const url = `https://github.com/${REPO}/releases/download/anteprima-pr-${pr}/${nome}`;
     console.log(`Scarico ${url}`);
     const r = await fetch(url).catch((e) => ({ ok: false, statusText: e.message }));
-    if (!r.ok) ferma(`Anteprima della pull request #${pr} non trovata (${r.status || r.statusText}). La build è finita?`);
+    if (!r.ok) {
+      await r.body?.cancel().catch(() => {}); // senza, Node su Windows si blocca uscendo
+      ferma(`Anteprima della pull request #${pr} non trovata (${r.status || r.statusText}): la build è finita? Dopo la fusione l'anteprima non c'è più, usa "npm run prova-mc" senza numero.`);
+    }
     writeFileSync(join(cartella, nome), Buffer.from(await r.arrayBuffer()));
   }
   addon = join(cartella, "coop-space.mcaddon");
@@ -115,24 +128,62 @@ for (const p of pack) {
 }
 const uuidBp = pack.find((p) => p.tipo === "behavior_packs")?.uuid;
 
-// ---------- 4. il mondo di prova, in cima alla lista ----------
+// ---------- 4. il mondo "Coop Space - laboratorio", sempre lo stesso ----------
+// Il mondo di prova si porta dentro la sua copia dell'add-on: nel laboratorio si sostituiscono solo
+// quella copia e l'elenco dei pack attivi (world_*_packs.json). Il resto (db/ = costruzioni,
+// level.dat = impostazioni) resta. Con --mondo-nuovo il laboratorio si rifà da zero: serve solo
+// per le cose che nascono quando il mondo viene generato (biomi, strutture, generazione naturale).
+const LABORATORIO = "coopLaboratorio";
+const NOME_LAB = "Coop Space - laboratorio";
 const vociMondo = leggiZip(readFileSync(mondo));
-const nomeMondo = vociMondo.find((v) => v.nome === "levelname.txt")?.dati.toString("utf8").trim() || "Coop Space";
-// Minecraft ordina i mondi per "LastPlayed" (secondi, nel level.dat): lo mettiamo ad adesso.
-const tag = Buffer.concat([Buffer.from([4]), Buffer.from([10, 0]), Buffer.from("LastPlayed")]);
-for (const v of vociMondo.filter((x) => x.nome === "level.dat" || x.nome === "level.dat_old")) {
-  const i = v.dati.indexOf(tag);
-  if (i >= 0) v.dati.writeBigInt64LE(BigInt(Math.floor(Date.now() / 1000)), i + tag.length);
+const versione = vociMondo.find((v) => v.nome === "levelname.txt")?.dati.toString("utf8").trim().replace(/^Coop Space /, "") || "?";
+const u16 = (n) => Buffer.from([n & 255, n >> 8]);
+const tagNbt = (tipo, nome) => Buffer.concat([Buffer.from([tipo]), u16(Buffer.byteLength(nome)), Buffer.from(nome)]);
+// Nel level.dat: nome del mondo e "LastPlayed" ad adesso (Minecraft ordina i mondi così: va in cima).
+function sistemaLevelDat(buf, nome) {
+  const tn = tagNbt(8, "LevelName");
+  const i = nome ? buf.indexOf(tn) : -1;
+  if (i >= 0) {
+    const p = i + tn.length;
+    const n = Buffer.from(nome, "utf8");
+    buf = Buffer.concat([buf.subarray(0, p), u16(n.length), n, buf.subarray(p + 2 + buf.readUInt16LE(p))]);
+    buf.writeInt32LE(buf.length - 8, 4); // l'intestazione contiene la lunghezza del resto
+  }
+  const tl = tagNbt(4, "LastPlayed");
+  const j = buf.indexOf(tl);
+  if (j >= 0) buf.writeBigInt64LE(BigInt(Math.floor(Date.now() / 1000)), j + tl.length);
+  return buf;
 }
+const lab = join(mondi, LABORATORIO);
+const nuovoLab = args.includes("--mondo-nuovo") || !existsSync(join(lab, "level.dat"));
+if (nuovoLab) {
+  rmSync(lab, { recursive: true, force: true });
+  for (const v of vociMondo) {
+    if (v.nome === "level.dat" || v.nome === "level.dat_old") v.dati = sistemaLevelDat(v.dati, NOME_LAB);
+    if (v.nome === "levelname.txt") v.dati = Buffer.from(NOME_LAB, "utf8");
+  }
+  estrai(vociMondo, "", lab);
+  console.log(`Creato il mondo "${NOME_LAB}" da zero`);
+} else {
+  for (const d of ["behavior_packs", "resource_packs"]) rmSync(join(lab, d), { recursive: true, force: true });
+  const aggiorna = (n) => /^(behavior_packs|resource_packs)\//.test(n) || /^world_(behavior|resource)_pack(s|_history)\.json$/.test(n);
+  for (const v of vociMondo.filter((x) => aggiorna(x.nome) && !x.nome.endsWith("/"))) {
+    mkdirSync(dirname(join(lab, v.nome)), { recursive: true });
+    writeFileSync(join(lab, v.nome), v.dati);
+  }
+  for (const n of ["level.dat", "level.dat_old"]) {
+    if (existsSync(join(lab, n))) writeFileSync(join(lab, n), sistemaLevelDat(readFileSync(join(lab, n))));
+  }
+  console.log(`Aggiornato l'add-on nel mondo "${NOME_LAB}" (costruzioni e impostazioni restano)`);
+}
+const nomeMondo = NOME_LAB;
 // Mondi di prova vecchi: nome "Coop Space ..." e il nostro behavior pack dentro il mondo.
 const vecchi = readdirSync(mondi).filter((d) => {
+  if (d === LABORATORIO) return false;
   const nome = existsSync(join(mondi, d, "levelname.txt")) ? readFileSync(join(mondi, d, "levelname.txt"), "utf8").trim() : "";
   const usa = JSON.stringify(leggiJson(join(mondi, d, "world_behavior_packs.json")) || []).includes(uuidBp);
   return nome.startsWith("Coop Space ") && usa && existsSync(join(mondi, d, "behavior_packs"));
 });
-const cartellaMondo = `coopprova${Date.now().toString(36)}`;
-estrai(vociMondo, "", join(mondi, cartellaMondo));
-console.log(`Aggiunto il mondo "${nomeMondo}"`);
 if (pulisci) {
   for (const d of vecchi) {
     console.log(`Cancellato il mondo di prova vecchio "${readFileSync(join(mondi, d, "levelname.txt"), "utf8").trim()}"`);
@@ -147,5 +198,5 @@ if (avvia) {
   spawnSync("cmd", ["/c", "start", "", "minecraft:"], { stdio: "ignore" });
   console.log("\nAvvio Minecraft.");
 }
-console.log(`\n✓ Pronto: in Minecraft entra nel mondo "${nomeMondo}" (il primo della lista).`);
+console.log(`\n✓ Pronto: in Minecraft entra nel mondo "${nomeMondo}" (il primo della lista), add-on ${versione}.`);
 console.log('  Entrando, la chat deve dire "Coop Space ... attivo."');
