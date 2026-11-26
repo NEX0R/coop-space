@@ -33,10 +33,10 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
-- [ ] Prototipi sul sito (contenuti delle pull request aperte, con la lista "come provarlo") e regole per le pull request. **Chi:** Nexor
 
 ## Fatto
 
+- [x] Prototipi sul sito: nella sezione "Contenuti" il gruppo "Prototipi: non ancora nella versione stabile" mostra, per ogni pull request aperta con l'anteprima, i contenuti nuovi (icona e nome), i pulsanti del mondo di prova e la lista "Come provarlo" da spuntare. Nuove regole: ogni pull request ha la sezione "## Come provarlo" (4-6 controlli nel gioco) e niente pull request che partono dal ramo di un'altra ancora aperta.
 - [x] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): in circa 15 secondi, senza aprire il gioco, dice se il gioco segnala errori caricando l'add-on e se ogni blocco, oggetto e mob `coop:` esiste davvero. Gira anche nella build delle pull request, quando Nexor crea la variabile `EULA_MINECRAFT_ACCETTATA`. Non controlla la grafica.
 - [x] Merge automatico: una pull request si fonde da sola quando qualcuno preme "Ready for review" e il controllo di GitHub è verde. Finché è in bozza resta ferma, per provarla. Dopo la fusione l'anteprima si cancella e "ultima-versione" e il sito si aggiornano da soli.
 - [x] Attivazione a prova di errore: pacchetti chiamati "Coop Space" (da attivare) e "Coop Space - grafica" (si aggiunge da sola), messaggio in chat "Coop Space <versione> attivo." all'ingresso, mondo di prova `.mcworld` già pronto in ogni release e anteprima. Causa del 16/11: era attiva solo la grafica.
