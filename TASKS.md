@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Sito: oggetti in rilievo nel visore 3D e prova di rottura dei blocchi con crepe e suono **Chi:** Nexor
 
 ## Fatto
 
