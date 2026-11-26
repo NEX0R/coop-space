@@ -9,7 +9,8 @@
     "package": "node scripts/package.mjs",
     "skills": "mct skills",
     "sito": "node scripts/sito.mjs",
-    "prova-server": "node scripts/prova-server.mjs"
+    "prova-server": "node scripts/prova-server.mjs",
+    "prova-mc": "node scripts/prova-mc.mjs"
   },
   "devDependencies": {
     "@minecraft/creator-tools": "0.21.0",

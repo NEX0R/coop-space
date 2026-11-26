@@ -143,8 +143,10 @@ async function mostraGitHub(repo) {
           .join("") +
         "</ul>";
     }
+    mostraPrototipi(repo, prs, anteprime);
   } catch (e) {
     $("pr").innerHTML = `<p class="nota">Non riesco a leggere GitHub: ${esc(e.message)}.</p>`;
+    $("prototipi").innerHTML = `<p class="nota">Non riesco a leggere GitHub: ${esc(e.message)}.</p>`;
   }
   try {
     const commits = await github(`repos/${repo}/commits?sha=main&per_page=6`);
@@ -159,6 +161,134 @@ async function mostraGitHub(repo) {
   } catch (e) {
     $("commit").innerHTML = `<li class="nota">Non disponibile: ${esc(e.message)}.</li>`;
   }
+}
+
+// ---------- prototipi: le pull request aperte che cambiano l'add-on ----------
+// Non sono ancora nella versione stabile: si provano con il loro mondo di prova.
+// Per ogni proposta: i contenuti nuovi (nome dai .lang della proposta, icona dal suo ramo)
+// e la lista "## Come provarlo" scritta nella descrizione. Una richiesta a GitHub per proposta;
+// i file si leggono da raw.githubusercontent.com, che non conta nel limite di 60 richieste l'ora.
+const CARTELLE = { blocks: "blocco", items: "oggetto", entities: "mob" };
+const RP_PREDEFINITO = "addon/resource_packs/coop_space_rp";
+const crudo = (repo, sha, percorso) => `https://raw.githubusercontent.com/${repo}/${sha}/${percorso}`;
+const leggiCrudo = (url) =>
+  fetch(url)
+    .then((r) => (r.ok ? r.json() : null))
+    .catch(() => null);
+
+// Righe "- [ ] ...", "- ..." o "1. ..." sotto il titolo "## Come provarlo", fino al titolo dopo.
+function comeProvarlo(corpo) {
+  const righe = String(corpo || "").split(/\r?\n/);
+  const inizio = righe.findIndex((r) => /^#{2,3}\s*come provarlo/i.test(r.trim()));
+  if (inizio < 0) return [];
+  const voci = [];
+  for (const r of righe.slice(inizio + 1)) {
+    if (/^#{1,3}\s/.test(r.trim())) break;
+    const m = r.match(/^\s*(?:[-*]\s+(?:\[[ xX]\]\s*)?|\d+[.)]\s+)(.+)/);
+    if (m) voci.push(m[1].trim());
+  }
+  return voci;
+}
+
+// Le righe "chiave=valore" aggiunte a un file .lang, lette dalla differenza della proposta.
+function righeLang(file) {
+  const mappa = {};
+  for (const r of String(file?.patch || "").split("\n")) {
+    const m = r.match(/^\+([^#=+][^=]*)=(.*)$/);
+    if (m) mappa[m[1].trim()] = m[2].trim();
+  }
+  return mappa;
+}
+
+async function contenutiDellaProposta(repo, p) {
+  const files = await github(`repos/${repo}/pulls/${p.number}/files?per_page=100`);
+  const nuovi = files.filter((f) => f.status === "added" && /^addon\/behavior_packs\/[^/]+\/(blocks|items|entities)\/.+\.json$/.test(f.filename));
+  if (!nuovi.length) return [];
+  const lang = (nome) => righeLang(files.find((f) => f.filename.endsWith(`/texts/${nome}.lang`)));
+  const it = lang("it_IT");
+  const en = lang("en_US");
+  const rp = files.map((f) => f.filename.match(/^addon\/resource_packs\/[^/]+/)?.[0]).find(Boolean) || RP_PREDEFINITO;
+  const atlanti = {};
+  const atlante = (nome) => (atlanti[nome] ??= leggiCrudo(crudo(repo, p.head.sha, `${rp}/textures/${nome}.json`)).then((j) => j?.texture_data || {}));
+  const png = async (nomeAtlante, chiave) => {
+    if (!chiave) return "";
+    let t = (await atlante(nomeAtlante))[chiave]?.textures;
+    if (Array.isArray(t)) t = t[0];
+    if (t && typeof t === "object") t = t.path;
+    return t ? crudo(repo, p.head.sha, `${rp}/${t}.png`) : "";
+  };
+  return Promise.all(
+    nuovi.map(async (f) => {
+      const tipo = CARTELLE[f.filename.split("/")[3]];
+      const j = (await leggiCrudo(crudo(repo, p.head.sha, f.filename))) || {};
+      const radice = j["minecraft:block"] || j["minecraft:item"] || j["minecraft:entity"] || {};
+      const id = radice.description?.identifier || f.filename.split("/").pop().replace(/\.json$/, "");
+      const comp = radice.components || {};
+      let chiave = `entity.${id}.name`;
+      let texture = "";
+      if (tipo === "oggetto") {
+        chiave = comp["minecraft:display_name"]?.value || "";
+        let icona = comp["minecraft:icon"];
+        if (icona && typeof icona === "object") icona = icona.texture || icona.textures?.default;
+        texture = await png("item_texture", icona);
+      } else if (tipo === "blocco") {
+        chiave = `tile.${id}.name`;
+        const mi = comp["minecraft:material_instances"] || {};
+        texture = await png("terrain_texture", (mi["*"] || Object.values(mi)[0] || {}).texture);
+      }
+      return { tipo, id, nome: it[chiave] || "", nomeEn: en[chiave] || "", texture };
+    })
+  );
+}
+
+async function mostraPrototipi(repo, prs, anteprime) {
+  const proposte = prs.filter((p) => anteprime.has(`anteprima-pr-${p.number}`)).sort((a, b) => b.number - a.number);
+  if (!proposte.length) {
+    $("prototipi").innerHTML = '<p class="nota">Nessun prototipo da provare, per ora.</p>';
+    return;
+  }
+  const contenuti = await Promise.all(proposte.map((p) => contenutiDellaProposta(repo, p).catch(() => null)));
+  const visti = new Set(); // se due proposte portano lo stesso contenuto, si mostra nella più recente
+  $("prototipi").innerHTML = proposte
+    .map((p, i) => {
+      const tutti = contenuti[i] || [];
+      const doppi = tutti.filter((c) => visti.has(c.id));
+      const lista = tutti.filter((c) => !visti.has(c.id) && visti.add(c.id));
+      const dove = doppi.length ? proposte.find((q, k) => k < i && (contenuti[k] || []).some((c) => c.id === doppi[0].id)) : null;
+      const prove = comeProvarlo(p.body);
+      const base = `https://github.com/${repo}/releases/download/anteprima-pr-${p.number}`;
+      const inCorso = /^in corso/i.test(p.title);
+      return `<article class="prototipo">
+        <div><a href="${esc(p.html_url)}" target="_blank" rel="noopener"><strong>#${p.number} ${esc(p.title)}</strong></a>
+          <span class="stato attesa">${inCorso ? "in lavorazione" : "da provare"}</span></div>
+        <div class="meta">di ${esc(p.user.login)} · aggiornata ${fa(p.updated_at)} · versione ${esc(anteprime.get(`anteprima-pr-${p.number}`) || "?")}</div>
+        <p class="azioni"><a class="stato ok" href="${base}/coop-space-mondo-prova.mcworld">Mondo di prova</a> <a class="stato ok" href="${base}/coop-space.mcaddon">Add-on</a></p>
+        ${
+          contenuti[i] === null
+            ? '<p class="nota">Non riesco a leggere i contenuti di questa proposta.</p>'
+            : lista.length
+              ? `<div class="griglia">${lista
+                  .map(
+                    (c) => `<div class="scheda">
+                ${c.texture ? `<img src="${esc(c.texture)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'vuoto'}))">` : '<span class="vuoto"></span>'}
+                <span><span class="tipo">${TIPI[c.tipo] || c.tipo} · prototipo</span><br><strong>${esc(c.nome || c.nomeEn || c.id)}</strong>
+                <span class="id">${esc(c.id)}</span></span></div>`
+                  )
+                  .join("")}</div>`
+              : dove
+                ? `<p class="nota">I suoi contenuti sono mostrati nella #${dove.number}, che li contiene già.</p>`
+                : '<p class="nota">Nessun contenuto nuovo: cambia come funzionano le cose che ci sono già.</p>'
+        }
+        ${
+          prove.length
+            ? `<details open><summary>Come provarlo (${prove.length})</summary><ul class="prova">${prove
+                .map((v) => `<li><label><input type="checkbox"> <span>${md(v)}</span></label></li>`)
+                .join("")}</ul></details>`
+            : '<p class="nota">La descrizione non ha ancora la lista "Come provarlo".</p>'
+        }
+      </article>`;
+    })
+    .join("");
 }
 
 // ---------- contenuti e visore ----------
