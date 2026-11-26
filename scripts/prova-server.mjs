@@ -283,8 +283,8 @@ function avviaServer(comandi, aspettaProve, aspettaProveGiocatore) {
       for (let i = 0; i < 60 && !dopo.some((r) => r.includes(SENTINELLA)); i++) await attesa(250);
       // Le prove degli script girano nei tick del gioco: si aspetta la loro riga finale (massimo 60 s).
       if (aspettaProve) for (let i = 0; i < 240 && !dopo.some((r) => r.includes(FINE_PROVE)); i++) await attesa(250);
-      // Il pack beta è opzionale: aspetta la risposta, poi segnala Saltato se non è partito.
-      if (aspettaProveGiocatore) for (let i = 0; i < 80 && !dopo.some((r) => r.includes(FINE_PROVE_GIOCATORE)); i++) await attesa(250);
+      // Prove da giocatore: si aspetta la loro riga finale (massimo 60 s), poi Saltato se non è arrivata.
+      if (aspettaProveGiocatore) for (let i = 0; i < 240 && !dopo.some((r) => r.includes(FINE_PROVE_GIOCATORE)); i++) await attesa(250);
       spegni();
     }
 

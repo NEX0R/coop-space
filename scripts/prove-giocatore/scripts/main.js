@@ -16,6 +16,12 @@ system.afterEvents.scriptEventReceive.subscribe(async (evento) => {
     return;
   }
   const dim = world.getDimension("overworld");
+  // Su GitHub il server è più lento: si aspetta che la zona (tenuta carica da tickingarea) sia pronta.
+  if (!(await zonaPronta(dim))) {
+    console.error("COOP-GIOCATORE zona FALLITO: la zona delle prove da giocatore non si è caricata (manca tickingarea?)");
+    console.warn("COOP-GIOCATORE FINE");
+    return;
+  }
   try {
     for (const { nome } of prove) {
       try {
@@ -35,6 +41,18 @@ system.afterEvents.scriptEventReceive.subscribe(async (evento) => {
   }
   console.warn("COOP-GIOCATORE FINE");
 });
+
+async function zonaPronta(dim) {
+  for (let i = 0; i < 60; i++) {
+    try {
+      if (dim.getBlock(ZONA) && dim.getBlock({ x: ZONA.x + 15, y: ZONA.y, z: ZONA.z + 15 })) return true;
+    } catch {
+      // zona non ancora caricata
+    }
+    await attesa(5);
+  }
+  return false;
+}
 
 async function esegui(nome, dim) {
   const test = prove.find((p) => p.nome === nome);
