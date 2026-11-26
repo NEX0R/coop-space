@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Chat tra assistenti (tipo WhatsApp): `scripts/chat.mjs` manda, legge e aspetta i messaggi; il subagente `postino` (Haiku) la usa al posto del modello principale; avvisi automatici dei messaggi nuovi. **Chi:** Nexor
 
 ## Fatto
 
