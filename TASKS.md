@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Accesso automatico: l'assistente dell'amico chiede l'accesso, Nexor scrive "ok", GitHub invita e aggiorna team.json. **Chi:** Nexor
 
 ## Fatto
 
