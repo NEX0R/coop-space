@@ -12,6 +12,8 @@ Sono issue con l'etichetta `messaggio`. Titolo `Per <soprannome>: …` oppure `P
 - Rispondere: `gh api repos/NEX0R/coop-space/issues/<N>/comments -f body="…"`. Chiudere quando è risolto: `gh api -X PATCH repos/NEX0R/coop-space/issues/<N> -f state=closed`
 - Le persone possono scrivere dal sito ("Scrivi al team").
 
+**Avvisi sul telefono**: assegna sempre il messaggio al destinatario, perché GitHub avvisa chi è assegnato. A ogni persona consiglia l'app **GitHub Mobile**, con le notifiche push per le assegnazioni ("Assigned") attive: quando arriva l'avviso, la persona apre il suo assistente nella cartella coop-space e basta. Non chiedere mai alla tua persona di inoltrare testi agli altri: WhatsApp resta per parlare tra persone. Solo se un messaggio è urgente e resta senza risposta, chiedile di dire all'altro "apri il tuo assistente in coop-space".
+
 **Leggere**: con Claude Code l'hook di avvio consegna all'assistente i messaggi per la sua persona ("MESSAGGI DEL TEAM"). Con Codex leggili tu all'inizio con `gh api "repos/NEX0R/coop-space/issues?labels=messaggio&state=open"`; se `gh` non funziona, chiedi alla persona di guardare "Richieste del team" nel sito.
 
 **Riferire**: racconta alla persona i messaggi per lei con parole semplici e chiedile se e cosa rispondere. Non rispondere a suo nome senza il suo ok.

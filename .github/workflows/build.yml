@@ -23,6 +23,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Controlla che la storia sia quella del progetto
+        # Il 26/11 la storia è stata riscritta per togliere i nomi veri. Una cartella scaricata prima,
+        # o un'unione con --allow-unrelated-histories, riporterebbe i commit vecchi: qui si fermano.
+        run: |
+          RADICI=$(git rev-list --max-parents=0 HEAD)
+          if [ "$RADICI" != "29298af7dd495158eea5c09227728b6063f26609" ]; then
+            echo "::error::Questa modifica contiene una storia diversa da quella del progetto (forse la vecchia, prima del 26/11). Riscarica il progetto da capo con git clone e rifai la modifica lì: vedi AGENTS.md, 'Storia riscritta'."
+            exit 1
+          fi
 
       - uses: actions/setup-node@v4
         with:

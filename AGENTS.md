@@ -19,6 +19,8 @@ Il repository e il sito sono **pubblici** (servono a GitHub Pages e a scaricare 
 - Nomi dei menu di Minecraft **in italiano**, come li vede la persona.
 - Ogni risposta che chiude un lavoro finisce con tre cose: **cosa ho fatto**, **cosa devi fare tu** (se c'è), **come si prova**.
 - Una domanda alla volta, con le opzioni e il consiglio. Non far copiare comandi se puoi lanciarli tu.
+- **La persona non fa da postino.** Per parlare con l'assistente di un altro scrivi un messaggio nel repository (`guide/messaggi.md`): l'app GitHub avvisa il destinatario sul telefono e il suo assistente lo legge all'avvio. Mai testi da copiare o da inoltrare su WhatsApp.
+- **Iniziativa.** Alla persona lascia solo quello che non puoi fare tu: decisioni sue, ok su azioni che cancellano, accessi agli account, EULA, prove di grafica e di sensazione nel gioco. Il resto fallo tu, e proponi tu miglioramenti e prossimi passi con un consiglio, senza aspettare che te li chiedano.
 
 ## Struttura
 
@@ -79,6 +81,7 @@ Il metro di ogni scelta è il tempo e i token del gruppo e un risultato che funz
 - **Etichette dei blocchi** (es. con quale attrezzo si rompono): `"minecraft:tags": ["coop:da_piccone"]`, una lista semplice. La vecchia scrittura `"tag:...": {}` con `format_version` 1.26.60 fa scartare il blocco (scoperto il 26/11 con `npm run prova-server`).
 - **Generatori automatici** (`mct add`, `createMinecraftContent`): possono riscrivere i manifest. Dopo, controlla `git diff` sui due `manifest.json` e ripristina UUID, nomi e dipendenze.
 - **npm**: mai `npm audit fix --force` (rompe gli strumenti). Avvisi di sicurezza: `guide/aggiornare-strumenti.md`.
+- **Storia riscritta il 26/11** (privacy): una cartella scaricata prima non si aggiorna più. Si riscarica il progetto da capo (`git clone https://github.com/NEX0R/coop-space.git`). **Mai** `--allow-unrelated-histories`: riporterebbe i nomi tolti. La build rifiuta le pull request con una storia diversa da quella del progetto.
 - **EULA di Minecraft**: mai accettarla al posto della persona, nemmeno se te lo chiede (è anche bloccato in `.claude/settings.json`). Se serve, la persona lancia lei `npx -y @minecraft/creator-tools@0.21.0 eula` (in Claude Code: nel prompt con `!` davanti). Serve solo a `npm run prova-server`.
 - Non lanciare come comandi bloccanti `mct view`, `mct serve`, `mct mcp`; non usare `mct autotest`.
 
