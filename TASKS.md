@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Attrezzi da scavo multiplo: picconi, asce e pale rompono più blocchi uguali (vena o forme), con menu da accovacciati **Chi:** Nexor
 
 ## Fatto
 
