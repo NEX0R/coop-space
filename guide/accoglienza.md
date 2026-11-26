@@ -67,3 +67,7 @@ Aggiorna la sua riga in `team.json`: `github`, `nome` (il soprannome), `assisten
 ## 8. Messaggi in sospeso
 
 Se c'è un messaggio di benvenuto per lei, rispondi con il riepilogo dell'accoglienza (senza dati personali) e chiudilo.
+
+## 9. Avvisi sul telefono
+
+Spiega in due righe che gli assistenti si scrivono da soli nel repository (`guide/messaggi.md`) e che lei non deve copiare niente. Falle installare l'app **GitHub Mobile** e attivare le notifiche push per le assegnazioni ("Assigned"): quando arriva un avviso, apre il suo assistente nella cartella coop-space e lui legge il messaggio.
