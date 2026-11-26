@@ -410,13 +410,13 @@ function costruisci(player, bacchetta, blocco, faccia) {
 
 // Anteprima, come i blocchi trasparenti di Building Gadgets: mentre guardi un blocco
 // con la bacchetta in mano, scintille verdi segnano dove andranno i blocchi.
-// Il mirino si controlla ogni 2 tick (0,1 secondi): appena cambia quello che guardi, le scintille
-// si ridisegnano subito. Se non cambia niente, si ridisegnano ogni 5 tick (0,25 secondi), quanto
-// dura la scintilla "coop:anteprima_bacchetta" (resource pack): così non restano scie in aria.
+// Il mirino si controlla a ogni tick (0,05 secondi): appena cambia quello che guardi, le scintille
+// si ridisegnano subito. Se non cambia niente, si ridisegnano ogni 2 tick (0,1 secondi); la scintilla
+// "coop:anteprima_bacchetta" (resource pack) dura 0,15 secondi: niente buchi, e sparisce quasi subito.
 // I calcoli (caselle libere, inventario) si rifanno solo quando cambia qualcosa.
 const DISTANZA_ANTEPRIMA = 10;
-const GIRO_MIRINO = 2; // tick
-const GIRO_SCINTILLE = 5; // tick
+const GIRO_MIRINO = 1; // tick
+const GIRO_SCINTILLE = 2; // tick
 const anteprime = new Map(); // id giocatore -> { chiave, punti, tick }
 const PUNTI_PIENI = 48; // oltre, si segnano solo gli spigoli della forma
 
