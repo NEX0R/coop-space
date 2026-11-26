@@ -144,12 +144,12 @@ function accoglienza(chi) {
   } catch {
     return;
   }
-  const io = membri.find((m) => chi && m.github.toLowerCase() === chi.toLowerCase());
-  const daFare = membri.filter((m) => m.accoglienza !== "fatta").map((m) => m.github);
+  const io = membri.find((m) => chi && (m.github || "").toLowerCase() === chi.toLowerCase());
+  const daFare = membri.filter((m) => m.accoglienza !== "fatta").map((m) => (m.github ? `${m.nome || m.github} (${m.github})` : `${m.nome} (account GitHub ancora da scrivere)`));
   if (chi && (!io || io.accoglienza !== "fatta")) {
-    righe.push(`PERSONA NUOVA: l'account GitHub ${chi} ${io ? "non ha ancora fatto l'accoglienza" : "non è in team.json"}. Alla tua prima risposta, prima di qualsiasi altra cosa, avvia tu l'accoglienza (AGENTS.md, "Accoglienza di una persona nuova"), anche se l'utente ha scritto solo "ciao"; poi riprendi la sua richiesta.`);
+    righe.push(`PERSONA NUOVA: l'account GitHub ${chi} ${io ? "non ha ancora fatto l'accoglienza" : "non è in team.json"}. Alla tua prima risposta, prima di qualsiasi altra cosa, avvia tu l'accoglienza (guide/accoglienza.md), anche se l'utente ha scritto solo "ciao"; poi riprendi la sua richiesta.`);
   } else if (!chi && daFare.length) {
-    righe.push(`Non so quale account GitHub sta usando l'utente. In team.json l'accoglienza è ancora da fare per: ${daFare.join(", ")}. Alla prima risposta chiedigli il suo nome utente GitHub: se è uno di questi, o non è in team.json, avvia l'accoglienza (AGENTS.md).`);
+    righe.push(`Non so quale account GitHub sta usando l'utente. In team.json l'accoglienza è ancora da fare per: ${daFare.join(", ")}. Alla prima risposta chiedigli soprannome e nome utente GitHub: se è uno di questi, o non è in team.json, avvia l'accoglienza (guide/accoglienza.md).`);
   }
 }
 
