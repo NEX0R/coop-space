@@ -5,3 +5,4 @@ out/
 *.mcpack
 .DS_Store
 .claude/settings.local.json
+.coop-chat.json

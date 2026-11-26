@@ -28,6 +28,7 @@
       "Bash(gh api repos/NEX0R/coop-space --jq:*)",
       "Bash(git ls-remote:*)",
       "Bash(gh api user:*)",
+      "Bash(node scripts/chat.mjs:*)",
       "mcp__minecraft-creator-tools__getSkill",
       "mcp__minecraft-creator-tools__validateFile",
       "mcp__minecraft-creator-tools__validateContent",
@@ -55,6 +56,22 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/scripts/avvio-sessione.mjs\"",
             "timeout": 240
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/chat.mjs\" nuovi --hook",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/chat.mjs\" nuovi --hook",
+            "timeout": 15
           }
         ]
       }
