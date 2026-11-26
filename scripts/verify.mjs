@@ -101,8 +101,13 @@ for (const bp of bpDirs) {
     const id = item?.description?.identifier;
     if (!id) continue;
     contenuti++;
-    // Gli oggetti possono avere il nome nel componente minecraft:display_name invece che nei .lang.
-    if (!item.components?.["minecraft:display_name"]) nomi(`item.${id}.name`, `l'oggetto ${id}`, file.slice(addonDir.length + 1));
+    // Per gli oggetti il gioco NON legge "item.<id>.name" dai .lang da solo (nel gioco compare la
+    // chiave grezza, scoperto il 26/11 con le bacchette): serve il componente minecraft:display_name,
+    // che punta alla chiave dei .lang così il nome è tradotto in italiano e in inglese.
+    const rel = file.slice(addonDir.length + 1);
+    const chiave = item.components?.["minecraft:display_name"]?.value;
+    if (!chiave) problema(`l'oggetto ${id} (${rel}) non ha il nome: aggiungi "minecraft:display_name": { "value": "item.${id}.name" } nei componenti e la riga "item.${id}.name=..." nei .lang.`);
+    else if (!/\s/.test(chiave)) nomi(chiave, `l'oggetto ${id}`, rel);
   }
 }
 // La guida Mojang (debug-addon) avverte: dipendenze circolari tra pack possono impedirne il caricamento.

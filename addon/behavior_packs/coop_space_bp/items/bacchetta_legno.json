@@ -1,0 +1,27 @@
+{
+  "format_version": "1.26.60",
+  "minecraft:item": {
+    "description": {
+      "identifier": "coop:bacchetta_legno",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.coop:bacchetta_legno.name"
+      },
+      "minecraft:icon": "coop_bacchetta_legno",
+      "minecraft:max_stack_size": 1,
+      "minecraft:hand_equipped": true,
+      "minecraft:durability": {
+        "max_durability": 59
+      },
+      "minecraft:tags": {
+        "tags": [
+          "coop:bacchetta_costruzione"
+        ]
+      }
+    }
+  }
+}
