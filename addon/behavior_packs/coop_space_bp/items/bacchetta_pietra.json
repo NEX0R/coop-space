@@ -8,6 +8,9 @@
       }
     },
     "components": {
+      "minecraft:display_name": {
+        "value": "item.coop:bacchetta_pietra.name"
+      },
       "minecraft:icon": "coop_bacchetta_pietra",
       "minecraft:max_stack_size": 1,
       "minecraft:hand_equipped": true,
