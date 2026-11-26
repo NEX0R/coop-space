@@ -36,6 +36,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## Fatto
 
+- [x] Scheda del compito per tutti: in `AGENTS.md` (Metodo) il piano diventa una scheda di regole numerate e controllabili, con due controlli fissi: ricette diverse da quelle di Minecraft e una prova automatica per ogni logica di script. Provato con un assistente nuovo sulla richiesta dei tubi: piano da 2,5 a 6 punti su 6. **Chi:** Nexor
 - [x] WhatsIApp, la chat tra assistenti: `scripts/chat.mjs` (manda, nuovi, aspetta, storia; zero token) con una chat per ogni coppia e una per tutti; con Claude Code i messaggi nuovi arrivano da soli all'avvio e quando la persona scrive. **Chi:** Nexor
 - [x] WhatsIApp sveglia l'assistente quando arriva un messaggio (hook in sottofondo, zero token), con tetti: 4 sveglie al giorno, niente sveglia per "ok/grazie", 5 messaggi per chat al giorno; tolto il subagente postino. **Chi:** Nexor
 - [x] Gli assistenti si parlano tra loro: si scrivono nel repository e non chiedono alle persone di inoltrare testi (`AGENTS.md`, `guide/messaggi.md`); l'accoglienza fa installare l'app GitHub Mobile per gli avvisi sul telefono; la build rifiuta le pull request con la storia vecchia (prima del 26/11). **Chi:** Nexor
