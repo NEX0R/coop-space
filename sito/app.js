@@ -107,10 +107,13 @@ async function mostraGitHub(repo) {
   mostraRichieste(repo);
   try {
     const prs = await github(`repos/${repo}/pulls?state=open&per_page=10`);
+    // Fuori dall'if: serve anche ai prototipi più sotto (prima era dentro l'else e i prototipi davano errore).
+    let anteprime = new Map();
     if (!prs.length) {
       $("pr").innerHTML = '<p class="nota">Nessuna proposta aperta.</p>';
     } else {
-      const [stati, anteprime] = await Promise.all([
+      let stati;
+      [stati, anteprime] = await Promise.all([
         Promise.all(
           prs.slice(0, 6).map((p) =>
             github(`repos/${repo}/commits/${p.head.sha}/check-runs?per_page=20`)
@@ -208,6 +211,9 @@ async function contenutiDellaProposta(repo, p) {
   const it = lang("it_IT");
   const en = lang("en_US");
   const rp = files.map((f) => f.filename.match(/^addon\/resource_packs\/[^/]+/)?.[0]).find(Boolean) || RP_PREDEFINITO;
+  const blocksPromise = nuovi.some((f) => f.filename.includes("/blocks/"))
+    ? leggiCrudo(crudo(repo, p.head.sha, `${rp}/blocks.json`))
+    : Promise.resolve({});
   const atlanti = {};
   const atlante = (nome) => (atlanti[nome] ??= leggiCrudo(crudo(repo, p.head.sha, `${rp}/textures/${nome}.json`)).then((j) => j?.texture_data || {}));
   const png = async (nomeAtlante, chiave) => {
@@ -236,7 +242,13 @@ async function contenutiDellaProposta(repo, p) {
         const mi = comp["minecraft:material_instances"] || {};
         texture = await png("terrain_texture", (mi["*"] || Object.values(mi)[0] || {}).texture);
       }
-      return { tipo, id, nome: it[chiave] || "", nomeEn: en[chiave] || "", texture };
+      const blocksRp = await blocksPromise || {};
+      const mining = comp["minecraft:destructible_by_mining"];
+      const seconds = typeof mining === "number" ? mining : Number(mining?.seconds_to_destroy);
+      const suono = blocksRp[id]?.sound || "stone";
+      return { tipo, id, nome: it[chiave] || "", nomeEn: en[chiave] || "", texture,
+        tempoRottura: tipo === "blocco" && Number.isFinite(seconds) && seconds >= 0 ? seconds : 1.5,
+        suono: ["metal", "stone", "wood", "gravel", "sand", "grass"].includes(suono) ? suono : "stone" };
     })
   );
 }
@@ -248,6 +260,7 @@ async function mostraPrototipi(repo, prs, anteprime) {
     return;
   }
   const contenuti = await Promise.all(proposte.map((p) => contenutiDellaProposta(repo, p).catch(() => null)));
+  const modelliPrototipo = [];
   const visti = new Set(); // se due proposte portano lo stesso contenuto, si mostra nella più recente
   $("prototipi").innerHTML = proposte
     .map((p, i) => {
@@ -269,11 +282,13 @@ async function mostraPrototipi(repo, prs, anteprime) {
             : lista.length
               ? `<div class="griglia">${lista
                   .map(
-                    (c) => `<div class="scheda">
+                    (c) => {
+                      const indice = modelliPrototipo.push(c) - 1;
+                      return `<button class="scheda" type="button" data-prototipo="${indice}">
                 ${c.texture ? `<img src="${esc(c.texture)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'vuoto'}))">` : '<span class="vuoto"></span>'}
                 <span><span class="tipo">${TIPI[c.tipo] || c.tipo} · prototipo</span><br><strong>${esc(c.nome || c.nomeEn || c.id)}</strong>
-                <span class="id">${esc(c.id)}</span></span></div>`
-                  )
+                <span class="id">${esc(c.id)}</span>${c.tipo === "blocco" ? `<span class="id">Tempo di rottura: ${esc(c.tempoRottura)} s (a mano)</span>` : ""}</span></button>`;
+                    })
                   .join("")}</div>`
               : dove
                 ? `<p class="nota">I suoi contenuti sono mostrati nella #${dove.number}, che li contiene già.</p>`
@@ -289,6 +304,14 @@ async function mostraPrototipi(repo, prs, anteprime) {
       </article>`;
     })
     .join("");
+  $("prototipi").onclick = (e) => {
+    const scheda = e.target.closest("[data-prototipo]");
+    if (!scheda) return;
+    const c = modelliPrototipo[Number(scheda.dataset.prototipo)];
+    if (!c || !c.texture || !["blocco", "oggetto"].includes(c.tipo)) return; // i mob dei prototipi non hanno ancora il modello qui
+    mostraModello({ texture: c.texture, tipo: c.tipo, tempoRottura: c.tempoRottura, suono: c.suono });
+    $("visore-sezione").scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 }
 
 // ---------- contenuti e visore ----------
@@ -329,11 +352,13 @@ function stato(testo) {
   $("visore-stato").textContent = testo;
 }
 
-async function mostraModello({ geo, texture, animazioni = {} }) {
+async function mostraModello({ geo, texture, animazioni = {}, tipo = "", tempoRottura, suono = "stone" }) {
   stato("Caricamento…");
   try {
     const v = await apriVisore();
-    await v.mostra($("tela"), geo, texture);
+    if (!geo && tipo === "oggetto") geo = await v.geoOggetto(texture);
+    if (!geo && tipo === "blocco") geo = v.geoBlocco();
+    await v.mostra($("tela"), geo, texture, { tipo, tempoRottura, suono });
     v.aggiungiAnimazioni(animazioni);
     const sel = $("scelta-animazione");
     const nomi = Object.keys(animazioni);
@@ -343,7 +368,10 @@ async function mostraModello({ geo, texture, animazioni = {} }) {
       sel.value = nomi[0];
       v.suona(nomi[0]);
     }
-    stato(nomi.length ? `${nomi.length} animazion${nomi.length === 1 ? "e" : "i"}` : "");
+    const etichettaTempo = $("visore-tempo");
+    etichettaTempo.hidden = tipo !== "blocco";
+    etichettaTempo.textContent = tipo === "blocco" ? `Tempo di rottura: ${tempoRottura ?? 1.5} s (a mano)` : "";
+    stato(nomi.length ? `${nomi.length} animazion${nomi.length === 1 ? "e" : "i"}` : tipo === "blocco" ? "Tieni premuto sul blocco per romperlo." : "");
   } catch (e) {
     stato("Non riesco a mostrare il modello: " + (e?.message || e));
     console.error(e);
@@ -379,7 +407,7 @@ function preparaVisore(contenuti) {
       carica: async () => {
         const v = await apriVisore();
         if (c.modello) return { geo: c.modello.geo, texture: c.texture, animazioni: c.modello.animazioni };
-        return { geo: c.tipo === "oggetto" ? v.geoOggetto() : v.geoBlocco(), texture: c.texture };
+        return { geo: c.tipo === "oggetto" ? await v.geoOggetto(c.texture) : v.geoBlocco(), texture: c.texture, tipo: c.tipo, tempoRottura: c.tempoRottura, suono: c.suono };
       },
     });
   });
@@ -394,6 +422,12 @@ function preparaVisore(contenuti) {
   $("scelta-modello").innerHTML = modelli.map((m) => `<option value="${m.valore}">${esc(m.nome)}</option>`).join("");
   $("scelta-modello").addEventListener("change", caricaScelto);
   $("scelta-animazione").addEventListener("change", async (e) => (await apriVisore()).suona(e.target.value));
+  $("suono-visore").addEventListener("click", async () => {
+    const attivo = $("suono-visore").getAttribute("aria-pressed") !== "true";
+    $("suono-visore").setAttribute("aria-pressed", String(attivo));
+    $("suono-visore").textContent = attivo ? "Suono sì" : "Suono no";
+    (await apriVisore()).impostaAudio(attivo);
+  });
   $("carica-miei").addEventListener("click", async () => {
     try {
       const [fg, fp, fa_] = await Promise.all([leggiFile($("file-geo")), leggiFile($("file-png")), leggiFile($("file-anim"))]);

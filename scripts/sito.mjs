@@ -130,6 +130,9 @@ function leggiContenuti() {
     const id = b?.description?.identifier;
     if (!id) continue;
     const comp = b.components || {};
+    const mining = comp["minecraft:destructible_by_mining"];
+    const tempoRottura = typeof mining === "number" ? mining : Number(mining?.seconds_to_destroy);
+    const suono = blocksRp[id]?.sound || "stone";
     let forma = comp["minecraft:geometry"];
     if (forma && typeof forma === "object") forma = forma.identifier;
     const mi = comp["minecraft:material_instances"] || {};
@@ -143,6 +146,8 @@ function leggiContenuti() {
     contenuti.push({
       tipo: "blocco",
       id,
+      tempoRottura: Number.isFinite(tempoRottura) && tempoRottura >= 0 ? tempoRottura : 1.5,
+      suono: ["metal", "stone", "wood", "gravel", "sand", "grass"].includes(suono) ? suono : "stone",
       nome: it[`tile.${id}.name`] || "",
       nomeEn: en[`tile.${id}.name`] || "",
       texture: tex,
