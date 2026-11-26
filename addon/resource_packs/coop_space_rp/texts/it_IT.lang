@@ -1,2 +1,8 @@
 tile.coop:blocco_prova.name=Blocco di prova Coop
 tile.coop:blocco_ottone.name=Blocco di ottone
+item.coop:bacchetta_legno.name=Bacchetta da costruzione di legno
+item.coop:bacchetta_pietra.name=Bacchetta da costruzione di pietra
+item.coop:bacchetta_ferro.name=Bacchetta da costruzione di ferro
+item.coop:bacchetta_oro.name=Bacchetta da costruzione d'oro
+item.coop:bacchetta_diamante.name=Bacchetta da costruzione di diamante
+item.coop:bacchetta_netherite.name=Bacchetta da costruzione di netherite
