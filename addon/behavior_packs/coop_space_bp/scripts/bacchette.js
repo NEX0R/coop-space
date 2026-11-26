@@ -14,11 +14,12 @@ import { ActionFormData, ModalFormData, FormCancelationReason } from "@minecraft
 const ETICHETTA = "coop:bacchetta_costruzione";
 
 // Massimo di blocchi per colpo, per materiale, presi dalle mod:
-// pietra 9, ferro 27 e diamante 128 come le bacchette della mod Construction Wand;
+// pietra 9, rame 16 (tra pietra e ferro, come gli attrezzi di rame), ferro 27 e diamante 128 come le bacchette della mod Construction Wand;
 // netherite 225 = un muro 15x15, il massimo di Building Gadgets. Legno e oro scelti per stare in mezzo.
 export const MASSIMI = {
   "coop:bacchetta_legno": 4,
   "coop:bacchetta_pietra": 9,
+  "coop:bacchetta_rame": 16,
   "coop:bacchetta_ferro": 27,
   "coop:bacchetta_oro": 64,
   "coop:bacchetta_diamante": 128,

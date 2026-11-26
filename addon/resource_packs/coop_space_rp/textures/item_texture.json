@@ -8,6 +8,9 @@
     "coop_bacchetta_pietra": {
       "textures": "textures/items/bacchetta_pietra"
     },
+    "coop_bacchetta_rame": {
+      "textures": "textures/items/bacchetta_rame"
+    },
     "coop_bacchetta_ferro": {
       "textures": "textures/items/bacchetta_ferro"
     },
