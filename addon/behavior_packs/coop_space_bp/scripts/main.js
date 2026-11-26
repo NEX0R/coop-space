@@ -1,6 +1,8 @@
 // Script principale del behavior pack.
 // Usa solo l'API stabile di @minecraft/server: non servono esperimenti nel mondo.
 import { world } from "@minecraft/server";
+// Pulsante di prova (/scriptevent coop:autotest): vedi prove.js.
+import "./prove.js";
 // Il potere delle bacchette da costruzione (menu, modi, misure).
 import "./bacchette.js";
 
