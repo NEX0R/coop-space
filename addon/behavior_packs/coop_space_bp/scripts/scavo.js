@@ -194,7 +194,7 @@ function consumaDurata(player, oggetto) {
   if (!durata) return true;
   const livello = inMano.getComponent("minecraft:enchantable")?.getEnchantment("unbreaking")?.level ?? 0;
   if (Math.random() >= 1 / (livello + 1)) return true;
-  if (durata.damage + 1 >= durata.maxDurability) {
+  if (durata.damage + 1 > durata.maxDurability) { // si rompe quando il danno supera il massimo, come nel gioco
     equip?.setEquipment(EquipmentSlot.Mainhand, undefined);
     player.playSound("random.break");
     return false;
@@ -267,6 +267,10 @@ world.afterEvents.playerBreakBlock.subscribe(({ player, block, brokenBlockPermut
   if (!tipo || !bloccoAdatto(brokenBlockPermutation, tipo)) return;
   const scelta = lettura(player);
   if (!scelta.vena && scelta.forma === "un_blocco") return;
+  // Nel gioco un attrezzo si rompe quando il danno SUPERA il massimo. Se era già al massimo, il colpo normale
+  // l'ha rotto (in quel momento risulta ancora in mano): niente blocchi in più.
+  const durataPrima = oggetto.getComponent("minecraft:durability");
+  if (durataPrima && durataPrima.damage >= durataPrima.maxDurability && player.getGameMode() !== GameMode.Creative) return;
   const max = massimo(oggetto), loc = block.location, dimensione = player.dimension, id = brokenBlockPermutation.type.id;
   const punto = puntiX.get(player.id);
   const uguale = (pos) => {
@@ -303,6 +307,22 @@ world.beforeEvents.playerInteractWithBlock.subscribe((evento) => {
 world.afterEvents.itemUse.subscribe(({ source, itemStack }) => {
   if (source.typeId !== "minecraft:player" || !source.isSneaking || !tipoAttrezzo(itemStack)) return;
   apriMenu(source, itemStack);
+});
+
+// Scelta senza menu, con un comando: /scriptevent coop:scavo_scelta {"vena":true}
+// oppure {"forma":"muro","larghezza":3,"altezza":3}. Cambia solo la scelta di chi lancia il comando.
+// Serve alle prove da giocatore (un altro pack non può leggere né scrivere le proprietà di questo).
+system.afterEvents.scriptEventReceive.subscribe(({ id, message, sourceEntity }) => {
+  if (id !== "coop:scavo_scelta" || sourceEntity?.typeId !== "minecraft:player") return;
+  try {
+    const nuova = { ...lettura(sourceEntity), ...JSON.parse(message) };
+    if (!FORME[nuova.forma]) throw new Error(`forma sconosciuta: ${nuova.forma}`);
+    sourceEntity.setDynamicProperty(PROP_SCELTA, JSON.stringify(nuova));
+    puntiX.delete(sourceEntity.id);
+    puntoAzione(sourceEntity, `§aScavo: Vena ${nuova.vena ? "SÌ" : "NO"}, forma ${FORME[nuova.forma].nome}`);
+  } catch (errore) {
+    puntoAzione(sourceEntity, `§cScelta non valida: ${errore.message}`);
+  }
 });
 
 function anteprima(player) {
