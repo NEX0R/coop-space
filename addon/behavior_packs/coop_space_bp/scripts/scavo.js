@@ -1,6 +1,6 @@
 // Menu, forme di scavo e anteprima per picconi, asce e pale normali.
 // Solo API stabili: @minecraft/server 2.11.0 e @minecraft/server-ui 2.3.0.
-import { world, system, EquipmentSlot, GameMode } from "@minecraft/server";
+import { world, system, EquipmentSlot, GameMode, BlockPermutation } from "@minecraft/server";
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { NORMALI, avantiDa, spigoli, mostra } from "./bacchette.js";
 import { prova } from "./prove.js";
@@ -35,6 +35,9 @@ const TAG_RISERVA = {
   axe: ["wood", "log"],
   shovel: ["dirt", "sand", "gravel", "grass", "snow"],
 };
+// I nostri blocchi dicono con quale attrezzo si rompono con un'etichetta "coop:", nel file del blocco:
+// "minecraft:tags": ["coop:da_piccone"]. Con format_version 1.26.60 la vecchia scrittura "tag:...": {} fa scartare il blocco.
+const TAG_NOSTRI = { pickaxe: "coop:da_piccone", axe: "coop:da_ascia", shovel: "coop:da_pala" };
 const anteprime = new Map();
 const puntiX = new Map();
 const facceColpite = new Map();
@@ -67,7 +70,7 @@ function massimo(oggetto) {
 
 function bloccoAdatto(permutazione, tipo) {
   if (NERI.has(permutazione.type.id)) return false;
-  if (permutazione.hasTag(`minecraft:is_${tipo}_item_destructible`)) return true;
+  if (permutazione.hasTag(TAG_NOSTRI[tipo]) || permutazione.hasTag(`minecraft:is_${tipo}_item_destructible`)) return true;
   return TAG_RISERVA[tipo].some((tag) => permutazione.hasTag(tag));
 }
 
@@ -344,4 +347,16 @@ prova("forme_scavo", async () => {
   if (muroLato.length !== 9 || !muroLato.some((p) => p.x === 9 && p.y === 11 && p.z === 10)) throw new Error("Muro 3x3 sul lato errato");
   if (tunnel.length !== 5 || !tunnel.some((p) => p.x === 10 && p.y === 10 && p.z === 14)) throw new Error("Tunnel 5 errato");
   return "Muro 3x3 e Tunnel 5";
+});
+
+prova("etichette_scavo", async () => {
+  const ottone = BlockPermutation.resolve("coop:blocco_ottone");
+  if (!bloccoAdatto(ottone, "pickaxe")) throw new Error("il blocco di ottone non risulta adatto al piccone: etichetta coop:da_piccone non letta");
+  if (bloccoAdatto(ottone, "shovel")) throw new Error("il blocco di ottone risulta adatto alla pala");
+  if (!bloccoAdatto(BlockPermutation.resolve("minecraft:stone"), "pickaxe")) throw new Error("la pietra non risulta adatta al piccone");
+  if (!bloccoAdatto(BlockPermutation.resolve("minecraft:oak_log"), "axe")) throw new Error("il tronco di quercia non risulta adatto all'ascia");
+  if (!bloccoAdatto(BlockPermutation.resolve("minecraft:dirt"), "shovel")) throw new Error("la terra non risulta adatta alla pala");
+  if (!bloccoAdatto(BlockPermutation.resolve("minecraft:coal_ore"), "pickaxe")) throw new Error("il carbone non risulta adatto al piccone");
+  if (bloccoAdatto(BlockPermutation.resolve("minecraft:bedrock"), "pickaxe")) throw new Error("la bedrock risulta rompibile");
+  return "ottone, pietra, tronco, terra, carbone, bedrock";
 });
