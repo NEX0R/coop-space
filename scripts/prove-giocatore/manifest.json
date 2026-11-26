@@ -1,0 +1,33 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Coop Space - prove da giocatore",
+    "description": "Prove automatiche con giocatore simulato, solo sul server di prova.",
+    "uuid": "96c24cc7-2b8b-4cb3-9f5a-2b616365d540",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 26, 60]
+  },
+  "modules": [
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "fdc5228d-1579-4ab2-8a8f-490f2bde6b01",
+      "entry": "scripts/main.js",
+      "version": [1, 0, 0]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "b834c4d8-40fd-43f3-9413-526fbb7d0950",
+      "version": [0, 1, 2]
+    },
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.11.0"
+    },
+    {
+      "module_name": "@minecraft/server-gametest",
+      "version": "1.0.0-beta"
+    }
+  ]
+}
