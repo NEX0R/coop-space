@@ -16,3 +16,5 @@ Quando aggiorni `creator-tools`: **togli tutta la sezione `overrides`**, poi `np
 ## Versione di Minecraft
 
 Oggi `min_engine_version` è `1.26.60` e gli script usano `@minecraft/server` 2.11.0 (stabile). Se Minecraft si aggiorna, controlla le nuove versioni con `npm view @minecraft/server dist-tags` e `npm view @minecraft/vanilla-data dist-tags`, poi aggiorna insieme i due `manifest.json`, `package.json` e le regole tecniche di `AGENTS.md`. Uno script con una versione di modulo che il gioco non conosce viene disattivato **senza errori visibili**: dopo l'aggiornamento controlla che in chat compaia ancora "Coop Space <versione> attivo.".
+
+Le **prove da giocatore** (`scripts/prove-giocatore/`) usano `@minecraft/server-gametest` beta, legato alla versione esatta del server di prova (oggi `1.0.0-beta.1.26.66-stable` per il server 1.26.66). Quando `npm run prova-server` scarica un server nuovo, aggiorna anche questo modulo in `package.json` (`npm view @minecraft/server-gametest versions`, scegli quello che finisce con la versione del server) e rilancia la prova.
