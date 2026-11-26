@@ -6,6 +6,22 @@ import { spawnSimulatedPlayer } from "@minecraft/server-gametest";
 
 export const attesa = (tick = 10) => new Promise((resolve) => system.runTimeout(resolve, tick));
 
+// Aspetta che una condizione diventi vera, controllando ogni 2 tick, al massimo `massimoTick` (100 = 5 secondi).
+// Da usare al posto di un'attesa fissa dopo un'azione: su una macchina lenta (GitHub) un'attesa fissa può non
+// bastare e la prova fallirebbe per caso; così invece si va avanti appena il risultato c'è.
+// Restituisce true se la condizione si è avverata; dopo, i controlli della prova spiegano cosa manca.
+export async function aspettaFinche(condizione, massimoTick = 100) {
+  for (let trascorsi = 0; trascorsi <= massimoTick; trascorsi += 2) {
+    try {
+      if (condizione()) return true;
+    } catch {
+      // la zona o l'entità non è ancora pronta: si riprova
+    }
+    await attesa(2);
+  }
+  return false;
+}
+
 // Zona autonoma: x=32..47, z=0..15; quella delle prove degli script è x=0..15.
 export const ZONA = { x: 32, y: 100, z: 0 };
 export const pos = (x, y, z) => ({ x: ZONA.x + x, y: ZONA.y + y, z: ZONA.z + z });

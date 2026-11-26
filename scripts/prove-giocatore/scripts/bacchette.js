@@ -1,9 +1,9 @@
 // Prove da giocatore della bacchetta da costruzione.
 import { ItemStack, GameMode, Direction } from "@minecraft/server";
-import { prova, pos, attesa, preparaBlocchi, contaBlocchi, durataInMano, creaGiocatore } from "./aiuti.js";
+import { prova, pos, attesa, aspettaFinche, preparaBlocchi, contaBlocchi, durataInMano, creaGiocatore } from "./aiuti.js";
 
 prova("bacchetta_creativa", async ({ dim }) => {
-    const pietra = pos(5, 0, 5);
+  const pietra = pos(5, 0, 5);
   preparaBlocchi(dim, [{ posizione: pietra, tipo: "minecraft:stone" }]);
   const giocatore = creaGiocatore(dim, pos(5, 1, 8), "Prova bacchetta", GameMode.Creative, "coop:bacchetta_ferro");
   try {
@@ -12,9 +12,10 @@ prova("bacchetta_creativa", async ({ dim }) => {
     if (!giocatore.useItemOnBlock(new ItemStack("coop:bacchetta_ferro"), pietra, Direction.Up)) {
       throw new Error("useItemOnBlock non ha eseguito l'uso sulla pietra");
     }
-    await attesa(10);
     const posizioni = [pos(5, 1, 5), pos(6, 1, 5), pos(5, 2, 5), pos(6, 2, 5)];
-    const mancanti = posizioni.filter((p) => dim.getBlock(p)?.typeId !== "minecraft:stone");
+    const mancano = () => posizioni.filter((p) => dim.getBlock(p)?.typeId !== "minecraft:stone");
+    await aspettaFinche(() => mancano().length === 0);
+    const mancanti = mancano();
     if (mancanti.length) throw new Error(`attesi 4 blocchi di pietra sopra il blocco base; ne mancano ${mancanti.length}`);
     return "4 blocchi costruiti in creativa";
   } finally {
@@ -23,7 +24,7 @@ prova("bacchetta_creativa", async ({ dim }) => {
 });
 
 prova("bacchetta_sopravvivenza", async ({ dim }) => {
-    const pietra = pos(10, 0, 5);
+  const pietra = pos(10, 0, 5);
   preparaBlocchi(dim, [{ posizione: pietra, tipo: "minecraft:stone" }]);
   const giocatore = creaGiocatore(dim, pos(10, 1, 8), "Prova materiali", GameMode.Survival, "coop:bacchetta_ferro");
   try {
@@ -34,8 +35,10 @@ prova("bacchetta_sopravvivenza", async ({ dim }) => {
     if (!giocatore.useItemOnBlock(new ItemStack("coop:bacchetta_ferro"), pietra, Direction.Up)) {
       throw new Error("useItemOnBlock non ha eseguito l'uso sulla pietra");
     }
-    await attesa(10);
-    const costruiti = contaBlocchi(dim, "minecraft:stone", pos(8, 1, 5), { x: 4, y: 1, z: 0 });
+    const costruitiOra = () => contaBlocchi(dim, "minecraft:stone", pos(8, 1, 5), { x: 4, y: 1, z: 0 });
+    await aspettaFinche(() => costruitiOra() >= 2 && durataInMano(giocatore) > prima);
+    await attesa(10); // ancora mezzo secondo: se costruisse più di 2 blocchi, la prova deve vederlo
+    const costruiti = costruitiOra();
     const inventario = giocatore.getComponent("minecraft:inventory")?.container;
     const restanti = [0, 1, 2, 3, 4, 5, 6, 7, 8].reduce((totale, slot) => {
       const item = inventario?.getItem(slot);
