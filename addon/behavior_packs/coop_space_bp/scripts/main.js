@@ -5,6 +5,8 @@ import { world } from "@minecraft/server";
 import "./prove.js";
 // Il potere delle bacchette da costruzione (menu, modi, misure).
 import "./bacchette.js";
+// Scavo multiplo per picconi, asce e pale.
+import "./scavo.js";
 
 // npm run package sostituisce questo segnaposto con la versione del pacchetto (es. "0.320.1024").
 const VERSIONE = "__VERSIONE_COOP__";
