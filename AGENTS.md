@@ -67,6 +67,7 @@ Il metro di ogni scelta è il tempo e i token del gruppo e un risultato che funz
 
 ## Regole tecniche
 
+- **Codice di prova nei mondi veri**: tutto quello che sta in `addon/` arriva nei mondi di tutti, telefoni compresi. Il codice che serve solo alle prove (cancellare blocchi, svuotare zone, togliere oggetti) deve essere inerte in un mondo vero: deve partire solo dove non ci sono giocatori, come `scripts/prove.js` (`guide/prova-server.md`).
 - **Namespace**: tutti gli identificativi iniziano con `coop:` (es. `coop:spada_fulmine`). Mai `minecraft:` per le cose nuove.
 - **UUID dei manifest**: mai cambiarli (romperebbero i mondi che usano l'add-on). `mct fix randomizealluids` è vietato.
 - **Versioni dei pack**: non si alzano a mano. `npm run package` dà ai due pack la versione `<prima cifra>.<giorno dal 1/1/2026>.<minuto>` e la mette anche nel nome ("Coop Space 0.330.758", nelle anteprime "(anteprima PR #N)"). Nei `manifest.json` del repository conta solo la prima cifra.
