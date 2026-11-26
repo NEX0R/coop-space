@@ -61,6 +61,12 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/scripts/chat.mjs\" nuovi --hook",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/chat.mjs\" sveglia",
+            "asyncRewake": true,
+            "timeout": 43200
           }
         ]
       }
@@ -72,6 +78,18 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/scripts/chat.mjs\" nuovi --hook",
             "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/chat.mjs\" sveglia",
+            "asyncRewake": true,
+            "timeout": 43200
           }
         ]
       }
