@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Bacchetta di rame (16 blocchi per colpo) **Chi:** Nexor
 
 ## Fatto
 
