@@ -2,6 +2,7 @@ tile.coop:blocco_prova.name=Coop Test Block
 tile.coop:blocco_ottone.name=Brass Block
 item.coop:bacchetta_legno.name=Wooden Building Wand
 item.coop:bacchetta_pietra.name=Stone Building Wand
+item.coop:bacchetta_rame.name=Copper Building Wand
 item.coop:bacchetta_ferro.name=Iron Building Wand
 item.coop:bacchetta_oro.name=Golden Building Wand
 item.coop:bacchetta_diamante.name=Diamond Building Wand
