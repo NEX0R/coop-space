@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Prove da giocatore automatiche: un giocatore simulato prova bacchette e attrezzi sul server di prova a ogni build **Chi:** Nexor
 
 ## Fatto
 
