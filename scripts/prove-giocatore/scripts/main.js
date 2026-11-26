@@ -8,6 +8,7 @@ import { system, world } from "@minecraft/server";
 import { prove, pulisci, attesa, ZONA, preparaBlocchi, contaBlocchi, contaOggetti, durataInMano, creaGiocatore } from "./aiuti.js";
 // Un file per funzione: aggiungi qui l'import di ogni file di prove nuovo.
 import "./bacchette.js";
+import "./scavo.js";
 
 system.afterEvents.scriptEventReceive.subscribe(async (evento) => {
   if (evento.id !== "coop:prove_giocatore") return;
