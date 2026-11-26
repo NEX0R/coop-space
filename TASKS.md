@@ -33,8 +33,10 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+
 ## Fatto
 
+- [x] Prototipi sul sito: nella sezione "Contenuti" il gruppo "Prototipi: non ancora nella versione stabile" mostra, per ogni pull request aperta con l'anteprima, i contenuti nuovi (icona e nome), i pulsanti del mondo di prova e la lista "Come provarlo" da spuntare. Nuove regole: ogni pull request ha la sezione "## Come provarlo" (4-6 controlli nel gioco) e niente pull request che partono dal ramo di un'altra ancora aperta. Sul PC `npm run prova-mc -- <N>` installa add-on e mondo di prova della pull request #N e avvia Minecraft.
 - [x] Potere delle bacchette, come la mod Building Gadgets: tocco su un blocco = costruisce; accovacciato + tocco (o tocco in aria) = menu con 9 modi (muro, pavimento, da X a Y, colonna verticale e orizzontale, fino a me, scale, superficie, blocco pieno), misure regolabili, scelta del blocco e "annulla l'ultima costruzione". Massimo per colpo: legno 4, pietra 9, ferro 27, oro 64, diamante 128, netherite 225 (dalle mod Construction Wand e Building Gadgets), lati fino a 15; anteprima con scintille verdi. In sopravvivenza consuma i blocchi dell'inventario e 1 punto di durata a colpo.
 - [x] Bacchette da costruzione a 6 livelli (`coop:bacchetta_legno`, `_pietra`, `_ferro`, `_oro`, `_diamante`, `_netherite`): oggetti con texture, nomi italiano e inglese, durata come gli attrezzi di Minecraft, ricette al banco da lavoro (netherite al tavolo da forgiatura). Ancora senza il potere di costruire.
 - [x] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): in circa 15 secondi, senza aprire il gioco, dice se il gioco segnala errori caricando l'add-on e se ogni blocco, oggetto e mob `coop:` esiste davvero. Gira anche nella build delle pull request, quando Samuele crea la variabile `EULA_MINECRAFT_ACCETTATA`. Non controlla la grafica.
