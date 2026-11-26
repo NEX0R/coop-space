@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Gli assistenti si parlano tra loro nel repository (niente testi da inoltrare alle persone), avvisi sul telefono con l'app GitHub, la build rifiuta la storia vecchia. **Chi:** Nexor
 
 ## Fatto
 
