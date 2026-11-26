@@ -161,8 +161,9 @@ function leggiContenuti() {
     if (icona && typeof icona === "object") icona = icona.texture || icona.textures?.default;
     const tex = texturePng(daAtlante(itemTex, icona));
     const dn = comp["minecraft:display_name"]?.value;
-    const nomeIt = it[`item.${id}.name`] || it[`item.${id}`] || (dn && (it[dn] || (!dn.includes(".") ? dn : ""))) || "";
-    const nomeEn = en[`item.${id}.name`] || en[`item.${id}`] || (dn && (en[dn] || (!dn.includes(".") ? dn : ""))) || "";
+    // Il gioco mostra il nome di un oggetto solo tramite minecraft:display_name (che punta ai .lang).
+    const nomeIt = (dn && (it[dn] || (/\s/.test(dn) ? dn : ""))) || "";
+    const nomeEn = (dn && (en[dn] || (/\s/.test(dn) ? dn : ""))) || "";
     contenuti.push({
       tipo: "oggetto",
       id,
