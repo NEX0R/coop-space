@@ -61,7 +61,7 @@ const VUOTI = new Set([
 
 // ---------- Geometria (senza giocatori: si può provare da sola) ----------
 
-const NORMALI = {
+export const NORMALI = {
   Up: { x: 0, y: 1, z: 0 },
   Down: { x: 0, y: -1, z: 0 },
   North: { x: 0, y: 0, z: -1 },
@@ -498,7 +498,7 @@ function annulla(player) {
 // ---------- Menu ----------
 
 // Il gioco può rifiutare il menu se il giocatore sta ancora toccando: riprova qualche volta.
-async function mostra(form, player) {
+export async function mostra(form, player) {
   for (let tentativo = 0; tentativo < 10; tentativo++) {
     const risposta = await form.show(player);
     if (risposta.cancelationReason !== FormCancelationReason.UserBusy) return risposta;
