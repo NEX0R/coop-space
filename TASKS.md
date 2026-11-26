@@ -1,21 +1,21 @@
 # Compiti
 
-Prendi un compito scrivendo il tuo nome accanto, e avvisa sul gruppo WhatsApp. Quando è fatto, spostalo in "Fatto" con una riga su cosa è cambiato.
+Prendi un compito scrivendo il tuo soprannome accanto (mai il nome vero: il progetto è pubblico), e avvisa sul gruppo WhatsApp. Quando è fatto, spostalo in "Fatto" con una riga su cosa è cambiato.
 
 ## Preamboli (prima di creare contenuti)
 
 Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "Inizia qui".
 
 **A. Accesso**
-- [x] Amico 1 manda a Nexor il nome utente GitHub
-- [ ] Amico 2 manda a Nexor il nome utente GitHub (o usa "Chiedi l'accesso" nel sito del team)
-- [ ] Nexor invita entrambi (Settings → Collaborators → Add people) e loro accettano
-  - Amico 1 ha accettato l'invito il 15/11 (accesso in scrittura). Prossimo passo: apre il suo assistente sul progetto e fa l'accoglienza (messaggio #17). Amico 2: invito da fare.
+- [x] Jowa ha accettato l'invito (15/11, accesso in scrittura)
+- [ ] ReverendoLupo, Lepsy e Voltex mandano a Nexor il nome utente GitHub (o usano "Chiedi l'accesso" nel sito) e accettano l'invito
 - [x] Nexor installa sul proprio account GitHub l'app "ChatGPT Codex Connector" per `coop-space` (serve a chi usa Codex)
   - Installata il 15/11 solo su `coop-space`.
 
 **B. Assistenti collegati**
-- [ ] Ognuno collega il proprio assistente al repository e fa la prima richiesta scritta nel README. **Chi:** tutti
+- [ ] Ognuno fa l'accoglienza con il proprio assistente ("Inizia qui" nel README: scrive "Ciao, sono <soprannome>, sono nuovo"). **Chi:** Jowa, ReverendoLupo, Lepsy, Voltex
+  - Jowa fa già add-on: durante l'accoglienza il suo assistente confronta il suo modo di lavorare con il nostro (messaggio #17).
+  - Lepsy usa Codex da Ubuntu sul telefono (strada D): è la prima prova di questa strada.
 
 **C. Prova nel gioco**
 - [x] Provare `coop-space.mcaddon` sul telefono: importarlo, attivarlo in un mondo, piazzare il "Blocco di prova Coop" e controllare che compaia il messaggio in chat. **Chi:** almeno uno, meglio tutti
@@ -25,7 +25,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 - [ ] Chi si occupa di cosa (logica e script, oggetti e mob, grafica e texture)
 - [ ] Il primo add-on vero: tema e 3-5 contenuti da creare
 - [x] Chi approva le pull request degli altri
-  - Deciso il 16/11: chiunque del gruppo, anche Jowa, dopo aver provato l'anteprima. Nessuna approvazione obbligatoria: se qualcosa va storto si torna indietro con "Revert" (vedi `AGENTS.md`, "Tornare indietro").
+  - Deciso il 16/11: chiunque del gruppo, dopo aver provato l'anteprima. Nessuna approvazione obbligatoria: se qualcosa va storto si torna indietro con "Revert" (vedi `guide/approvare-e-tornare-indietro.md`).
 
 ## Da fare
 
@@ -33,10 +33,15 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+
 ## Fatto
 
-- [x] Pulsante di prova degli script: `npm run prova-server` preme `/scriptevent coop:autotest` e fa girare le prove della logica scritte in `scripts/prove.js` (senza giocatori); ora vede anche gli errori degli script dopo l'avvio, che prima ignorava.
-- [x] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): in circa 15 secondi, senza aprire il gioco, dice se il gioco segnala errori caricando l'add-on e se ogni blocco, oggetto e mob `coop:` esiste davvero. Gira anche nella build delle pull request, quando Nexor crea la variabile `EULA_MINECRAFT_ACCETTATA`. Non controlla la grafica.
+- [x] Pulsante di prova degli script: `npm run prova-server` preme `/scriptevent coop:autotest` e fa girare le prove della logica scritte in `scripts/prove.js` (senza giocatori; nei mondi veri il comando viene rifiutato e non tocca niente). Ora vede anche gli errori degli script dopo l'avvio, che prima ignorava.
+- [x] Guida per tutti e privacy: solo soprannomi in file, sito, proposte e messaggi (Nexor, Jowa, ReverendoLupo, Lepsy, Voltex); `README.md` per chi non ha mai fatto add-on, con glossario e 4 strade (PC o telefono, Claude Code o Codex); `AGENTS.md` lungo un terzo, con privacy e linguaggio semplice, e procedure in `guide/` lette solo quando servono; accoglienza preparata dall'assistente per ogni strada; confronto delle tecniche per chi fa già add-on.
+- [x] Prototipi sul sito: nella sezione "Contenuti" il gruppo "Prototipi: non ancora nella versione stabile" mostra, per ogni pull request aperta con l'anteprima, i contenuti nuovi (icona e nome), i pulsanti del mondo di prova e la lista "Come provarlo" da spuntare. Nuove regole: ogni pull request ha la sezione "## Come provarlo" (4-6 controlli nel gioco) e niente pull request che partono dal ramo di un'altra ancora aperta. Sul PC `npm run prova-mc -- <N>` installa add-on e mondo di prova della pull request #N e avvia Minecraft.
+- [x] Potere delle bacchette, come la mod Building Gadgets: tocco su un blocco = costruisce; accovacciato + tocco (o tocco in aria) = menu con 9 modi (muro, pavimento, da X a Y, colonna verticale e orizzontale, fino a me, scale, superficie, blocco pieno), misure regolabili, scelta del blocco e "annulla l'ultima costruzione". Massimo per colpo: legno 4, pietra 9, ferro 27, oro 64, diamante 128, netherite 225 (dalle mod Construction Wand e Building Gadgets), lati fino a 15; anteprima con scintille verdi. In sopravvivenza consuma i blocchi dell'inventario e 1 punto di durata a colpo.
+- [x] Bacchette da costruzione a 6 livelli (`coop:bacchetta_legno`, `_pietra`, `_ferro`, `_oro`, `_diamante`, `_netherite`): oggetti con texture, nomi italiano e inglese, durata come gli attrezzi di Minecraft, ricette al banco da lavoro (netherite al tavolo da forgiatura). Ancora senza il potere di costruire.
+- [x] Prova automatica sul server ufficiale Bedrock (`npm run prova-server`): in circa 15 secondi, senza aprire il gioco, dice se il gioco segnala errori caricando l'add-on e se ogni blocco, oggetto e mob `coop:` esiste davvero. Gira anche nella build delle pull request, perché Nexor ha creato la variabile `EULA_MINECRAFT_ACCETTATA`. Non controlla la grafica.
 - [x] Merge automatico: una pull request si fonde da sola quando qualcuno preme "Ready for review" e il controllo di GitHub è verde. Finché è in bozza resta ferma, per provarla. Dopo la fusione l'anteprima si cancella e "ultima-versione" e il sito si aggiornano da soli.
 - [x] Attivazione a prova di errore: pacchetti chiamati "Coop Space" (da attivare) e "Coop Space - grafica" (si aggiunge da sola), messaggio in chat "Coop Space <versione> attivo." all'ingresso, mondo di prova `.mcworld` già pronto in ogni release e anteprima. Causa del 16/11: era attiva solo la grafica.
 - [x] Blocco di ottone (`coop:blocco_ottone`): cubo pieno, suono di metallo, 5 secondi per romperlo, texture 16×16, nomi "Blocco di ottone" / "Brass Block".
