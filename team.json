@@ -1,19 +1,10 @@
 {
-  "_spiegazione": "Chi fa parte del gruppo. L'hook di avvio lo legge per riconoscere chi è nuovo e avviare l'accoglienza. Alla fine dell'accoglienza ognuno aggiorna la propria riga con una pull request. Solo nome di battesimo: il repository è pubblico.",
+  "_spiegazione": "Chi fa parte del gruppo. L'hook di avvio lo legge per riconoscere chi è nuovo e avviare l'accoglienza (guide/accoglienza.md). In 'nome' va SOLO il soprannome: il repository è pubblico. 'github' si completa durante l'accoglienza.",
   "membri": [
-    {
-      "github": "NEX0R",
-      "nome": "Samuele",
-      "assistente": "Claude Code",
-      "dispositivi": ["PC", "telefono"],
-      "accoglienza": "fatta"
-    },
-    {
-      "github": "giovannidonatokr14-code",
-      "nome": "",
-      "assistente": "",
-      "dispositivi": [],
-      "accoglienza": "da fare"
-    }
+    { "github": "NEX0R", "nome": "Nexor", "assistente": "Claude Code", "dispositivi": ["PC", "telefono"], "accoglienza": "fatta" },
+    { "github": "giovannidonatokr14-code", "nome": "Jowa", "assistente": "Claude Code", "dispositivi": [], "accoglienza": "da fare" },
+    { "github": "", "nome": "ReverendoLupo", "assistente": "Codex", "dispositivi": ["PC"], "accoglienza": "da fare" },
+    { "github": "", "nome": "Lepsy", "assistente": "Codex", "dispositivi": ["telefono"], "accoglienza": "da fare" },
+    { "github": "", "nome": "Voltex", "assistente": "Codex", "dispositivi": ["PC"], "accoglienza": "da fare" }
   ]
 }

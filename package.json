@@ -9,11 +9,13 @@
     "package": "node scripts/package.mjs",
     "skills": "mct skills",
     "sito": "node scripts/sito.mjs",
-    "prova-server": "node scripts/prova-server.mjs"
+    "prova-server": "node scripts/prova-server.mjs",
+    "prova-mc": "node scripts/prova-mc.mjs"
   },
   "devDependencies": {
     "@minecraft/creator-tools": "0.21.0",
-    "@minecraft/server": "2.11.0"
+    "@minecraft/server": "2.11.0",
+    "@minecraft/server-ui": "^2.3.0"
   },
   "overrides": {
     "axios": "1.21.1",

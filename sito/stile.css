@@ -93,3 +93,12 @@ section { background: var(--superficie); border: 1px solid var(--bordo); border-
 .comandi select, .comandi input { display: block; width: 100%; margin-top: 4px; font: inherit; padding: 6px; border-radius: 6px; border: 1px solid var(--bordo); background: var(--superficie); color: var(--testo); }
 details summary { cursor: pointer; font-weight: 600; margin: 4px 0 8px; }
 footer { max-width: 960px; margin: 0 auto; padding: 8px 16px 32px; color: var(--tenue); font-size: 0.9rem; }
+.prototipo { border: 1px dashed var(--bordo); border-radius: 10px; padding: 12px; margin: 0 0 12px; }
+.prototipo .azioni { margin: 8px 0; }
+.prototipo .scheda { cursor: default; }
+.prototipo .scheda:hover { border-color: var(--bordo); }
+.prototipo summary { cursor: pointer; font-weight: 600; margin-top: 8px; }
+.prova { list-style: none; margin: 6px 0 0; padding: 0; }
+.prova li { padding: 4px 0; }
+.prova label { display: flex; gap: 8px; align-items: flex-start; }
+.prova input { margin-top: 4px; flex: none; }
