@@ -33,6 +33,7 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
+- [ ] Unione con Sangue Immortale di Jowa: un solo add-on, mondo tutorial copiato dal suo con un quartiere Coop Space (bacchette e scavo multiplo) **Chi:** Nexor
 
 ## Fatto
 
