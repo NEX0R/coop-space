@@ -15,6 +15,8 @@ Guida per gli assistenti. Leggila quando una proposta va approvata, quando la fu
 
 Niente si perde: `main` è protetto (niente push forzati né cancellazioni) e ogni modifica resta nella storia delle pull request.
 
+- **Una versione vecchia da giocare subito**: ogni fusione lascia anche una release fissa **"Versione <numero> (copia di riserva)"** (tag `versione-<numero>`, mai cancellata), con `.mcaddon` e mondo di prova. Si scarica dalla pagina Releases. Attenzione: una versione vecchia ha un numero più basso, quindi Minecraft la rifiuta come "Pacchetto doppio" finché è installata quella nuova (prima va eliminata da Impostazioni → Archiviazione). Per tornare indietro **per tutti** si usa Revert (qui sotto).
+
 - **La persona**: nella pagina della pull request fusa c'è il pulsante **Revert**. Crea una pull request che annulla quella modifica; quando viene fusa il progetto torna com'era e "Ultima versione" si ricrea con un numero più alto, quindi il telefono la accetta.
 - **L'assistente**, anche dal cloud: `git switch main && git pull && git switch -c annulla-pr-<N>`, poi `git revert -m 1 <commit di merge della PR>` (lo trovi con `git log --merges --oneline`), `npm run verify`, `git push -u origin annulla-pr-<N>` e la pull request con `gh api` come al solito (titolo `Annulla #<N>: …`).
 - **Un solo file**: `git checkout <commit buono> -- <file>` su un ramo nuovo, poi pull request.
