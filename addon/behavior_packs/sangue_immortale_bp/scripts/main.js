@@ -230,7 +230,17 @@ world.afterEvents.playerPlaceBlock.subscribe((ev) => g(() => A.piazzato(ev.block
 
 // ---------------------------------------------------------------- comandi di prova
 system.afterEvents.scriptEventReceive.subscribe((ev) => g(() => {
-  const p = ev.sourceEntity;
+  let p = ev.sourceEntity;
+  // Su un amico: /scriptevent vamp:originale NomeAmico (anche vamp:vampiro e vamp:umano). Più semplice di
+  // /execute as, che dà errore di sintassi con i nomi con spazi o simboli (provato da Nexor il 27/11).
+  const nome = String(ev.message || '').trim().replace(/^"(.*)"$/, '$1').replace(/^@/, '').toLowerCase();
+  if (nome && ['vamp:vampiro', 'vamp:originale', 'vamp:umano'].includes(ev.id)) {
+    const tutti = world.getPlayers();
+    const amico = tutti.find((x) => x.name.toLowerCase() === nome) ?? (tutti.filter((x) => x.name.toLowerCase().includes(nome)).length === 1 ? tutti.find((x) => x.name.toLowerCase().includes(nome)) : undefined);
+    if (!amico) { if (p?.typeId === 'minecraft:player') U.tell(p, `§c[Prova] Nessun giocatore si chiama "${ev.message.trim()}". Nel mondo ci sono: ${tutti.map((x) => x.name).join(', ')}`); return; }
+    if (p?.typeId === 'minecraft:player' && p.id !== amico.id) U.tell(p, `§7[Prova] Fatto su ${amico.name}.`);
+    p = amico;
+  }
   if (p?.typeId !== 'minecraft:player') return;
   const n = ev.message ? Number(ev.message) : NaN;
   switch (ev.id) {
