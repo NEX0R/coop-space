@@ -1,0 +1,20 @@
+{
+ "format_version": "1.10.0",
+ "minecraft:attachable": {
+  "description": {
+   "identifier": "vamp:caccia_rete",
+   "materials": {
+    "default": "entity_alphatest"
+   },
+   "textures": {
+    "default": "textures/items/vamp/caccia_rete"
+   },
+   "geometry": {
+    "default": "geometry.vamp.vuoto"
+   },
+   "render_controllers": [
+    "controller.render.item_default"
+   ]
+  }
+ }
+}

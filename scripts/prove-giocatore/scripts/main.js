@@ -9,6 +9,8 @@ import { prove, pulisci, attesa, ZONA, preparaBlocchi, contaBlocchi, contaOggett
 // Un file per funzione: aggiungi qui l'import di ogni file di prove nuovo.
 import "./bacchette.js";
 import "./scavo.js";
+// Per ultima: il tutorial di Sangue Immortale sposta il giocatore e costruisce piazza e villaggi.
+import "./tutorial.js";
 
 system.afterEvents.scriptEventReceive.subscribe(async (evento) => {
   if (evento.id !== "coop:prove_giocatore") return;

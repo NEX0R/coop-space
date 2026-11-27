@@ -1,0 +1,20 @@
+{
+ "format_version": "1.10.0",
+ "minecraft:attachable": {
+  "description": {
+   "identifier": "vamp:caccia_nube",
+   "materials": {
+    "default": "entity_alphatest"
+   },
+   "textures": {
+    "default": "textures/items/vamp/caccia_nube"
+   },
+   "geometry": {
+    "default": "geometry.vamp.vuoto"
+   },
+   "render_controllers": [
+    "controller.render.item_default"
+   ]
+  }
+ }
+}

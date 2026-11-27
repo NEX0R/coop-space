@@ -233,16 +233,20 @@ function preparaMondo() {
 function contenuti(pack) {
   const tipi = [
     ["blocks", "minecraft:block", "il blocco", (id) => `setblock 0 200 0 ${id}`],
-    ["items", "minecraft:item", "l'oggetto", (id) => `give @a ${id}`],
+    // Gli oggetti nella categoria "none" (nascosti dall'inventario creativa) il comando /give non li
+    // accetta, anche se esistono (provato il 27/11 con gli oggetti "potere" di Sangue Immortale):
+    // per loro chiediamo allo script se riesce a crearli (prove.js, /scriptevent coop:esiste).
+    ["items", "minecraft:item", "l'oggetto", (id, dati) => ((dati?.description?.menu_category?.category ?? "none") === "none" ? `scriptevent coop:esiste ${id}` : `give @a ${id}`)],
     ["entities", "minecraft:entity", "il mob", (id) => `summon ${id} 0 200 0`],
   ];
   const elenco = [];
   for (const p of pack.filter((x) => x.tipo === "behavior")) {
     for (const [cartella, chiave, cosa, comando] of tipi) {
       for (const file of fileJson(join(p.cartella, cartella))) {
-        let id;
-        try { id = leggiJson(file)[chiave]?.description?.identifier; } catch { /* JSON rotto: lo segnala già verify */ }
-        if (id) elenco.push({ id, cosa, comando: comando(id), file: file.slice(addonDir.length + 1) });
+        let dati;
+        try { dati = leggiJson(file)[chiave]; } catch { /* JSON rotto: lo segnala già verify */ }
+        const id = dati?.description?.identifier;
+        if (id) elenco.push({ id, cosa, comando: comando(id, dati), file: file.slice(addonDir.length + 1) });
       }
     }
   }
@@ -283,8 +287,8 @@ function avviaServer(comandi, aspettaProve, aspettaProveGiocatore) {
       for (let i = 0; i < 60 && !dopo.some((r) => r.includes(SENTINELLA)); i++) await attesa(250);
       // Le prove degli script girano nei tick del gioco: si aspetta la loro riga finale (massimo 60 s).
       if (aspettaProve) for (let i = 0; i < 240 && !dopo.some((r) => r.includes(FINE_PROVE)); i++) await attesa(250);
-      // Prove da giocatore: si aspetta la loro riga finale (massimo 60 s), poi Saltato se non è arrivata.
-      if (aspettaProveGiocatore) for (let i = 0; i < 240 && !dopo.some((r) => r.includes(FINE_PROVE_GIOCATORE)); i++) await attesa(250);
+      // Prove da giocatore: si aspetta la loro riga finale (massimo 120 s: il tutorial ne chiede fino a 40), poi Saltato se non è arrivata.
+      if (aspettaProveGiocatore) for (let i = 0; i < 480 && !dopo.some((r) => r.includes(FINE_PROVE_GIOCATORE)); i++) await attesa(250);
       spegni();
     }
 
@@ -323,7 +327,7 @@ function leggiRisultato(esito, pack, elenco) {
   // Errori del caricamento e, dopo i comandi, degli script (per esempio un TypeError dentro una prova).
   // Dopo i comandi contano solo le righe degli script: le risposte ai comandi sono volute.
   for (const riga of [...esito.prima, ...esito.dopo.filter((r) => r.includes("[Scripting]"))]) {
-    if (riga.includes("COOP-TEST") || riga.includes("COOP-GIOCATORE")) continue;
+    if (riga.includes("COOP-TEST") || riga.includes("COOP-GIOCATORE") || riga.includes("COOP-ESISTE")) continue;
     if (riga.includes("prove-giocatore") || riga.includes("Coop Space - prove da giocatore")) continue;
     if (!/\b(ERROR|WARN)\]/.test(riga) || RUMORE.some((r) => r.test(riga))) continue;
     const testo = riga.replace(/^\[[^\]]*\]\s*/, "");
@@ -346,6 +350,7 @@ function leggiRisultato(esito, pack, elenco) {
 
   const rifiutati = new Set();
   for (const riga of esito.dopo) for (const m of riga.matchAll(/Unexpected "([^"]+)"/g)) rifiutati.add(m[1]);
+  for (const riga of esito.dopo) for (const m of riga.matchAll(/COOP-ESISTE-NO (\S+)/g)) rifiutati.add(m[1]);
   const comandiLetti = rifiutati.has(SENTINELLA);
   const mancanti = elenco.filter((c) => rifiutati.has(c.id));
   return { problemi, altri, comandiLetti, mancanti, prove, proveFinite, proveGiocatore, proveGiocatoreFinite };

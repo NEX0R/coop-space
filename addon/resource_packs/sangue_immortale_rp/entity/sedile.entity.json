@@ -1,0 +1,20 @@
+{
+ "format_version": "1.10.0",
+ "minecraft:client_entity": {
+  "description": {
+   "identifier": "vamp:sedile",
+   "materials": {
+    "default": "entity_alphatest"
+   },
+   "textures": {
+    "default": "textures/entity/vamp/anello_mano"
+   },
+   "geometry": {
+    "default": "geometry.vamp.vuoto"
+   },
+   "render_controllers": [
+    "controller.render.vamp.semplice"
+   ]
+  }
+ }
+}

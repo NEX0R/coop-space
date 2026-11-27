@@ -1,0 +1,28 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shapeless": {
+  "description": {
+   "identifier": "vamp:r_pugnale_cenere"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "ingredients": [
+   {
+    "item": "vamp:pugnale"
+   },
+   {
+    "item": "vamp:cenere"
+   }
+  ],
+  "unlock": [
+   {
+    "item": "vamp:pugnale"
+   }
+  ],
+  "result": {
+   "item": "vamp:pugnale_cenere",
+   "count": 1
+  }
+ }
+}

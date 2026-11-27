@@ -33,10 +33,10 @@ Si fanno in ordine. Le istruzioni passo per passo sono in `README.md`, sezione "
 
 ## In corso
 
-- [ ] Unione con Sangue Immortale di Jowa: un solo add-on, mondo tutorial copiato dal suo con un quartiere Coop Space (bacchette e scavo multiplo) **Chi:** Nexor
 
 ## Fatto
 
+- [x] Coop Space e Sangue Immortale (la mod dei vampiri di Jowa) uniti in un solo add-on: attivando "Coop Space" arrivano anche i vampiri; nomi `vamp:` e codici dei pack di Jowa invariati, così i suoi mondi continuano a funzionare. Il mondo di prova è una copia del suo mondo tutorial: si costruiscono da soli la piazza dei vampiri con le 8 stazioni e, a est, il quartiere Coop Space con 4 stazioni (bacchette, menu della bacchetta, scavo multiplo, forme dello scavo) con cartelli, casse e prove pronte. Corretti nella mod di Jowa: 23 oggetti "potere/caccia" che la prova scambiava per scartati, ricette con uno sblocco non più valido, blocchi dei villaggi con nomi Java (comignoli, strade, pedane, meloni, ragnatele, cespugli secchi mai comparsi). **Chi:** Nexor
 - [x] Scheda del compito per tutti: in `AGENTS.md` (Metodo) il piano diventa una scheda di regole numerate e controllabili, con due controlli fissi: ricette diverse da quelle di Minecraft e una prova automatica per ogni logica di script. Provato con un assistente nuovo sulla richiesta dei tubi: piano da 2,5 a 6 punti su 6. **Chi:** Nexor
 - [x] WhatsIApp, la chat tra assistenti: `scripts/chat.mjs` (manda, nuovi, aspetta, storia; zero token) con una chat per ogni coppia e una per tutti; con Claude Code i messaggi nuovi arrivano da soli all'avvio e quando la persona scrive. **Chi:** Nexor
 - [x] WhatsIApp sveglia l'assistente quando arriva un messaggio (hook in sottofondo, zero token), con tetti: 4 sveglie al giorno, niente sveglia per "ok/grazie", 5 messaggi per chat al giorno; tolto il subagente postino. **Chi:** Nexor

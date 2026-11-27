@@ -1,0 +1,73 @@
+{
+ "format_version": "1.21.0",
+ "minecraft:entity": {
+  "description": {
+   "identifier": "vamp:pipistrello",
+   "is_spawnable": false,
+   "is_summonable": true
+  },
+  "components": {
+   "minecraft:type_family": {
+    "family": [
+     "vamp_pipistrello",
+     "inanimate"
+    ]
+   },
+   "minecraft:collision_box": {
+    "width": 0.7,
+    "height": 0.7
+   },
+   "minecraft:health": {
+    "value": 1000,
+    "max": 1000
+   },
+   "minecraft:physics": {
+    "has_gravity": false,
+    "has_collision": true
+   },
+   "minecraft:pushable": {
+    "is_pushable": false,
+    "is_pushable_by_piston": false
+   },
+   "minecraft:knockback_resistance": {
+    "value": 1.0
+   },
+   "minecraft:breathable": {
+    "breathes_air": true,
+    "breathes_water": true,
+    "suffocate_time": -1
+   },
+   "minecraft:damage_sensor": {
+    "triggers": [
+     {
+      "cause": "fall",
+      "deals_damage": "no"
+     },
+     {
+      "cause": "suffocation",
+      "deals_damage": "no"
+     }
+    ]
+   },
+   "minecraft:rideable": {
+    "seat_count": 1,
+    "family_types": [
+     "player"
+    ],
+    "interact_text": "",
+    "pull_in_entities": false,
+    "seats": {
+     "position": [
+      0,
+      -0.2,
+      0
+     ]
+    }
+   },
+   "minecraft:flying_speed": {
+    "value": 0.0
+   },
+   "minecraft:conditional_bandwidth_optimization": {}
+  }
+ }
+}

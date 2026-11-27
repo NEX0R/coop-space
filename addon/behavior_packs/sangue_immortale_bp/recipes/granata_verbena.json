@@ -1,0 +1,34 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shapeless": {
+  "description": {
+   "identifier": "vamp:r_granata_verbena"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "ingredients": [
+   {
+    "item": "minecraft:glass_bottle"
+   },
+   {
+    "item": "vamp:verbena"
+   },
+   {
+    "item": "vamp:verbena"
+   },
+   {
+    "item": "minecraft:gunpowder"
+   }
+  ],
+  "unlock": [
+   {
+    "item": "minecraft:glass_bottle"
+   }
+  ],
+  "result": {
+   "item": "vamp:granata_verbena",
+   "count": 2
+  }
+ }
+}

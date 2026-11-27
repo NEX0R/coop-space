@@ -1,0 +1,28 @@
+{
+ "format_version": [
+  1,
+  1,
+  0
+ ],
+ "vamp:quercia_bianca": {
+  "sound": "wood"
+ },
+ "vamp:foglie_quercia": {
+  "sound": "grass"
+ },
+ "vamp:altare": {
+  "sound": "stone"
+ },
+ "vamp:verbena_pianta": {
+  "sound": "grass"
+ },
+ "vamp:ghianda_pianta": {
+  "sound": "grass"
+ },
+ "vamp:cenere_strato": {
+  "sound": "sand"
+ },
+ "vamp:sedia": {
+  "sound": "wood"
+ }
+}

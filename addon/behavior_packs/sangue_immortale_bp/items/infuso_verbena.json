@@ -1,0 +1,31 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:infuso_verbena",
+   "menu_category": {
+    "category": "items"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_infuso_verbena",
+   "minecraft:display_name": {
+    "value": "item.vamp:infuso_verbena.name"
+   },
+   "minecraft:food": {
+    "nutrition": 0,
+    "saturation_modifier": 0,
+    "can_always_eat": true,
+    "using_converts_to": "minecraft:glass_bottle"
+   },
+   "minecraft:use_modifiers": {
+    "use_duration": 1.6,
+    "movement_modifier": 0.35
+   },
+   "minecraft:use_animation": "drink",
+   "minecraft:max_stack_size": {
+    "value": 16
+   }
+  }
+ }
+}

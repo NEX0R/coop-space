@@ -1,0 +1,32 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shaped": {
+  "description": {
+   "identifier": "vamp:r_paletto_quercia"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "pattern": [
+   "Q",
+   "S"
+  ],
+  "key": {
+   "Q": {
+    "item": "vamp:quercia_bianca"
+   },
+   "S": {
+    "item": "minecraft:stick"
+   }
+  },
+  "unlock": [
+   {
+    "item": "vamp:quercia_bianca"
+   }
+  ],
+  "result": {
+   "item": "vamp:paletto_quercia",
+   "count": 2
+  }
+ }
+}

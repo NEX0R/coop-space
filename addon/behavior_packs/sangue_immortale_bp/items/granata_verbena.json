@@ -1,0 +1,29 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:granata_verbena",
+   "menu_category": {
+    "category": "equipment"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_granata_verbena",
+   "minecraft:display_name": {
+    "value": "item.vamp:granata_verbena.name"
+   },
+   "minecraft:max_stack_size": {
+    "value": 16
+   },
+   "minecraft:throwable": {
+    "do_swing_animation": true,
+    "launch_power_scale": 1,
+    "max_launch_power": 1
+   },
+   "minecraft:projectile": {
+    "projectile_entity": "vamp:granata_verbena",
+    "minimum_critical_power": 1
+   }
+  }
+ }
+}

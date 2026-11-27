@@ -1,0 +1,61 @@
+{
+ "format_version": "1.21.0",
+ "minecraft:entity": {
+  "description": {
+   "identifier": "vamp:dardo_paletto",
+   "is_spawnable": false,
+   "is_summonable": true
+  },
+  "components": {
+   "minecraft:collision_box": {
+    "width": 0.25,
+    "height": 0.25
+   },
+   "minecraft:projectile": {
+    "anchor": "eye_height",
+    "gravity": 0.05,
+    "power": 3.15,
+    "hit_sound": "bow.hit",
+    "offset": [
+     0,
+     -0.1,
+     0
+    ],
+    "should_bounce": "no",
+    "uncertainty_base": 1,
+    "uncertainty_multiplier": 0,
+    "on_hit": {
+     "impact_damage": {
+      "damage": {
+       "min": 9,
+       "max": 9
+      },
+      "knockback": true,
+      "destroy_on_hit": true
+     },
+     "stick_in_ground": {
+      "shake_time": 0.35
+     }
+    }
+   },
+   "minecraft:physics": {},
+   "minecraft:pushable": {
+    "is_pushable": false,
+    "is_pushable_by_piston": true
+   },
+   "minecraft:type_family": {
+    "family": [
+     "vamp_dardo",
+     "inanimate"
+    ]
+   },
+   "minecraft:conditional_bandwidth_optimization": {
+    "default_values": {
+     "max_optimized_distance": 80,
+     "max_dropped_ticks": 7,
+     "use_motion_prediction_hints": true
+    }
+   }
+  }
+ }
+}

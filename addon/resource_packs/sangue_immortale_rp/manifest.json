@@ -1,0 +1,29 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Sangue Immortale - grafica",
+    "description": "pack.description",
+    "uuid": "19587c1e-a082-4c68-af33-cdb4f0b26793",
+    "version": [
+      1,
+      5,
+      2
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      60
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "636a60ff-5e81-4c9f-a077-6b4a52a64162",
+      "version": [
+        1,
+        5,
+        2
+      ]
+    }
+  ]
+}

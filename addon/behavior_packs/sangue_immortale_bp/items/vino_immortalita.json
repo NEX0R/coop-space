@@ -1,0 +1,33 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:vino_immortalita",
+   "menu_category": {
+    "category": "items"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_vino_immortalita",
+   "minecraft:display_name": {
+    "value": "item.vamp:vino_immortalita.name"
+   },
+   "minecraft:food": {
+    "nutrition": 0,
+    "saturation_modifier": 0,
+    "can_always_eat": true
+   },
+   "minecraft:use_modifiers": {
+    "use_duration": 2,
+    "movement_modifier": 0.35
+   },
+   "minecraft:use_animation": "drink",
+   "minecraft:max_stack_size": {
+    "value": 1
+   },
+   "minecraft:glint": {
+    "value": true
+   }
+  }
+ }
+}

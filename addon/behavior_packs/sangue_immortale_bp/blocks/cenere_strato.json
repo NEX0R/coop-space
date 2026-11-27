@@ -1,0 +1,53 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:block": {
+  "description": {
+   "identifier": "vamp:cenere_strato",
+   "menu_category": {
+    "category": "nature"
+   }
+  },
+  "components": {
+   "minecraft:display_name": "tile.vamp:cenere_strato.name",
+   "minecraft:geometry": "geometry.vamp.strato",
+   "minecraft:material_instances": {
+    "*": {
+     "texture": "vamp_cenere_strato",
+     "render_method": "alpha_test",
+     "ambient_occlusion": false
+    }
+   },
+   "minecraft:collision_box": false,
+   "minecraft:selection_box": {
+    "origin": [
+     -8,
+     0,
+     -8
+    ],
+    "size": [
+     16,
+     1,
+     16
+    ]
+   },
+   "minecraft:light_dampening": 0,
+   "minecraft:destructible_by_mining": {
+    "seconds_to_destroy": 0
+   },
+   "minecraft:destructible_by_explosion": {
+    "explosion_resistance": 0
+   },
+   "minecraft:loot": "loot_tables/vamp/blocco_cenere_strato.json",
+   "minecraft:placement_filter": {
+    "conditions": [
+     {
+      "allowed_faces": [
+       "up"
+      ]
+     }
+    ]
+   },
+   "minecraft:map_color": "#cfccc4"
+  }
+ }
+}

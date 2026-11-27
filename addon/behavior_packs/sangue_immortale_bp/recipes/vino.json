@@ -1,0 +1,37 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shapeless": {
+  "description": {
+   "identifier": "vamp:r_vino"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "ingredients": [
+   {
+    "item": "minecraft:glass_bottle"
+   },
+   {
+    "item": "minecraft:sweet_berries"
+   },
+   {
+    "item": "minecraft:sweet_berries"
+   },
+   {
+    "item": "minecraft:sweet_berries"
+   },
+   {
+    "item": "minecraft:sugar"
+   }
+  ],
+  "unlock": [
+   {
+    "item": "minecraft:glass_bottle"
+   }
+  ],
+  "result": {
+   "item": "vamp:vino",
+   "count": 1
+  }
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "format_version": "1.10.0",
+ "minecraft:attachable": {
+  "description": {
+   "identifier": "vamp:anello_diurno",
+   "materials": {
+    "default": "entity_alphatest"
+   },
+   "textures": {
+    "default": "textures/entity/vamp/anello_mano"
+   },
+   "geometry": {
+    "default": "geometry.vamp.anello_mano"
+   },
+   "render_controllers": [
+    "controller.render.vamp.anello_mano"
+   ]
+  }
+ }
+}

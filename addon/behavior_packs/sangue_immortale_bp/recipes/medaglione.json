@@ -1,0 +1,36 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shaped": {
+  "description": {
+   "identifier": "vamp:r_medaglione"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "pattern": [
+   " S ",
+   "GVG",
+   " G "
+  ],
+  "key": {
+   "S": {
+    "item": "minecraft:string"
+   },
+   "G": {
+    "item": "minecraft:gold_ingot"
+   },
+   "V": {
+    "item": "vamp:verbena"
+   }
+  },
+  "unlock": [
+   {
+    "item": "minecraft:string"
+   }
+  ],
+  "result": {
+   "item": "vamp:medaglione",
+   "count": 1
+  }
+ }
+}

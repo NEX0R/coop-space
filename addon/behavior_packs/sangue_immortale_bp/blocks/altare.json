@@ -1,0 +1,102 @@
+{
+ "format_version": "1.21.90",
+ "minecraft:block": {
+  "description": {
+   "identifier": "vamp:altare",
+   "menu_category": {
+    "category": "items"
+   },
+   "states": {
+    "vamp:offerta": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "vamp:rito": [
+     false,
+     true
+    ],
+    "vamp:uovo": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  },
+  "components": {
+   "minecraft:display_name": "tile.vamp:altare.name",
+   "minecraft:geometry": {
+    "identifier": "geometry.vamp.altare",
+    "bone_visibility": {
+     "anello": "q.block_state('vamp:offerta') == 1 || q.block_state('vamp:offerta') == 4 || q.block_state('vamp:offerta') == 14 || q.block_state('vamp:offerta') == 15",
+     "calice": "q.block_state('vamp:offerta') == 2 || q.block_state('vamp:offerta') == 5 || q.block_state('vamp:offerta') == 13",
+     "pugnale": "q.block_state('vamp:offerta') == 3 || q.block_state('vamp:offerta') == 6",
+     "lingotto": "q.block_state('vamp:offerta') >= 7 && q.block_state('vamp:offerta') <= 10",
+     "paletto": "q.block_state('vamp:offerta') >= 9 && q.block_state('vamp:offerta') <= 12",
+     "uovo": "q.block_state('vamp:uovo') > 0",
+     "uovo_cura": "q.block_state('vamp:uovo') == 3",
+     "uovo_chiuso": "q.block_state('vamp:uovo') == 4",
+     "uovo_socchiuso": "q.block_state('vamp:uovo') == 1 || q.block_state('vamp:uovo') == 3",
+     "uovo_aperto": "q.block_state('vamp:uovo') == 2",
+     "uovo_croce": "q.block_state('vamp:uovo') == 4"
+    }
+   },
+   "minecraft:material_instances": {
+    "*": {
+     "texture": "vamp_altare",
+     "render_method": "alpha_test",
+     "ambient_occlusion": false
+    }
+   },
+   "minecraft:collision_box": {
+    "origin": [
+     -8,
+     0,
+     -8
+    ],
+    "size": [
+     16,
+     14,
+     16
+    ]
+   },
+   "minecraft:selection_box": {
+    "origin": [
+     -8,
+     0,
+     -8
+    ],
+    "size": [
+     16,
+     14,
+     16
+    ]
+   },
+   "minecraft:light_emission": 7,
+   "minecraft:light_dampening": 0,
+   "minecraft:destructible_by_mining": {
+    "seconds_to_destroy": 3
+   },
+   "minecraft:destructible_by_explosion": {
+    "explosion_resistance": 30
+   },
+   "minecraft:map_color": "#3a3640",
+   "vamp:altare": {}
+  }
+ }
+}

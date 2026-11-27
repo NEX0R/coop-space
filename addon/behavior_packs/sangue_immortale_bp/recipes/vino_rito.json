@@ -1,0 +1,31 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shapeless": {
+  "description": {
+   "identifier": "vamp:r_vino_rito"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "ingredients": [
+   {
+    "item": "vamp:vino"
+   },
+   {
+    "item": "vamp:sacca_sangue"
+   },
+   {
+    "item": "minecraft:gold_nugget"
+   }
+  ],
+  "unlock": [
+   {
+    "item": "vamp:vino"
+   }
+  ],
+  "result": {
+   "item": "vamp:vino_rito",
+   "count": 1
+  }
+ }
+}

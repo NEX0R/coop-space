@@ -1,0 +1,31 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:guida",
+   "menu_category": {
+    "category": "items"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_guida",
+   "minecraft:display_name": {
+    "value": "item.vamp:guida.name"
+   },
+   "minecraft:food": {
+    "nutrition": 0,
+    "saturation_modifier": 0,
+    "can_always_eat": true,
+    "using_converts_to": "vamp:guida"
+   },
+   "minecraft:use_modifiers": {
+    "use_duration": 30,
+    "movement_modifier": 1
+   },
+   "minecraft:use_animation": "bow",
+   "minecraft:max_stack_size": {
+    "value": 1
+   }
+  }
+ }
+}

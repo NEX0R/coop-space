@@ -1,0 +1,27 @@
+{
+ "format_version": "1.10.0",
+ "render_controllers": {
+  "controller.render.vamp.anello_mano": {
+   "geometry": "Geometry.default",
+   "materials": [
+    {
+     "*": "Material.default"
+    }
+   ],
+   "textures": [
+    "Texture.default"
+   ],
+   "part_visibility": [
+    {
+     "anello_dx": "!c.is_first_person && c.item_slot == 'main_hand'"
+    },
+    {
+     "anello_sx": "!c.is_first_person && c.item_slot == 'off_hand'"
+    },
+    {
+     "anello_fp": "c.is_first_person"
+    }
+   ]
+  }
+ }
+}

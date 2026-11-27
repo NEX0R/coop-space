@@ -1,0 +1,20 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:verbena",
+   "menu_category": {
+    "category": "nature"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_verbena",
+   "minecraft:display_name": {
+    "value": "item.vamp:verbena.name"
+   },
+   "minecraft:block_placer": {
+    "block": "vamp:verbena_pianta"
+   }
+  }
+ }
+}
