@@ -4,10 +4,12 @@
   "description": {
    "identifier": "vamp:potere_sensi",
    "materials": {
-    "default": "entity_alphatest"
+    "default": "entity_alphatest",
+    "enchanted": "entity_alphatest_glint"
    },
    "textures": {
-    "default": "textures/items/vamp/potere_sensi"
+    "default": "textures/items/vamp/potere_sensi",
+    "enchanted": "textures/misc/enchanted_item_glint"
    },
    "geometry": {
     "default": "geometry.vamp.vuoto"

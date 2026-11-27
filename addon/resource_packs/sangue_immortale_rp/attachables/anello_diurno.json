@@ -14,7 +14,14 @@
    },
    "render_controllers": [
     "controller.render.vamp.anello_mano"
-   ]
+   ],
+   "scripts": {
+    "pre_animation": [
+     "v.vamp_prima_persona = c.is_first_person;",
+     "v.vamp_mano_destra = c.item_slot == 'main_hand';",
+     "v.vamp_mano_sinistra = c.item_slot == 'off_hand';"
+    ]
+   }
   }
  }
 }

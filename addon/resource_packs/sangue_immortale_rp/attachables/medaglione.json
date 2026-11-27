@@ -4,7 +4,7 @@
   "description": {
    "identifier": "vamp:medaglione",
    "item": {
-    "vamp:medaglione": "query.owner_identifier == 'minecraft:player' && c.item_slot == 'chest'"
+    "vamp:medaglione": "query.owner_identifier == 'minecraft:player'"
    },
    "materials": {
     "default": "armor",
@@ -18,10 +18,13 @@
     "default": "geometry.vamp.medaglione"
    },
    "scripts": {
-    "parent_setup": "variable.chest_layer_visible = 0.0;"
+    "parent_setup": "variable.chest_layer_visible = 0.0;",
+    "pre_animation": [
+     "v.vamp_al_petto = c.item_slot == 'chest';"
+    ]
    },
    "render_controllers": [
-    "controller.render.armor"
+    "controller.render.vamp.medaglione"
    ]
   }
  }

@@ -4,10 +4,12 @@
   "description": {
    "identifier": "vamp:caccia_rete",
    "materials": {
-    "default": "entity_alphatest"
+    "default": "entity_alphatest",
+    "enchanted": "entity_alphatest_glint"
    },
    "textures": {
-    "default": "textures/items/vamp/caccia_rete"
+    "default": "textures/items/vamp/caccia_rete",
+    "enchanted": "textures/misc/enchanted_item_glint"
    },
    "geometry": {
     "default": "geometry.vamp.vuoto"

@@ -13,13 +13,30 @@
    ],
    "part_visibility": [
     {
-     "anello_dx": "!c.is_first_person && c.item_slot == 'main_hand'"
+     "anello_dx": "!v.vamp_prima_persona && v.vamp_mano_destra"
     },
     {
-     "anello_sx": "!c.is_first_person && c.item_slot == 'off_hand'"
+     "anello_sx": "!v.vamp_prima_persona && v.vamp_mano_sinistra"
     },
     {
-     "anello_fp": "c.is_first_person"
+     "anello_fp": "v.vamp_prima_persona"
+    }
+   ]
+  },
+  "controller.render.vamp.medaglione": {
+   "geometry": "Geometry.default",
+   "materials": [
+    {
+     "*": "Material.enchanted"
+    }
+   ],
+   "textures": [
+    "Texture.default",
+    "Texture.enchanted"
+   ],
+   "part_visibility": [
+    {
+     "*": "v.vamp_al_petto"
     }
    ]
   }
