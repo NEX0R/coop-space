@@ -1,0 +1,31 @@
+{
+ "format_version": "1.10.0",
+ "minecraft:attachable": {
+  "description": {
+   "identifier": "vamp:medaglione",
+   "item": {
+    "vamp:medaglione": "query.owner_identifier == 'minecraft:player'"
+   },
+   "materials": {
+    "default": "armor",
+    "enchanted": "armor_enchanted"
+   },
+   "textures": {
+    "default": "textures/entity/vamp/medaglione",
+    "enchanted": "textures/misc/enchanted_item_glint"
+   },
+   "geometry": {
+    "default": "geometry.vamp.medaglione"
+   },
+   "scripts": {
+    "parent_setup": "variable.chest_layer_visible = 0.0;",
+    "pre_animation": [
+     "v.vamp_al_petto = c.item_slot == 'chest';"
+    ]
+   },
+   "render_controllers": [
+    "controller.render.vamp.medaglione"
+   ]
+  }
+ }
+}

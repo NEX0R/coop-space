@@ -11,7 +11,7 @@
 //     return "dettaglio facoltativo";
 //   });
 // La zona di prova (16x11x16 blocchi da `origine`) viene svuotata prima di ogni prova.
-import { system, world } from "@minecraft/server";
+import { system, world, ItemStack } from "@minecraft/server";
 
 const prove = [];
 export function prova(nome, funzione) {
@@ -72,4 +72,17 @@ prova("blocco_ottone", async ({ dim, origine }) => {
   dim.setBlockType(origine, "coop:blocco_ottone");
   const tipo = dim.getBlock(origine)?.typeId;
   if (tipo !== "coop:blocco_ottone") throw new Error(`atteso coop:blocco_ottone, trovato ${tipo}`);
+});
+
+// Per npm run prova-server: `/scriptevent coop:esiste <id>` dice se lo script riesce a creare l'oggetto.
+// Serve per gli oggetti nascosti (categoria "none"), che /give non accetta. Non tocca il mondo.
+system.afterEvents.scriptEventReceive.subscribe(({ id, message }) => {
+  if (id !== "coop:esiste") return;
+  const oggetto = message.trim();
+  try {
+    new ItemStack(oggetto, 1);
+    console.warn(`COOP-ESISTE-SI ${oggetto}`);
+  } catch {
+    console.warn(`COOP-ESISTE-NO ${oggetto}`);
+  }
 });

@@ -2,7 +2,7 @@
 // Esegue prima la verifica: un add-on con errori non viene impacchettato.
 import { spawnSync } from "node:child_process";
 import { mkdirSync, existsSync, rmSync, cpSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { leggiZip, scriviZip } from "./zip.mjs";
 
@@ -66,17 +66,25 @@ for (const file of elencaJs(join(copia, "behavior_packs"))) {
 // Lanciamo il file JS di mct direttamente con node: il collegamento in node_modules/.bin
 // su Windows è un .cmd e non si può avviare così.
 const mct = join(root, "node_modules/@minecraft/creator-tools/cli/index.mjs");
-const r = spawnSync(
-  process.execPath,
-  [mct, "-i", copia, "-o", dist, "--of", out, "export", "addon"],
-  { stdio: "inherit" },
-);
-if (r.status !== 0 || !existsSync(out)) {
-  console.error("Impacchettamento fallito.");
-  process.exit(1);
-}
+// I pack sono quattro (Coop Space e Sangue Immortale, logica e grafica): "mct export addon" ne mette
+// nel file una sola coppia (provato il 27/11), quindi lo zip con tutti i pack lo componiamo noi.
+// Un .mcaddon è solo uno zip con una cartella per pack.
+const vociDi = (dir, prefisso) =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((d) =>
+    d.isDirectory()
+      ? [{ nome: `${prefisso}${d.name}/`, dati: Buffer.alloc(0) }, ...vociDi(join(dir, d.name), `${prefisso}${d.name}/`)]
+      : [{ nome: `${prefisso}${d.name}`, dati: readFileSync(join(dir, d.name)) }],
+  );
+const packs = manifest.map((m) => ({
+  cartella: dirname(m.file),
+  nome: basename(dirname(m.file)),
+  tipo: basename(dirname(dirname(m.file))),
+  uuid: m.dati.header.uuid,
+  versione: m.dati.header.version,
+}));
+writeFileSync(out, scriviZip(packs.flatMap((p) => vociDi(p.cartella, `${p.nome}/`))));
 
-// Mondo di prova: mondo piatto in creativa con i trucchi attivi e i due pack già attivati dentro.
+// Mondo di prova: copia del mondo tutorial di Sangue Immortale (vedi sistemaLevelDat), con i trucchi attivi e tutti i pack già attivati dentro.
 // Aprendolo non si deve scegliere nessun pacchetto: è il modo più sicuro per provare, su PC e telefono.
 // Lo esporta Creator Tools; noi cambiamo il nome e spegniamo l'esperimento "Beta API" (gametest),
 // che Creator Tools accende ma a noi non serve (usiamo solo API stabili).
@@ -93,6 +101,26 @@ const u16 = (n) => {
   b.writeUInt16LE(n);
   return b;
 };
+const STRATI_TUTORIAL = {
+  biome_id: 1,
+  block_layers: [
+    { block_name: "minecraft:bedrock", count: 1 },
+    { block_name: "minecraft:deepslate", count: 1 },
+    { block_name: "minecraft:dirt", count: 2 },
+    { block_name: "minecraft:grass_block", count: 1 },
+  ],
+  encoding_version: 6,
+  structure_options: null,
+  world_version: "version.post_1_18",
+};
+// [tipo NBT (1 = sì/no, 3 = numero), nome, valore], presi dal level.dat del tutorial di Jowa.
+const IMPOSTAZIONI_TUTORIAL = [
+  [3, "GameType", 0],
+  [1, "keepinventory", 1],
+  [1, "showcoordinates", 1],
+  [1, "domobspawning", 0],
+  [1, "doweathercycle", 0],
+];
 const tagNbt = (tipo, nome) => Buffer.concat([Buffer.from([tipo]), u16(Buffer.byteLength(nome)), Buffer.from(nome)]);
 function sistemaLevelDat(buf) {
   const i = buf.indexOf(tagNbt(8, "LevelName"));
@@ -103,14 +131,38 @@ function sistemaLevelDat(buf) {
   }
   const g = buf.indexOf(tagNbt(1, "gametest"));
   if (g >= 0) buf[g + tagNbt(1, "gametest").length] = 0;
+  // Il mondo di prova è una copia del mondo "Tutorial Sangue Immortale" di Jowa: stesso terreno piatto
+  // con uno strato di ardesia profonda (è il segno da cui i due tutorial capiscono dove sono e si
+  // costruiscono da soli), sopravvivenza, inventario che resta, coordinate, niente mob spontanei né meteo.
+  const strati = Buffer.from(JSON.stringify(STRATI_TUTORIAL), "utf8");
+  const f = buf.indexOf(tagNbt(8, "FlatWorldLayers"));
+  if (f >= 0) {
+    const s = f + tagNbt(8, "FlatWorldLayers").length;
+    buf = Buffer.concat([buf.subarray(0, s), u16(strati.length), strati, buf.subarray(s + 2 + buf.readUInt16LE(s))]);
+  }
+  for (const [tipo, nome, valore] of IMPOSTAZIONI_TUTORIAL) {
+    const t = buf.indexOf(tagNbt(tipo, nome));
+    if (t < 0) continue;
+    if (tipo === 1) buf[t + tagNbt(tipo, nome).length] = valore;
+    else buf.writeInt32LE(valore, t + tagNbt(tipo, nome).length);
+  }
   buf.writeInt32LE(buf.length - 8, 4); // l'intestazione del level.dat contiene la lunghezza del resto
   return buf;
 }
-const voci = leggiZip(readFileSync(mondo)).map((v) => {
+// Dal mondo esportato teniamo solo impostazioni e nome: i pack (anche qui ne metterebbe una coppia sola)
+// e gli elenchi dei pack attivi li scriviamo noi, con tutti e quattro.
+const json = (d) => Buffer.from(JSON.stringify(d, null, 2), "utf8");
+const voci = leggiZip(readFileSync(mondo)).filter((v) => !/^(behavior_packs|resource_packs)\//.test(v.nome) && !/^world_(behavior|resource)_pack/.test(v.nome));
+for (const v of voci) {
   if (v.nome === "level.dat" || v.nome === "level.dat_old") v.dati = sistemaLevelDat(v.dati);
   if (v.nome === "levelname.txt") v.dati = Buffer.from(nomeMondo, "utf8");
-  return v;
-});
+}
+for (const [tipo, chiave] of [["behavior_packs", "behavior"], ["resource_packs", "resource"]]) {
+  const questi = packs.filter((p) => p.tipo === tipo);
+  voci.push({ nome: `${tipo}/`, dati: Buffer.alloc(0) }, ...questi.flatMap((p) => vociDi(p.cartella, `${tipo}/${p.nome}/`)));
+  voci.push({ nome: `world_${chiave}_packs.json`, dati: json(questi.map((p) => ({ pack_id: p.uuid, version: p.versione }))) });
+  voci.push({ nome: `world_${chiave}_pack_history.json`, dati: json({ packs: questi.map((p) => ({ uuid: p.uuid, version: p.versione, name: p.nome, can_be_redownloaded: false })) }) });
+}
 writeFileSync(mondo, scriviZip(voci));
 
 console.log(`\nPronto: ${out} (versione ${versione})`);

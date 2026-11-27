@@ -1,0 +1,44 @@
+{
+ "format_version": "1.10.0",
+ "render_controllers": {
+  "controller.render.vamp.anello_mano": {
+   "geometry": "Geometry.default",
+   "materials": [
+    {
+     "*": "Material.default"
+    }
+   ],
+   "textures": [
+    "Texture.default"
+   ],
+   "part_visibility": [
+    {
+     "anello_dx": "!v.vamp_prima_persona && v.vamp_mano_destra"
+    },
+    {
+     "anello_sx": "!v.vamp_prima_persona && v.vamp_mano_sinistra"
+    },
+    {
+     "anello_fp": "v.vamp_prima_persona"
+    }
+   ]
+  },
+  "controller.render.vamp.medaglione": {
+   "geometry": "Geometry.default",
+   "materials": [
+    {
+     "*": "Material.enchanted"
+    }
+   ],
+   "textures": [
+    "Texture.default",
+    "Texture.enchanted"
+   ],
+   "part_visibility": [
+    {
+     "*": "v.vamp_al_petto"
+    }
+   ]
+  }
+ }
+}

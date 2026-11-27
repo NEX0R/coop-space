@@ -1,0 +1,66 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Sangue Immortale",
+    "description": "pack.description",
+    "uuid": "81617e2a-b05e-4d1f-8f6e-86a19ef3081d",
+    "version": [
+      1,
+      5,
+      2
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      60
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "fb6d0445-ef67-4c6e-90df-8193b3339b6c",
+      "version": [
+        1,
+        5,
+        2
+      ]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "a178a1da-4c3f-49a1-abb5-ed1cff2a71f0",
+      "version": [
+        1,
+        5,
+        2
+      ],
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "19587c1e-a082-4c68-af33-cdb4f0b26793",
+      "version": [
+        1,
+        5,
+        2
+      ]
+    },
+    {
+      "module_name": "@minecraft/server",
+      "version": [
+        2,
+        11,
+        0
+      ]
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": [
+        2,
+        3,
+        0
+      ]
+    }
+  ]
+}

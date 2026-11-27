@@ -1,0 +1,82 @@
+{
+ "pools": [
+  {
+   "rolls": 1,
+   "conditions": [
+    {
+     "condition": "random_chance_with_looting",
+     "chance": 0.3,
+     "looting_multiplier": 0.05
+    }
+   ],
+   "entries": [
+    {
+     "type": "item",
+     "name": "vamp:fiala_vampiro",
+     "weight": 1,
+     "functions": [
+      {
+       "function": "set_count",
+       "count": {
+        "min": 1,
+        "max": 1
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "rolls": 1,
+   "conditions": [
+    {
+     "condition": "random_chance_with_looting",
+     "chance": 0.15,
+     "looting_multiplier": 0.05
+    }
+   ],
+   "entries": [
+    {
+     "type": "item",
+     "name": "vamp:sacca_sangue",
+     "weight": 1,
+     "functions": [
+      {
+       "function": "set_count",
+       "count": {
+        "min": 1,
+        "max": 1
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "rolls": 1,
+   "conditions": [
+    {
+     "condition": "random_chance_with_looting",
+     "chance": 0.4,
+     "looting_multiplier": 0.05
+    }
+   ],
+   "entries": [
+    {
+     "type": "item",
+     "name": "minecraft:gold_nugget",
+     "weight": 1,
+     "functions": [
+      {
+       "function": "set_count",
+       "count": {
+        "min": 1,
+        "max": 3
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

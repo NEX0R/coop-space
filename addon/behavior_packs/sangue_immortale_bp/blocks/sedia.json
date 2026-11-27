@@ -1,0 +1,129 @@
+{
+ "format_version": "1.21.90",
+ "minecraft:block": {
+  "description": {
+   "identifier": "vamp:sedia",
+   "menu_category": {
+    "category": "items"
+   },
+   "states": {
+    "vamp:cibo": [
+     false,
+     true
+    ],
+    "vamp:sacche": [
+     false,
+     true
+    ]
+   },
+   "traits": {
+    "minecraft:placement_direction": {
+     "enabled_states": [
+      "minecraft:cardinal_direction"
+     ],
+     "y_rotation_offset": 180
+    }
+   }
+  },
+  "components": {
+   "minecraft:display_name": "tile.vamp:sedia.name",
+   "minecraft:geometry": {
+    "identifier": "geometry.vamp.sedia",
+    "bone_visibility": {
+     "cibo": "q.block_state('vamp:cibo')",
+     "sacche": "q.block_state('vamp:sacche')"
+    }
+   },
+   "minecraft:material_instances": {
+    "*": {
+     "texture": "vamp_sedia",
+     "render_method": "alpha_test",
+     "ambient_occlusion": false
+    }
+   },
+   "minecraft:collision_box": {
+    "origin": [
+     -8,
+     0,
+     -8
+    ],
+    "size": [
+     16,
+     10,
+     16
+    ]
+   },
+   "minecraft:selection_box": {
+    "origin": [
+     -8,
+     0,
+     -8
+    ],
+    "size": [
+     16,
+     16,
+     16
+    ]
+   },
+   "minecraft:light_dampening": 0,
+   "minecraft:destructible_by_mining": {
+    "seconds_to_destroy": 1.5
+   },
+   "minecraft:destructible_by_explosion": {
+    "explosion_resistance": 6
+   },
+   "minecraft:map_color": "#5a3a22",
+   "vamp:sedia": {}
+  },
+  "permutations": [
+   {
+    "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+    "components": {
+     "minecraft:transformation": {
+      "rotation": [
+       0,
+       0,
+       0
+      ]
+     }
+    }
+   },
+   {
+    "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+    "components": {
+     "minecraft:transformation": {
+      "rotation": [
+       0,
+       90,
+       0
+      ]
+     }
+    }
+   },
+   {
+    "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+    "components": {
+     "minecraft:transformation": {
+      "rotation": [
+       0,
+       180,
+       0
+      ]
+     }
+    }
+   },
+   {
+    "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+    "components": {
+     "minecraft:transformation": {
+      "rotation": [
+       0,
+       270,
+       0
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

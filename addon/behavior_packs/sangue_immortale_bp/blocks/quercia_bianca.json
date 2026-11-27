@@ -1,0 +1,40 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:block": {
+  "description": {
+   "identifier": "vamp:quercia_bianca",
+   "menu_category": {
+    "category": "nature"
+   }
+  },
+  "components": {
+   "minecraft:display_name": "tile.vamp:quercia_bianca.name",
+   "minecraft:material_instances": {
+    "*": {
+     "texture": "vamp_quercia_lato",
+     "render_method": "opaque"
+    },
+    "up": {
+     "texture": "vamp_quercia_sopra",
+     "render_method": "opaque"
+    },
+    "down": {
+     "texture": "vamp_quercia_sopra",
+     "render_method": "opaque"
+    }
+   },
+   "minecraft:destructible_by_mining": {
+    "seconds_to_destroy": 2.5
+   },
+   "minecraft:destructible_by_explosion": {
+    "explosion_resistance": 6
+   },
+   "minecraft:flammable": {
+    "catch_chance_modifier": 5,
+    "destroy_chance_modifier": 5
+   },
+   "minecraft:map_color": "#e6dfcf",
+   "minecraft:geometry": "minecraft:geometry.full_block"
+  }
+ }
+}

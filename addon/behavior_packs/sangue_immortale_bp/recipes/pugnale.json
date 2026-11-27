@@ -1,0 +1,36 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shaped": {
+  "description": {
+   "identifier": "vamp:r_pugnale"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "pattern": [
+   "I",
+   "G",
+   "S"
+  ],
+  "key": {
+   "I": {
+    "item": "minecraft:iron_ingot"
+   },
+   "G": {
+    "item": "minecraft:gold_ingot"
+   },
+   "S": {
+    "item": "minecraft:stick"
+   }
+  },
+  "unlock": [
+   {
+    "item": "minecraft:iron_ingot"
+   }
+  ],
+  "result": {
+   "item": "vamp:pugnale",
+   "count": 1
+  }
+ }
+}

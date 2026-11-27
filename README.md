@@ -28,7 +28,7 @@ Le parole che vedrai e che gli assistenti useranno con te.
 | **Bozza** | Una proposta ancora in prova. Finché è in bozza non entra nel gioco di nessuno. Serve anche da **cartello "occupato"**: gli altri vedono che ci stai lavorando. |
 | **Controlli automatici** | Prove che GitHub e l'assistente fanno da soli a ogni modifica: verde = va bene, rosso = c'è un errore da correggere. |
 | **Anteprima** | Il file di prova di una proposta, aggiornato a ogni modifica. Sparisce quando la proposta si chiude. |
-| **Mondo di prova** | Un mondo piatto in creativa con l'add-on già attivo, da aprire sul telefono. |
+| **Mondo di prova** | Il mondo tutorial: piatto, in sopravvivenza, con l'add-on già attivo. Entrando si costruiscono da soli il tutorial dei vampiri e il quartiere Coop Space (bacchette e scavo). Da aprire sul telefono. |
 | **Laboratorio** | Sul PC: il mondo "Coop Space - laboratorio", sempre lo stesso. A ogni prova l'assistente ci mette dentro la versione nuova e apre Minecraft; quello che hai costruito resta. |
 | **Prototipo** | Una cosa nuova ancora in prova (in una proposta aperta). Nel sito ha un gruppo tutto suo. |
 | **Come provarlo** | La lista di 4-6 controlli da fare nel gioco, scritta in ogni proposta (la vedi anche nel sito). |

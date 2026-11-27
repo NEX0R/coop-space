@@ -1,0 +1,39 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:pugnale_cenere",
+   "menu_category": {
+    "category": "equipment"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_pugnale_cenere",
+   "minecraft:display_name": {
+    "value": "item.vamp:pugnale_cenere.name"
+   },
+   "minecraft:hand_equipped": {
+    "value": true
+   },
+   "minecraft:max_stack_size": {
+    "value": 1
+   },
+   "minecraft:damage": {
+    "value": 4
+   },
+   "minecraft:durability": {
+    "max_durability": 120
+   },
+   "minecraft:can_destroy_in_creative": {
+    "value": false
+   },
+   "minecraft:enchantable": {
+    "slot": "sword",
+    "value": 10
+   },
+   "minecraft:glint": {
+    "value": true
+   }
+  }
+ }
+}

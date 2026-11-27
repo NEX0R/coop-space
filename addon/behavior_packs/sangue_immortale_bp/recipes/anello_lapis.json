@@ -1,0 +1,33 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shaped": {
+  "description": {
+   "identifier": "vamp:r_anello_lapis"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "pattern": [
+   " L ",
+   "G G",
+   " G "
+  ],
+  "key": {
+   "L": {
+    "item": "minecraft:lapis_lazuli"
+   },
+   "G": {
+    "item": "minecraft:gold_ingot"
+   }
+  },
+  "unlock": [
+   {
+    "item": "minecraft:lapis_lazuli"
+   }
+  ],
+  "result": {
+   "item": "vamp:anello_lapis",
+   "count": 1
+  }
+ }
+}

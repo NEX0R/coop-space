@@ -1,0 +1,29 @@
+{
+ "format_version": "1.10.0",
+ "minecraft:client_entity": {
+  "description": {
+   "identifier": "vamp:pipistrello",
+   "materials": {
+    "default": "bat_v2"
+   },
+   "textures": {
+    "default": "textures/entity/vamp/pipistrello"
+   },
+   "geometry": {
+    "default": "geometry.bat_v2"
+   },
+   "animations": {
+    "flying": "animation.bat.flying"
+   },
+   "scripts": {
+    "scale": "2.0",
+    "animate": [
+     "flying"
+    ]
+   },
+   "render_controllers": [
+    "controller.render.bat"
+   ]
+  }
+ }
+}

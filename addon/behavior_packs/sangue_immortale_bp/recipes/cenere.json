@@ -1,0 +1,13 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_furnace": {
+  "description": {
+   "identifier": "vamp:r_cenere"
+  },
+  "tags": [
+   "furnace"
+  ],
+  "input": "vamp:quercia_bianca",
+  "output": "vamp:cenere"
+ }
+}

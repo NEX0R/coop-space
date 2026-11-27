@@ -1,0 +1,64 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:block": {
+  "description": {
+   "identifier": "vamp:ghianda_pianta",
+   "menu_category": {
+    "category": "nature"
+   }
+  },
+  "components": {
+   "minecraft:display_name": "tile.vamp:ghianda_pianta.name",
+   "minecraft:geometry": "geometry.vamp.croce",
+   "minecraft:material_instances": {
+    "*": {
+     "texture": "vamp_ghianda_pianta",
+     "render_method": "alpha_test",
+     "ambient_occlusion": false,
+     "face_dimming": false
+    }
+   },
+   "minecraft:collision_box": false,
+   "minecraft:selection_box": {
+    "origin": [
+     -5,
+     0,
+     -5
+    ],
+    "size": [
+     10,
+     12,
+     10
+    ]
+   },
+   "minecraft:light_dampening": 0,
+   "minecraft:destructible_by_mining": {
+    "seconds_to_destroy": 0
+   },
+   "minecraft:destructible_by_explosion": {
+    "explosion_resistance": 0
+   },
+   "minecraft:loot": "loot_tables/vamp/blocco_ghianda_pianta.json",
+   "minecraft:placement_filter": {
+    "conditions": [
+     {
+      "allowed_faces": [
+       "up"
+      ],
+      "block_filter": [
+       "minecraft:grass_block",
+       "minecraft:dirt",
+       "minecraft:podzol",
+       "minecraft:coarse_dirt",
+       "minecraft:moss_block",
+       "minecraft:farmland",
+       "minecraft:dirt_with_roots",
+       "minecraft:mycelium"
+      ]
+     }
+    ]
+   },
+   "minecraft:map_color": "#d8d4c4"
+  }
+ }
+}

@@ -1,0 +1,73 @@
+{
+ "format_version": "1.21.0",
+ "minecraft:entity": {
+  "description": {
+   "identifier": "vamp:bara_letto",
+   "is_spawnable": false,
+   "is_summonable": true
+  },
+  "components": {
+   "minecraft:type_family": {
+    "family": [
+     "vamp_bara_letto",
+     "inanimate"
+    ]
+   },
+   "minecraft:collision_box": {
+    "width": 1.0,
+    "height": 0.6
+   },
+   "minecraft:health": {
+    "value": 100,
+    "max": 100
+   },
+   "minecraft:physics": {},
+   "minecraft:pushable": {
+    "is_pushable": false,
+    "is_pushable_by_piston": false
+   },
+   "minecraft:knockback_resistance": {
+    "value": 1.0
+   },
+   "minecraft:persistent": {},
+   "minecraft:damage_sensor": {
+    "triggers": [
+     {
+      "on_damage": {
+       "filters": {
+        "test": "is_family",
+        "subject": "other",
+        "value": "player"
+       },
+       "event": "vamp:raccolta"
+      },
+      "deals_damage": "no"
+     },
+     {
+      "cause": "all",
+      "deals_damage": "no"
+     }
+    ]
+   },
+   "minecraft:rideable": {
+    "seat_count": 1,
+    "family_types": [
+     "player"
+    ],
+    "interact_text": "action.interact.vamp_dormi",
+    "pull_in_entities": false,
+    "seats": {
+     "position": [
+      0,
+      0.15,
+      0
+     ],
+     "lock_rider_rotation": 0
+    }
+   }
+  },
+  "events": {
+   "vamp:raccolta": {}
+  }
+ }
+}

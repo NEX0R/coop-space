@@ -1,0 +1,42 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shaped": {
+  "description": {
+   "identifier": "vamp:r_guscio_bomba"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "pattern": [
+   " E ",
+   "GDG",
+   "LPL"
+  ],
+  "key": {
+   "E": {
+    "item": "minecraft:emerald"
+   },
+   "G": {
+    "item": "minecraft:gold_ingot"
+   },
+   "D": {
+    "item": "minecraft:diamond"
+   },
+   "L": {
+    "item": "minecraft:glowstone_dust"
+   },
+   "P": {
+    "item": "minecraft:gunpowder"
+   }
+  },
+  "unlock": [
+   {
+    "item": "minecraft:emerald"
+   }
+  ],
+  "result": {
+   "item": "vamp:guscio_bomba",
+   "count": 1
+  }
+ }
+}

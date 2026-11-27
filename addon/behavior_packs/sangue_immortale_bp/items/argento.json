@@ -1,0 +1,20 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:argento",
+   "menu_category": {
+    "category": "items"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_argento",
+   "minecraft:display_name": {
+    "value": "item.vamp:argento.name"
+   },
+   "minecraft:max_stack_size": {
+    "value": 16
+   }
+  }
+ }
+}

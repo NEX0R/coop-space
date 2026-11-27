@@ -1,0 +1,31 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shapeless": {
+  "description": {
+   "identifier": "vamp:r_tabaccata"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "ingredients": [
+   {
+    "item": "minecraft:paper"
+   },
+   {
+    "item": "vamp:verbena"
+   },
+   {
+    "item": "vamp:verbena"
+   }
+  ],
+  "unlock": [
+   {
+    "item": "minecraft:paper"
+   }
+  ],
+  "result": {
+   "item": "vamp:tabaccata",
+   "count": 2
+  }
+ }
+}

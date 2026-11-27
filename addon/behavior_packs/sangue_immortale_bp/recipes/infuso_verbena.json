@@ -1,0 +1,31 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shapeless": {
+  "description": {
+   "identifier": "vamp:r_infuso_verbena"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "ingredients": [
+   {
+    "item": "minecraft:glass_bottle"
+   },
+   {
+    "item": "vamp:verbena"
+   },
+   {
+    "item": "vamp:verbena"
+   }
+  ],
+  "unlock": [
+   {
+    "item": "minecraft:glass_bottle"
+   }
+  ],
+  "result": {
+   "item": "vamp:infuso_verbena",
+   "count": 1
+  }
+ }
+}

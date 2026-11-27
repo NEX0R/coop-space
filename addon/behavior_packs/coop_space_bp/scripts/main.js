@@ -7,6 +7,8 @@ import "./prove.js";
 import "./bacchette.js";
 // Scavo multiplo per picconi, asce e pale.
 import "./scavo.js";
+// Il quartiere Coop Space del mondo tutorial (e /scriptevent coop:tutorial).
+import "./tutorial.js";
 
 // npm run package sostituisce questo segnaposto con la versione del pacchetto (es. "0.320.1024").
 const VERSIONE = "__VERSIONE_COOP__";

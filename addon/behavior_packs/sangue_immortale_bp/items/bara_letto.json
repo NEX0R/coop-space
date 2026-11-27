@@ -1,0 +1,23 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:bara_letto",
+   "menu_category": {
+    "category": "items"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_bara_letto",
+   "minecraft:display_name": {
+    "value": "item.vamp:bara_letto.name"
+   },
+   "minecraft:max_stack_size": {
+    "value": 1
+   },
+   "minecraft:entity_placer": {
+    "entity": "vamp:bara_letto"
+   }
+  }
+ }
+}

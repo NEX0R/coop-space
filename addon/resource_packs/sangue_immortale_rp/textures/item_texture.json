@@ -1,0 +1,174 @@
+{
+ "resource_pack_name": "vamp",
+ "texture_name": "atlas.items",
+ "texture_data": {
+  "vamp_paletto": {
+   "textures": "textures/items/vamp/paletto"
+  },
+  "vamp_paletto_quercia": {
+   "textures": "textures/items/vamp/paletto_quercia"
+  },
+  "vamp_paletto_argento": {
+   "textures": "textures/items/vamp/paletto_argento"
+  },
+  "vamp_paletto_argento_quercia": {
+   "textures": "textures/items/vamp/paletto_argento_quercia"
+  },
+  "vamp_lega_argento": {
+   "textures": "textures/items/vamp/lega_argento"
+  },
+  "vamp_argento": {
+   "textures": "textures/items/vamp/argento"
+  },
+  "vamp_pugnale": {
+   "textures": "textures/items/vamp/pugnale"
+  },
+  "vamp_pugnale_cenere": {
+   "textures": "textures/items/vamp/pugnale_cenere"
+  },
+  "vamp_cenere": {
+   "textures": "textures/items/vamp/cenere"
+  },
+  "vamp_verbena": {
+   "textures": "textures/items/vamp/verbena"
+  },
+  "vamp_infuso_verbena": {
+   "textures": "textures/items/vamp/infuso_verbena"
+  },
+  "vamp_tabaccata": {
+   "textures": "textures/items/vamp/tabaccata"
+  },
+  "vamp_granata_verbena": {
+   "textures": "textures/items/vamp/granata_verbena"
+  },
+  "vamp_sacca_vuota": {
+   "textures": "textures/items/vamp/sacca_vuota"
+  },
+  "vamp_sacca_sangue": {
+   "textures": "textures/items/vamp/sacca_sangue"
+  },
+  "vamp_fiala_vampiro": {
+   "textures": "textures/items/vamp/fiala_vampiro"
+  },
+  "vamp_anello_lapis": {
+   "textures": "textures/items/vamp/anello_lapis"
+  },
+  "vamp_anello_diurno": {
+   "textures": "textures/items/vamp/anello_diurno"
+  },
+  "vamp_vino": {
+   "textures": "textures/items/vamp/vino"
+  },
+  "vamp_vino_rito": {
+   "textures": "textures/items/vamp/vino_rito"
+  },
+  "vamp_vino_immortalita": {
+   "textures": "textures/items/vamp/vino_immortalita"
+  },
+  "vamp_cura": {
+   "textures": "textures/items/vamp/cura"
+  },
+  "vamp_ghianda": {
+   "textures": "textures/items/vamp/ghianda"
+  },
+  "vamp_guida": {
+   "textures": "textures/items/vamp/guida"
+  },
+  "vamp_istinto": {
+   "textures": "textures/items/vamp/istinto"
+  },
+  "vamp_potere_morso": {
+   "textures": "textures/items/vamp/potere_morso"
+  },
+  "vamp_potere_soggiogo": {
+   "textures": "textures/items/vamp/potere_soggiogo"
+  },
+  "vamp_potere_seguito": {
+   "textures": "textures/items/vamp/potere_seguito"
+  },
+  "vamp_potere_sensi": {
+   "textures": "textures/items/vamp/potere_sensi"
+  },
+  "vamp_potere_pipistrello": {
+   "textures": "textures/items/vamp/potere_pipistrello"
+  },
+  "vamp_potere_sangue": {
+   "textures": "textures/items/vamp/potere_sangue"
+  },
+  "vamp_potere_umanita": {
+   "textures": "textures/items/vamp/potere_umanita"
+  },
+  "vamp_potere_allucinazioni": {
+   "textures": "textures/items/vamp/potere_allucinazioni"
+  },
+  "vamp_potere_velo": {
+   "textures": "textures/items/vamp/potere_velo"
+  },
+  "vamp_potere_collo": {
+   "textures": "textures/items/vamp/potere_collo"
+  },
+  "vamp_potere_cuore": {
+   "textures": "textures/items/vamp/potere_cuore"
+  },
+  "vamp_potere_sisma": {
+   "textures": "textures/items/vamp/potere_sisma"
+  },
+  "vamp_potere_sfondamento": {
+   "textures": "textures/items/vamp/potere_sfondamento"
+  },
+  "vamp_diario": {
+   "textures": "textures/items/vamp/diario"
+  },
+  "vamp_caccia_fiuto": {
+   "textures": "textures/items/vamp/caccia_fiuto"
+  },
+  "vamp_caccia_colpo": {
+   "textures": "textures/items/vamp/caccia_colpo"
+  },
+  "vamp_caccia_nube": {
+   "textures": "textures/items/vamp/caccia_nube"
+  },
+  "vamp_caccia_trappola": {
+   "textures": "textures/items/vamp/caccia_trappola"
+  },
+  "vamp_caccia_rete": {
+   "textures": "textures/items/vamp/caccia_rete"
+  },
+  "vamp_caccia_raffica": {
+   "textures": "textures/items/vamp/caccia_raffica"
+  },
+  "vamp_caccia_schivata": {
+   "textures": "textures/items/vamp/caccia_schivata"
+  },
+  "vamp_caccia_volonta": {
+   "textures": "textures/items/vamp/caccia_volonta"
+  },
+  "vamp_caccia_richiamo": {
+   "textures": "textures/items/vamp/caccia_richiamo"
+  },
+  "vamp_caccia_fuoco": {
+   "textures": "textures/items/vamp/caccia_fuoco"
+  },
+  "vamp_guscio_bomba": {
+   "textures": "textures/items/vamp/guscio_bomba"
+  },
+  "vamp_santa_bomba": {
+   "textures": "textures/items/vamp/santa_bomba"
+  },
+  "vamp_medaglione": {
+   "textures": "textures/items/vamp/medaglione"
+  },
+  "vamp_bara_letto": {
+   "textures": "textures/items/vamp/bara_letto"
+  },
+  "vamp_sangue_cacciatore": {
+   "textures": "textures/items/vamp/sangue_cacciatore"
+  },
+  "vamp_anello_ametista": {
+   "textures": "textures/items/vamp/anello_ametista"
+  },
+  "vamp_anello_varco": {
+   "textures": "textures/items/vamp/anello_varco"
+  }
+ }
+}

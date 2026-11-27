@@ -1,0 +1,20 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:ghianda",
+   "menu_category": {
+    "category": "nature"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_ghianda",
+   "minecraft:display_name": {
+    "value": "item.vamp:ghianda.name"
+   },
+   "minecraft:block_placer": {
+    "block": "vamp:ghianda_pianta"
+   }
+  }
+ }
+}

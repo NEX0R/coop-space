@@ -1,0 +1,70 @@
+{
+ "format_version": "1.10.0",
+ "render_controllers": {
+  "controller.render.vamp.vampiro": {
+   "arrays": {
+    "textures": {
+     "Array.pelli": [
+      "Texture.vampiro_0",
+      "Texture.vampiro_0_volto",
+      "Texture.vampiro_1",
+      "Texture.vampiro_1_volto",
+      "Texture.vampiro_2",
+      "Texture.vampiro_2_volto"
+     ]
+    }
+   },
+   "geometry": "Geometry.default",
+   "materials": [
+    {
+     "*": "Material.default"
+    }
+   ],
+   "textures": [
+    "Array.pelli[q.property('vamp:variante') * 2 + ((q.has_target && !q.property('vamp:a_terra')) ? 1 : 0)]"
+   ]
+  },
+  "controller.render.vamp.semplice": {
+   "geometry": "Geometry.default",
+   "materials": [
+    {
+     "*": "Material.default"
+    }
+   ],
+   "textures": [
+    "Texture.default"
+   ]
+  },
+  "controller.render.vamp.originale": {
+   "arrays": {
+    "textures": {
+     "Array.pelli": [
+      "Texture.default",
+      "Texture.volto",
+      "Texture.essiccato"
+     ]
+    }
+   },
+   "geometry": "Geometry.default",
+   "materials": [
+    {
+     "*": "Material.default"
+    }
+   ],
+   "textures": [
+    "Array.pelli[q.property('vamp:essiccato') ? 2 : (q.has_target ? 1 : 0)]"
+   ]
+  },
+  "controller.render.vamp.bara": {
+   "geometry": "Geometry.default",
+   "materials": [
+    {
+     "*": "Material.default"
+    }
+   ],
+   "textures": [
+    "Texture.default"
+   ]
+  }
+ }
+}

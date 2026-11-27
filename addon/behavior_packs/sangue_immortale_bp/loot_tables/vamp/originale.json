@@ -1,0 +1,82 @@
+{
+ "pools": [
+  {
+   "rolls": 1,
+   "conditions": [
+    {
+     "condition": "random_chance_with_looting",
+     "chance": 1.0,
+     "looting_multiplier": 0.05
+    }
+   ],
+   "entries": [
+    {
+     "type": "item",
+     "name": "vamp:cura",
+     "weight": 1,
+     "functions": [
+      {
+       "function": "set_count",
+       "count": {
+        "min": 1,
+        "max": 1
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "rolls": 1,
+   "conditions": [
+    {
+     "condition": "random_chance_with_looting",
+     "chance": 1.0,
+     "looting_multiplier": 0.05
+    }
+   ],
+   "entries": [
+    {
+     "type": "item",
+     "name": "vamp:fiala_vampiro",
+     "weight": 1,
+     "functions": [
+      {
+       "function": "set_count",
+       "count": {
+        "min": 2,
+        "max": 3
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "rolls": 1,
+   "conditions": [
+    {
+     "condition": "random_chance_with_looting",
+     "chance": 1.0,
+     "looting_multiplier": 0.05
+    }
+   ],
+   "entries": [
+    {
+     "type": "item",
+     "name": "vamp:anello_diurno",
+     "weight": 1,
+     "functions": [
+      {
+       "function": "set_count",
+       "count": {
+        "min": 1,
+        "max": 1
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

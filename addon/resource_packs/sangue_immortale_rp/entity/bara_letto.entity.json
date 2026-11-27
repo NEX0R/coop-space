@@ -1,0 +1,28 @@
+{
+ "format_version": "1.10.0",
+ "minecraft:client_entity": {
+  "description": {
+   "identifier": "vamp:bara_letto",
+   "materials": {
+    "default": "entity_alphatest"
+   },
+   "textures": {
+    "default": "textures/entity/vamp/bara"
+   },
+   "geometry": {
+    "default": "geometry.vamp.bara"
+   },
+   "render_controllers": [
+    "controller.render.vamp.bara"
+   ],
+   "animations": {
+    "apri": "animation.vamp.bara_apri"
+   },
+   "scripts": {
+    "animate": [
+     "apri"
+    ]
+   }
+  }
+ }
+}

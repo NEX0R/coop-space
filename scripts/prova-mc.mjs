@@ -5,12 +5,13 @@
 //   opzioni: --mondo-nuovo        rifà da zero il mondo "Coop Space - laboratorio" (solo se serve davvero)
 //            --pulisci            cancella i mondi di prova "Coop Space ..." vecchi (non quelli tuoi)
 //            --non-avviare        installa senza aprire Minecraft
+//            --chiudi             chiude Minecraft se è aperto (solo se la persona è già uscita dal mondo)
 //
-// Cosa fa: chiude Minecraft se è aperto, sostituisce i pack "Coop Space" installati con quelli
+// Cosa fa: si ferma se Minecraft è aperto (mai chiuderlo con la persona dentro un mondo), salva una copia del laboratorio, sostituisce i pack "Coop Space" installati con quelli
 // nuovi (riconosciuti dall'UUID del manifest, non dal nome), aggiorna l'add-on nel mondo fisso
 // "Coop Space - laboratorio" (lo crea la prima volta), lo mette in cima alla lista e avvia il gioco. Codici: 0 = pronto, 3 = non è stato possibile prepararlo.
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { leggiZip } from "./zip.mjs";
@@ -85,13 +86,14 @@ if (pr) {
 // ---------- 2. chiudere Minecraft (i pack nuovi si leggono solo all'avvio) ----------
 const aperto = () => spawnSync("tasklist", ["/FI", `IMAGENAME eq ${PROCESSO}`, "/NH"], { encoding: "utf8" }).stdout.includes(PROCESSO);
 const aspetta = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+// Mai chiuderlo a forza: il 27/11 la persona era dentro il laboratorio e le zone non ancora salvate
+// sono andate perse. Se è aperto ci si ferma; con --chiudi lo si chiude solo se l'ha chiesto la persona.
 if (aperto()) {
-  console.log("Minecraft è aperto: lo chiudo (il gioco salva i mondi da solo).");
+  if (!args.includes("--chiudi")) ferma("Minecraft è aperto: esci dal mondo (Salva ed esci), chiudi il gioco e rilancia. Non lo chiudo io: chiudendolo a forza si perdono le zone non ancora salvate.");
+  console.log("Minecraft è aperto: lo chiudo (richiesto con --chiudi).");
   spawnSync("taskkill", ["/IM", PROCESSO]);
   for (let i = 0; i < 20 && aperto(); i++) aspetta(500);
-  if (aperto()) spawnSync("taskkill", ["/F", "/IM", PROCESSO]);
-  for (let i = 0; i < 10 && aperto(); i++) aspetta(500);
-  if (aperto()) ferma("Non riesco a chiudere Minecraft: chiudilo tu e rilancia.");
+  if (aperto()) ferma("Minecraft non si è chiuso: esci dal mondo, chiudilo tu e rilancia.");
 }
 
 // Scrive le voci di uno zip (già lette) in una cartella, togliendo il prefisso indicato.
@@ -122,7 +124,9 @@ for (const p of pack) {
       console.log(`Tolto il pack vecchio ${p.tipo}/${d}`);
     }
   }
-  const cartella = p.tipo === "resource_packs" ? "CoopSpaceR" : "CoopSpaceB";
+  // Una cartella per pack (Coop Space e Sangue Immortale, logica e grafica): con un nome fisso il
+  // secondo pack sovrascriveva il primo (successo il 27/11 con la PR #48).
+  const cartella = p.prefisso.replace(/\/$/, "");
   estrai(vociAddon, p.prefisso, join(base, cartella));
   console.log(`Installato "${p.nome}" in ${p.tipo}/${cartella}`);
 }
@@ -156,6 +160,15 @@ function sistemaLevelDat(buf, nome) {
 }
 const lab = join(mondi, LABORATORIO);
 const nuovoLab = args.includes("--mondo-nuovo") || !existsSync(join(lab, "level.dat"));
+// Copia di riserva del laboratorio prima di toccarlo (le ultime 3, in out/prova-mc/copie del laboratorio).
+if (existsSync(join(lab, "level.dat"))) {
+  const copie = join(radice, "out", "prova-mc", "copie del laboratorio");
+  mkdirSync(copie, { recursive: true });
+  const ora = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "");
+  cpSync(lab, join(copie, ora), { recursive: true });
+  for (const vecchia of readdirSync(copie).sort().slice(0, -3)) rmSync(join(copie, vecchia), { recursive: true, force: true });
+  console.log(`Copia di riserva del laboratorio: out/prova-mc/copie del laboratorio/${ora}`);
+}
 if (nuovoLab) {
   rmSync(lab, { recursive: true, force: true });
   for (const v of vociMondo) {

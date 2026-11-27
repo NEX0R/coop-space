@@ -1,0 +1,32 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:santa_bomba",
+   "menu_category": {
+    "category": "equipment"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_santa_bomba",
+   "minecraft:display_name": {
+    "value": "item.vamp:santa_bomba.name"
+   },
+   "minecraft:max_stack_size": {
+    "value": 4
+   },
+   "minecraft:glint": {
+    "value": true
+   },
+   "minecraft:throwable": {
+    "do_swing_animation": true,
+    "launch_power_scale": 1,
+    "max_launch_power": 1
+   },
+   "minecraft:projectile": {
+    "projectile_entity": "vamp:santa_bomba",
+    "minimum_critical_power": 1
+   }
+  }
+ }
+}

@@ -87,10 +87,19 @@ function leggiCompiti() {
 }
 
 // ---------- contenuti dell'add-on ----------
+// Ogni behavior pack con il suo resource pack (quello da cui dipende): Coop Space e Sangue Immortale.
 function leggiContenuti() {
-  const bp = sottocartelle(path.join(addon, "behavior_packs"))[0];
-  const rp = sottocartelle(path.join(addon, "resource_packs"))[0];
-  if (!bp || !rp) return { contenuti: [], versione: "" };
+  const rps = sottocartelle(path.join(addon, "resource_packs"));
+  const coppie = sottocartelle(path.join(addon, "behavior_packs")).map((bp) => {
+    const dipende = new Set((leggiJson(path.join(bp, "manifest.json"))?.dependencies || []).map((d) => d.uuid));
+    return { bp, rp: rps.find((rp) => dipende.has(leggiJson(path.join(rp, "manifest.json"))?.header?.uuid)) };
+  }).filter((c) => c.rp);
+  if (!coppie.length) return { contenuti: [], versione: "", rps: [] };
+  const risultati = coppie.map(({ bp, rp }) => leggiCoppia(bp, rp));
+  return { contenuti: risultati.flatMap((r) => r.contenuti), versione: risultati[0].versione, rps: coppie.map((c) => c.rp) };
+}
+
+function leggiCoppia(bp, rp) {
   const rpNome = path.basename(rp);
   const it = leggiLang(path.join(rp, "texts", "it_IT.lang"));
   const en = leggiLang(path.join(rp, "texts", "en_US.lang"));
@@ -201,7 +210,7 @@ function leggiContenuti() {
     });
   }
 
-  return { contenuti, versione: (manifest?.header?.version || []).join("."), rpNome, rp };
+  return { contenuti, versione: (manifest?.header?.version || []).join(".") };
 }
 
 // ---------- costruzione ----------
@@ -209,8 +218,8 @@ function costruisci() {
   fs.rmSync(out, { recursive: true, force: true });
   fs.mkdirSync(out, { recursive: true });
   fs.cpSync(path.join(root, "sito"), out, { recursive: true });
-  const { contenuti, versione, rpNome, rp } = leggiContenuti();
-  if (rp) fs.cpSync(rp, path.join(out, "rp", rpNome), { recursive: true });
+  const { contenuti, versione, rps } = leggiContenuti();
+  for (const rp of rps) fs.cpSync(rp, path.join(out, "rp", path.basename(rp)), { recursive: true });
   const dati = {
     repo: REPO,
     generato: new Date().toISOString(),

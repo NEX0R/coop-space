@@ -1,0 +1,902 @@
+{
+ "format_version": "1.21.0",
+ "minecraft:entity": {
+  "description": {
+   "identifier": "vamp:vampiro",
+   "is_spawnable": true,
+   "is_summonable": true,
+   "properties": {
+    "vamp:variante": {
+     "type": "int",
+     "range": [
+      0,
+      2
+     ],
+     "default": 0,
+     "client_sync": true
+    },
+    "vamp:a_terra": {
+     "type": "bool",
+     "default": false,
+     "client_sync": true
+    },
+    "vamp:alleato": {
+     "type": "bool",
+     "default": false,
+     "client_sync": true
+    },
+    "vamp:anello": {
+     "type": "bool",
+     "default": false,
+     "client_sync": true
+    },
+    "vamp:eta": {
+     "type": "int",
+     "range": [
+      1,
+      5
+     ],
+     "default": 1,
+     "client_sync": true
+    }
+   }
+  },
+  "component_groups": {
+   "attivo": {
+    "minecraft:movement": {
+     "value": 0.32
+    },
+    "minecraft:behavior.float": {
+     "priority": 0
+    },
+    "minecraft:behavior.melee_attack": {
+     "priority": 3,
+     "speed_multiplier": 1.2,
+     "track_target": true
+    },
+    "minecraft:behavior.hurt_by_target": {
+     "priority": 1
+    },
+    "minecraft:behavior.random_stroll": {
+     "priority": 7,
+     "speed_multiplier": 0.8
+    },
+    "minecraft:behavior.look_at_player": {
+     "priority": 8,
+     "look_distance": 8
+    },
+    "minecraft:behavior.random_look_around": {
+     "priority": 9
+    },
+    "minecraft:damage_sensor": {
+     "triggers": [
+      {
+       "on_damage": {
+        "filters": {
+         "any_of": [
+          {
+           "test": "has_equipment",
+           "subject": "other",
+           "domain": "hand",
+           "value": "vamp:paletto"
+          },
+          {
+           "test": "has_equipment",
+           "subject": "other",
+           "domain": "hand",
+           "value": "vamp:paletto_quercia"
+          },
+          {
+           "test": "has_equipment",
+           "subject": "other",
+           "domain": "hand",
+           "value": "vamp:paletto_argento"
+          },
+          {
+           "test": "has_equipment",
+           "subject": "other",
+           "domain": "hand",
+           "value": "vamp:paletto_argento_quercia"
+          }
+         ]
+        }
+       },
+       "deals_damage": "yes",
+       "damage_multiplier": 3
+      },
+      {
+       "cause": "fire",
+       "deals_damage": "yes",
+       "damage_multiplier": 2
+      },
+      {
+       "cause": "fire_tick",
+       "deals_damage": "yes",
+       "damage_multiplier": 2
+      },
+      {
+       "cause": "lava",
+       "deals_damage": "yes",
+       "damage_multiplier": 2
+      },
+      {
+       "cause": "fall",
+       "deals_damage": "no"
+      },
+      {
+       "on_damage": {
+        "filters": {
+         "test": "actor_health",
+         "subject": "self",
+         "operator": "<=",
+         "value": 10
+        },
+        "event": "vamp:neutralizza"
+       },
+       "deals_damage": "no"
+      }
+     ]
+    }
+   },
+   "a_terra": {
+    "minecraft:movement": {
+     "value": 0
+    },
+    "minecraft:damage_sensor": {
+     "triggers": [
+      {
+       "on_damage": {
+        "filters": {
+         "any_of": [
+          {
+           "test": "has_equipment",
+           "subject": "other",
+           "domain": "hand",
+           "value": "vamp:paletto"
+          },
+          {
+           "test": "has_equipment",
+           "subject": "other",
+           "domain": "hand",
+           "value": "vamp:paletto_quercia"
+          },
+          {
+           "test": "has_equipment",
+           "subject": "other",
+           "domain": "hand",
+           "value": "vamp:paletto_argento"
+          },
+          {
+           "test": "has_equipment",
+           "subject": "other",
+           "domain": "hand",
+           "value": "vamp:paletto_argento_quercia"
+          }
+         ]
+        }
+       },
+       "deals_damage": "yes",
+       "damage_multiplier": 10
+      },
+      {
+       "cause": "fire",
+       "deals_damage": "yes",
+       "damage_multiplier": 2
+      },
+      {
+       "cause": "fire_tick",
+       "deals_damage": "yes",
+       "damage_multiplier": 2
+      },
+      {
+       "cause": "lava",
+       "deals_damage": "yes"
+      },
+      {
+       "cause": "all",
+       "deals_damage": "no"
+      }
+     ]
+    },
+    "minecraft:timer": {
+     "time": 30,
+     "looping": false,
+     "time_down_event": {
+      "event": "vamp:rialzati",
+      "target": "self"
+     }
+    }
+   },
+   "morente": {
+    "minecraft:movement": {
+     "value": 0
+    },
+    "minecraft:damage_sensor": {
+     "triggers": [
+      {
+       "cause": "all",
+       "deals_damage": "yes"
+      }
+     ]
+    }
+   },
+   "senza_anello": {
+    "minecraft:burns_in_daylight": {},
+    "minecraft:behavior.flee_sun": {
+     "priority": 2,
+     "speed_multiplier": 1.2
+    }
+   },
+   "selvatico": {
+    "minecraft:behavior.nearest_attackable_target": {
+     "priority": 2,
+     "must_see": true,
+     "reselect_targets": true,
+     "within_radius": 24,
+     "entity_types": [
+      {
+       "filters": {
+        "any_of": [
+         {
+          "all_of": [
+           {
+            "test": "is_family",
+            "subject": "other",
+            "value": "player"
+           },
+           {
+            "test": "has_tag",
+            "subject": "other",
+            "operator": "!=",
+            "value": "vamp_vampiro"
+           }
+          ]
+         },
+         {
+          "test": "is_family",
+          "subject": "other",
+          "value": "villager"
+         },
+         {
+          "test": "is_family",
+          "subject": "other",
+          "value": "wandering_trader"
+         },
+         {
+          "test": "is_family",
+          "subject": "other",
+          "value": "vamp_cacciatore"
+         }
+        ]
+       },
+       "max_dist": 24
+      }
+     ]
+    },
+    "minecraft:despawn": {
+     "despawn_from_distance": {
+      "min_distance": 48,
+      "max_distance": 96
+     }
+    }
+   },
+   "alleato": {
+    "minecraft:is_tamed": {},
+    "minecraft:persistent": {},
+    "minecraft:behavior.owner_hurt_by_target": {
+     "priority": 1
+    },
+    "minecraft:type_family": {
+     "family": [
+      "vamp_vampiro",
+      "vamp_alleato",
+      "vamp_vampiro",
+      "mob"
+     ]
+    },
+    "minecraft:interact": {
+     "interactions": [
+      {
+       "on_interact": {
+        "filters": {
+         "test": "is_family",
+         "subject": "other",
+         "value": "player"
+        },
+        "event": "vamp:ordini",
+        "target": "self"
+       },
+       "interact_text": "action.interact.vamp_ordini"
+      }
+     ]
+    }
+   },
+   "segue": {
+    "minecraft:behavior.follow_owner": {
+     "priority": 4,
+     "speed_multiplier": 1.2,
+     "start_distance": 10,
+     "stop_distance": 3
+    }
+   },
+   "aggressivo": {
+    "minecraft:behavior.owner_hurt_target": {
+     "priority": 2
+    },
+    "minecraft:behavior.nearest_attackable_target": {
+     "priority": 3,
+     "must_see": true,
+     "reselect_targets": true,
+     "within_radius": 16,
+     "entity_types": [
+      {
+       "filters": {
+        "any_of": [
+         {
+          "all_of": [
+           {
+            "test": "is_family",
+            "subject": "other",
+            "value": "monster"
+           },
+           {
+            "test": "is_family",
+            "subject": "other",
+            "value": "creeper",
+            "operator": "!="
+           },
+           {
+            "test": "is_family",
+            "subject": "other",
+            "value": "vamp_alleato",
+            "operator": "!="
+           }
+          ]
+         },
+         {
+          "test": "is_family",
+          "subject": "other",
+          "value": "vamp_cacciatore"
+         }
+        ]
+       },
+       "max_dist": 16
+      }
+     ]
+    }
+   },
+   "residente": {
+    "minecraft:behavior.nearest_attackable_target": {
+     "priority": 2,
+     "must_see": true,
+     "reselect_targets": true,
+     "within_radius": 24,
+     "entity_types": [
+      {
+       "filters": {
+        "any_of": [
+         {
+          "all_of": [
+           {
+            "test": "is_family",
+            "subject": "other",
+            "value": "player"
+           },
+           {
+            "test": "has_tag",
+            "subject": "other",
+            "operator": "!=",
+            "value": "vamp_vampiro"
+           }
+          ]
+         },
+         {
+          "test": "is_family",
+          "subject": "other",
+          "value": "villager"
+         },
+         {
+          "test": "is_family",
+          "subject": "other",
+          "value": "wandering_trader"
+         },
+         {
+          "test": "is_family",
+          "subject": "other",
+          "value": "vamp_cacciatore"
+         }
+        ]
+       },
+       "max_dist": 24
+      }
+     ]
+    },
+    "minecraft:persistent": {},
+    "minecraft:home": {
+     "restriction_radius": 16
+    },
+    "minecraft:behavior.move_towards_home_restriction": {
+     "priority": 6,
+     "speed_multiplier": 1
+    }
+   },
+   "seduto": {
+    "minecraft:behavior.stay_while_sitting": {
+     "priority": 0
+    }
+   },
+   "eta_1": {
+    "minecraft:health": {
+     "value": 30,
+     "max": 30
+    },
+    "minecraft:attack": {
+     "damage": 5
+    },
+    "minecraft:scale": {
+     "value": 1
+    },
+    "minecraft:knockback_resistance": {
+     "value": 0
+    }
+   },
+   "eta_2": {
+    "minecraft:health": {
+     "value": 40,
+     "max": 40
+    },
+    "minecraft:attack": {
+     "damage": 6
+    },
+    "minecraft:scale": {
+     "value": 1
+    },
+    "minecraft:knockback_resistance": {
+     "value": 0.1
+    }
+   },
+   "eta_3": {
+    "minecraft:health": {
+     "value": 55,
+     "max": 55
+    },
+    "minecraft:attack": {
+     "damage": 8
+    },
+    "minecraft:scale": {
+     "value": 1.04
+    },
+    "minecraft:knockback_resistance": {
+     "value": 0.2
+    }
+   },
+   "eta_4": {
+    "minecraft:health": {
+     "value": 75,
+     "max": 75
+    },
+    "minecraft:attack": {
+     "damage": 10
+    },
+    "minecraft:scale": {
+     "value": 1.08
+    },
+    "minecraft:knockback_resistance": {
+     "value": 0.30000000000000004
+    }
+   },
+   "eta_5": {
+    "minecraft:health": {
+     "value": 100,
+     "max": 100
+    },
+    "minecraft:attack": {
+     "damage": 13
+    },
+    "minecraft:scale": {
+     "value": 1.12
+    },
+    "minecraft:knockback_resistance": {
+     "value": 0.4
+    }
+   }
+  },
+  "components": {
+   "minecraft:type_family": {
+    "family": [
+     "vamp_vampiro",
+     "vamp_vampiro",
+     "monster",
+     "mob"
+    ]
+   },
+   "minecraft:health": {
+    "value": 30,
+    "max": 30
+   },
+   "minecraft:collision_box": {
+    "width": 0.6,
+    "height": 1.9
+   },
+   "minecraft:physics": {},
+   "minecraft:pushable": {
+    "is_pushable": true,
+    "is_pushable_by_piston": true
+   },
+   "minecraft:movement.basic": {},
+   "minecraft:jump.static": {},
+   "minecraft:navigation.walk": {
+    "can_path_over_water": true,
+    "avoid_damage_blocks": true,
+    "can_open_doors": true
+   },
+   "minecraft:can_climb": {},
+   "minecraft:nameable": {},
+   "minecraft:annotation.open_door": {},
+   "minecraft:conditional_bandwidth_optimization": {},
+   "minecraft:experience_reward": {
+    "on_death": "query.last_hit_by_player ? 10 : 0"
+   },
+   "minecraft:attack": {
+    "damage": 5
+   },
+   "minecraft:breathable": {
+    "breathes_air": true,
+    "breathes_water": true,
+    "suffocate_time": -1
+   },
+   "minecraft:loot": {
+    "table": "loot_tables/vamp/vampiro.json"
+   },
+   "minecraft:tameable": {
+    "probability": 0,
+    "tame_items": [
+     "minecraft:barrier"
+    ],
+    "tame_event": {
+     "event": "vamp:diventa_alleato",
+     "target": "self"
+    }
+   },
+   "minecraft:follow_range": {
+    "value": 32,
+    "max": 32
+   }
+  },
+  "events": {
+   "minecraft:entity_spawned": {
+    "sequence": [
+     {
+      "add": {
+       "component_groups": [
+        "attivo",
+        "selvatico"
+       ]
+      },
+      "set_property": {
+       "vamp:variante": "math.random_integer(0, 2)"
+      }
+     },
+     {
+      "randomize": [
+       {
+        "weight": 35,
+        "add": {
+         "component_groups": [
+          "eta_1"
+         ]
+        },
+        "set_property": {
+         "vamp:eta": 1
+        }
+       },
+       {
+        "weight": 25,
+        "add": {
+         "component_groups": [
+          "eta_2"
+         ]
+        },
+        "set_property": {
+         "vamp:eta": 2
+        }
+       },
+       {
+        "weight": 20,
+        "add": {
+         "component_groups": [
+          "eta_3"
+         ]
+        },
+        "set_property": {
+         "vamp:eta": 3
+        }
+       },
+       {
+        "weight": 13,
+        "add": {
+         "component_groups": [
+          "eta_4"
+         ]
+        },
+        "set_property": {
+         "vamp:eta": 4
+        }
+       },
+       {
+        "weight": 7,
+        "add": {
+         "component_groups": [
+          "eta_5"
+         ]
+        },
+        "set_property": {
+         "vamp:eta": 5
+        }
+       }
+      ]
+     },
+     {
+      "randomize": [
+       {
+        "weight": 70,
+        "add": {
+         "component_groups": [
+          "senza_anello"
+         ]
+        }
+       },
+       {
+        "weight": 30,
+        "set_property": {
+         "vamp:anello": true
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "vamp:neutralizza": {
+    "remove": {
+     "component_groups": [
+      "attivo"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "a_terra"
+     ]
+    },
+    "set_property": {
+     "vamp:a_terra": true
+    }
+   },
+   "vamp:rialzati": {
+    "remove": {
+     "component_groups": [
+      "a_terra"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "attivo"
+     ]
+    },
+    "set_property": {
+     "vamp:a_terra": false
+    }
+   },
+   "vamp:morente": {
+    "remove": {
+     "component_groups": [
+      "attivo",
+      "a_terra"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "morente"
+     ]
+    }
+   },
+   "vamp:residente": {
+    "remove": {
+     "component_groups": [
+      "selvatico"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "residente"
+     ]
+    }
+   },
+   "vamp:diventa_alleato": {
+    "remove": {
+     "component_groups": [
+      "selvatico",
+      "residente"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "alleato",
+      "segue",
+      "aggressivo"
+     ]
+    },
+    "set_property": {
+     "vamp:alleato": true
+    }
+   },
+   "vamp:ordini": {
+    "set_property": {
+     "vamp:alleato": true
+    }
+   },
+   "vamp:ordine_segui": {
+    "add": {
+     "component_groups": [
+      "segue"
+     ]
+    }
+   },
+   "vamp:ordine_fermo": {
+    "remove": {
+     "component_groups": [
+      "segue"
+     ]
+    }
+   },
+   "vamp:ordine_aggressivo": {
+    "add": {
+     "component_groups": [
+      "aggressivo"
+     ]
+    }
+   },
+   "vamp:ordine_neutrale": {
+    "remove": {
+     "component_groups": [
+      "aggressivo"
+     ]
+    }
+   },
+   "vamp:ordine_seduto": {
+    "remove": {
+     "component_groups": [
+      "segue",
+      "aggressivo"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "seduto"
+     ]
+    }
+   },
+   "vamp:ordine_alzati": {
+    "remove": {
+     "component_groups": [
+      "seduto"
+     ]
+    }
+   },
+   "vamp:metti_anello": {
+    "remove": {
+     "component_groups": [
+      "senza_anello"
+     ]
+    },
+    "set_property": {
+     "vamp:anello": true
+    }
+   },
+   "vamp:togli_anello": {
+    "add": {
+     "component_groups": [
+      "senza_anello"
+     ]
+    },
+    "set_property": {
+     "vamp:anello": false
+    }
+   },
+   "vamp:eta_1": {
+    "remove": {
+     "component_groups": [
+      "eta_1",
+      "eta_2",
+      "eta_3",
+      "eta_4",
+      "eta_5"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "eta_1"
+     ]
+    },
+    "set_property": {
+     "vamp:eta": 1
+    }
+   },
+   "vamp:eta_2": {
+    "remove": {
+     "component_groups": [
+      "eta_1",
+      "eta_2",
+      "eta_3",
+      "eta_4",
+      "eta_5"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "eta_2"
+     ]
+    },
+    "set_property": {
+     "vamp:eta": 2
+    }
+   },
+   "vamp:eta_3": {
+    "remove": {
+     "component_groups": [
+      "eta_1",
+      "eta_2",
+      "eta_3",
+      "eta_4",
+      "eta_5"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "eta_3"
+     ]
+    },
+    "set_property": {
+     "vamp:eta": 3
+    }
+   },
+   "vamp:eta_4": {
+    "remove": {
+     "component_groups": [
+      "eta_1",
+      "eta_2",
+      "eta_3",
+      "eta_4",
+      "eta_5"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "eta_4"
+     ]
+    },
+    "set_property": {
+     "vamp:eta": 4
+    }
+   },
+   "vamp:eta_5": {
+    "remove": {
+     "component_groups": [
+      "eta_1",
+      "eta_2",
+      "eta_3",
+      "eta_4",
+      "eta_5"
+     ]
+    },
+    "add": {
+     "component_groups": [
+      "eta_5"
+     ]
+    },
+    "set_property": {
+     "vamp:eta": 5
+    }
+   }
+  }
+ }
+}

@@ -47,6 +47,14 @@
       ]
     },
     {
+      "uuid": "81617e2a-b05e-4d1f-8f6e-86a19ef3081d",
+      "version": [
+        1,
+        5,
+        2
+      ]
+    },
+    {
       "module_name": "@minecraft/server",
       "version": [
         2,

@@ -1,0 +1,56 @@
+{
+ "pools": [
+  {
+   "rolls": 1,
+   "conditions": [
+    {
+     "condition": "random_chance_with_looting",
+     "chance": 0.45,
+     "looting_multiplier": 0.05
+    }
+   ],
+   "entries": [
+    {
+     "type": "item",
+     "name": "vamp:fiala_vampiro",
+     "weight": 1,
+     "functions": [
+      {
+       "function": "set_count",
+       "count": {
+        "min": 1,
+        "max": 2
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "rolls": 1,
+   "conditions": [
+    {
+     "condition": "random_chance_with_looting",
+     "chance": 0.5,
+     "looting_multiplier": 0.05
+    }
+   ],
+   "entries": [
+    {
+     "type": "item",
+     "name": "minecraft:bone",
+     "weight": 1,
+     "functions": [
+      {
+       "function": "set_count",
+       "count": {
+        "min": 1,
+        "max": 2
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

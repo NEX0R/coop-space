@@ -27,6 +27,7 @@ Il repository e il sito sono **pubblici** (servono a GitHub Pages e a scaricare 
 ```
 addon/behavior_packs/coop_space_bp/   logica: blocchi, oggetti, mob, ricette, script (scripts/main.js)
 addon/resource_packs/coop_space_rp/   grafica: texture, modelli, nomi (texts/it_IT.lang, texts/en_US.lang), particelle
+addon/*/sangue_immortale_*/           Sangue Immortale di Jowa (vampiri, nomi vamp:), unito il 27/11: stesso add-on, pack propri
 scripts/verify.mjs        controllo obbligatorio (npm run verify)
 scripts/package.mjs       crea dist/coop-space.mcaddon e il mondo di prova (npm run package)
 scripts/prova-mc.mjs      Minecraft pronto sul PC con il laboratorio (npm run prova-mc)
@@ -71,7 +72,8 @@ Il metro di ogni scelta è il tempo e i token del gruppo e un risultato che funz
 ## Regole tecniche
 
 - **Codice di prova nei mondi veri**: tutto quello che sta in `addon/` arriva nei mondi di tutti, telefoni compresi. Il codice che serve solo alle prove (cancellare blocchi, svuotare zone, togliere oggetti) deve essere inerte in un mondo vero: deve partire solo dove non ci sono giocatori, come `scripts/prove.js` (`guide/prova-server.md`).
-- **Namespace**: tutti gli identificativi iniziano con `coop:` (es. `coop:spada_fulmine`). Mai `minecraft:` per le cose nuove.
+- **Namespace**: tutti gli identificativi iniziano con `coop:` (es. `coop:spada_fulmine`). Mai `minecraft:` per le cose nuove. Eccezione: Sangue Immortale tiene `vamp:` (rinominare romperebbe i mondi di chi lo usa già).
+- **Due mod, un add-on**: il behavior pack "Coop Space" dipende anche da quello di Sangue Immortale, così attivandolo si attiva tutto. `npm run package` mette tutti i pack nel `.mcaddon` e nel mondo di prova. Il mondo di prova copia il mondo tutorial di Jowa (piatto, con uno strato di ardesia profonda): entrando si costruiscono da soli il tutorial di Sangue Immortale e il quartiere Coop Space (`scripts/tutorial.js`, stazioni di bacchette e scavo). Una funzione nuova da spiegare = una stazione nuova lì. Nomi dei blocchi nei comandi: quelli **Bedrock** (`brick_block`, `grass_path`, `web`), non quelli Java: un nome Java fa fallire il comando senza avvisi.
 - **UUID dei manifest**: mai cambiarli (romperebbero i mondi che usano l'add-on). `mct fix randomizealluids` è vietato.
 - **Versioni dei pack**: non si alzano a mano. `npm run package` dà ai due pack la versione `<prima cifra>.<giorno dal 1/1/2026>.<minuto>` e la mette anche nel nome ("Coop Space 0.330.758", nelle anteprime "(anteprima PR #N)"). Nei `manifest.json` del repository conta solo la prima cifra.
 - **Dipendenze**: solo il behavior pack dipende dal resource pack, mai il contrario (dipendenze circolari = pack che non si caricano).

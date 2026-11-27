@@ -1,0 +1,23 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:item": {
+  "description": {
+   "identifier": "vamp:cenere",
+   "menu_category": {
+    "category": "items"
+   }
+  },
+  "components": {
+   "minecraft:icon": "vamp_cenere",
+   "minecraft:display_name": {
+    "value": "item.vamp:cenere.name"
+   },
+   "minecraft:max_stack_size": {
+    "value": 64
+   },
+   "minecraft:block_placer": {
+    "block": "vamp:cenere_strato"
+   }
+  }
+ }
+}

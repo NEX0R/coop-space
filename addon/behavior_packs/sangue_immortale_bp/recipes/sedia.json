@@ -1,0 +1,36 @@
+{
+ "format_version": "1.20.10",
+ "minecraft:recipe_shaped": {
+  "description": {
+   "identifier": "vamp:r_sedia"
+  },
+  "tags": [
+   "crafting_table"
+  ],
+  "pattern": [
+   "I  ",
+   "PPP",
+   "S S"
+  ],
+  "key": {
+   "I": {
+    "item": "minecraft:iron_bars"
+   },
+   "P": {
+    "tag": "minecraft:planks"
+   },
+   "S": {
+    "item": "minecraft:stick"
+   }
+  },
+  "unlock": [
+   {
+    "item": "minecraft:iron_bars"
+   }
+  ],
+  "result": {
+   "item": "vamp:sedia",
+   "count": 1
+  }
+ }
+}

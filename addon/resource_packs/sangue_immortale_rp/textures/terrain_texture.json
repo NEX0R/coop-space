@@ -1,0 +1,32 @@
+{
+ "resource_pack_name": "vamp",
+ "texture_name": "atlas.terrain",
+ "padding": 8,
+ "num_mip_levels": 4,
+ "texture_data": {
+  "vamp_quercia_lato": {
+   "textures": "textures/blocks/vamp/quercia_lato"
+  },
+  "vamp_quercia_sopra": {
+   "textures": "textures/blocks/vamp/quercia_sopra"
+  },
+  "vamp_foglie_quercia": {
+   "textures": "textures/blocks/vamp/foglie_quercia"
+  },
+  "vamp_verbena_pianta": {
+   "textures": "textures/blocks/vamp/verbena_pianta"
+  },
+  "vamp_ghianda_pianta": {
+   "textures": "textures/blocks/vamp/ghianda_pianta"
+  },
+  "vamp_cenere_strato": {
+   "textures": "textures/blocks/vamp/cenere_strato"
+  },
+  "vamp_altare": {
+   "textures": "textures/blocks/vamp/altare"
+  },
+  "vamp_sedia": {
+   "textures": "textures/blocks/vamp/sedia"
+  }
+ }
+}
