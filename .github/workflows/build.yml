@@ -112,3 +112,6 @@ jobs:
           gh release delete ultima-versione --cleanup-tag --yes >/dev/null 2>&1 || true
           gh release create ultima-versione dist/coop-space.mcaddon dist/coop-space-mondo-prova.mcworld --title "Ultima versione $VERSIONE" --notes "$NOTE" --latest --target "$GITHUB_SHA"
           echo "Ultima versione $VERSIONE pubblicata." >> "$GITHUB_STEP_SUMMARY"
+          # Copia di riserva di ogni versione (chiesta da Nexor il 27/11): "ultima-versione" viene ricreata a ogni
+          # fusione, invece "versione-<numero>" resta per sempre. Così si può riscaricare qualsiasi versione vecchia.
+          gh release create "versione-$VERSIONE" dist/coop-space.mcaddon dist/coop-space-mondo-prova.mcworld --title "Versione $VERSIONE (copia di riserva)" --notes "Copia di riserva, non cancellare. $NOTE" --latest=false --target "$GITHUB_SHA"             && echo "Copia di riserva: versione-$VERSIONE." >> "$GITHUB_STEP_SUMMARY"             || echo "Copia di riserva versione-$VERSIONE NON creata." >> "$GITHUB_STEP_SUMMARY"

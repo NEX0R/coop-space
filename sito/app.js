@@ -121,7 +121,7 @@ async function mostraGitHub(repo) {
               .catch(() => null)
           )
         ),
-        github(`repos/${repo}/releases?per_page=30`)
+        github(`repos/${repo}/releases?per_page=100`)
           .then((r) => new Map(r.map((x) => [x.tag_name, versioneDa(x.name)])))
           .catch(() => new Map()),
       ]);
