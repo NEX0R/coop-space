@@ -122,7 +122,9 @@ for (const p of pack) {
       console.log(`Tolto il pack vecchio ${p.tipo}/${d}`);
     }
   }
-  const cartella = p.tipo === "resource_packs" ? "CoopSpaceR" : "CoopSpaceB";
+  // Una cartella per pack (Coop Space e Sangue Immortale, logica e grafica): con un nome fisso il
+  // secondo pack sovrascriveva il primo (successo il 27/11 con la PR #48).
+  const cartella = p.prefisso.replace(/\/$/, "");
   estrai(vociAddon, p.prefisso, join(base, cartella));
   console.log(`Installato "${p.nome}" in ${p.tipo}/${cartella}`);
 }
